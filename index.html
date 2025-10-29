@@ -494,14 +494,87 @@
             box-shadow: 0 10px 20px rgba(74, 222, 128, 0.3);
         }
 
+        /* Enhanced Calculator Result Styles */
         .calc-result {
-            margin-top: 20px;
+            margin-top: 30px;
+            padding: 30px;
+            background: linear-gradient(135deg, rgba(74, 222, 128, 0.15) 0%, rgba(34, 197, 94, 0.15) 100%);
+            border-radius: 20px;
+            border: 2px solid rgba(74, 222, 128, 0.4);
+            box-shadow: 0 10px 30px rgba(74, 222, 128, 0.2);
+            backdrop-filter: blur(10px);
+        }
+
+        .calc-result h3 {
+            color: #4ade80;
+            font-size: 1.8em;
+            margin-bottom: 25px;
+            text-align: center;
+            font-weight: 700;
+        }
+
+        .calc-result .result-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+            margin-bottom: 25px;
+        }
+
+        .calc-result .result-item {
+            background: rgba(255, 255, 255, 0.08);
             padding: 20px;
-            background: rgba(74, 222, 128, 0.1);
             border-radius: 15px;
-            border-left: 5px solid #4ade80;
+            border-left: 4px solid #4ade80;
+            transition: all 0.3s ease;
+        }
+
+        .calc-result .result-item:hover {
+            background: rgba(255, 255, 255, 0.12);
+            transform: translateY(-2px);
+        }
+
+        .calc-result .result-label {
+            color: #86efac;
             font-size: 1.1em;
-            line-height: 1.6;
+            font-weight: 600;
+            margin-bottom: 8px;
+        }
+
+        .calc-result .result-value {
+            color: #ffffff;
+            font-size: 1.4em;
+            font-weight: 700;
+        }
+
+        .calc-result .result-highlight {
+            background: linear-gradient(135deg, rgba(34, 197, 94, 0.2) 0%, rgba(74, 222, 128, 0.2) 100%);
+            border-left-color: #22c55e;
+        }
+
+        .calc-result .result-highlight .result-value {
+            color: #4ade80;
+            font-size: 1.6em;
+        }
+
+        .calc-result .recommendation {
+            margin-top: 25px;
+            padding: 20px;
+            border-radius: 15px;
+            font-size: 1.2em;
+            font-weight: 600;
+            text-align: center;
+        }
+
+        .calc-result .recommendation.warning {
+            background: rgba(239, 68, 68, 0.15);
+            border: 2px solid rgba(239, 68, 68, 0.4);
+            color: #fca5a5;
+        }
+
+        .calc-result .recommendation.success {
+            background: rgba(34, 197, 94, 0.15);
+            border: 2px solid rgba(34, 197, 94, 0.4);
+            color: #86efac;
         }
 
         .extra-calc {
@@ -513,13 +586,64 @@
         }
 
         .extra-result {
-            margin-top: 20px;
+            margin-top: 30px;
+            padding: 30px;
+            background: linear-gradient(135deg, rgba(255, 193, 7, 0.15) 0%, rgba(245, 158, 11, 0.15) 100%);
+            border-radius: 20px;
+            border: 2px solid rgba(255, 193, 7, 0.4);
+            box-shadow: 0 10px 30px rgba(255, 193, 7, 0.2);
+            backdrop-filter: blur(10px);
+        }
+
+        .extra-result h3 {
+            color: #fbbf24;
+            font-size: 1.8em;
+            margin-bottom: 25px;
+            text-align: center;
+            font-weight: 700;
+        }
+
+        .extra-result .result-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+            margin-bottom: 25px;
+        }
+
+        .extra-result .result-item {
+            background: rgba(255, 255, 255, 0.08);
             padding: 20px;
-            background: rgba(255, 193, 7, 0.1);
             border-radius: 15px;
-            border-left: 5px solid #ffc107;
+            border-left: 4px solid #fbbf24;
+            transition: all 0.3s ease;
+        }
+
+        .extra-result .result-item:hover {
+            background: rgba(255, 255, 255, 0.12);
+            transform: translateY(-2px);
+        }
+
+        .extra-result .result-label {
+            color: #fde68a;
             font-size: 1.1em;
-            line-height: 1.6;
+            font-weight: 600;
+            margin-bottom: 8px;
+        }
+
+        .extra-result .result-value {
+            color: #ffffff;
+            font-size: 1.4em;
+            font-weight: 700;
+        }
+
+        .extra-result .result-highlight {
+            background: linear-gradient(135deg, rgba(245, 158, 11, 0.2) 0%, rgba(255, 193, 7, 0.2) 100%);
+            border-left-color: #f59e0b;
+        }
+
+        .extra-result .result-highlight .result-value {
+            color: #fbbf24;
+            font-size: 1.6em;
         }
 
         /* Responsive */
@@ -545,6 +669,10 @@
             }
             .next-button {
                 right: 20px;
+            }
+            .calc-result .result-grid,
+            .extra-result .result-grid {
+                grid-template-columns: 1fr;
             }
         }
 
@@ -1002,7 +1130,7 @@
       }
     }
 
-    // Calculator functions
+    // Enhanced Calculator functions with improved result display
     function obliczAutokonsumpcje() {
       const produkcja = parseFloat(document.getElementById('produkcja').value);
       const eksport = parseFloat(document.getElementById('eksport').value);
@@ -1022,11 +1150,25 @@
       const procentAutokonsumpcji = ((autokonsumpcja / produkcja) * 100).toFixed(1);
       
       let wynik = `
-        <h3>Wyniki analizy autokonsumpcji:</h3>
-        <p><strong>Produkcja energii:</strong> ${produkcja.toFixed(2)} kWh</p>
-        <p><strong>Eksport do sieci:</strong> ${eksport.toFixed(2)} kWh</p>
-        <p><strong>Autokonsumpcja:</strong> ${autokonsumpcja.toFixed(2)} kWh</p>
-        <p><strong>Procent autokonsumpcji:</strong> ${procentAutokonsumpcji}%</p>
+        <h3>Wyniki analizy autokonsumpcji</h3>
+        <div class="result-grid">
+          <div class="result-item">
+            <div class="result-label">Produkcja energii</div>
+            <div class="result-value">${produkcja.toFixed(2)} kWh</div>
+          </div>
+          <div class="result-item">
+            <div class="result-label">Eksport do sieci</div>
+            <div class="result-value">${eksport.toFixed(2)} kWh</div>
+          </div>
+          <div class="result-item result-highlight">
+            <div class="result-label">Autokonsumpcja</div>
+            <div class="result-value">${autokonsumpcja.toFixed(2)} kWh</div>
+          </div>
+          <div class="result-item result-highlight">
+            <div class="result-label">Procent autokonsumpcji</div>
+            <div class="result-value">${procentAutokonsumpcji}%</div>
+          </div>
+        </div>
       `;
       
       if (zuzycie) {
@@ -1034,17 +1176,28 @@
         const importZSieci = Math.max(0, zuzycie - autokonsumpcja);
         
         wynik += `
-          <p><strong>Całkowite zużycie:</strong> ${zuzycie.toFixed(2)} kWh</p>
-          <p><strong>Pokrycie potrzeb:</strong> ${procentPokrycia}%</p>
-          <p><strong>Import z sieci:</strong> ${importZSieci.toFixed(2)} kWh</p>
+          <div class="result-grid">
+            <div class="result-item">
+              <div class="result-label">Całkowite zużycie</div>
+              <div class="result-value">${zuzycie.toFixed(2)} kWh</div>
+            </div>
+            <div class="result-item">
+              <div class="result-label">Pokrycie potrzeb</div>
+              <div class="result-value">${procentPokrycia}%</div>
+            </div>
+            <div class="result-item">
+              <div class="result-label">Import z sieci</div>
+              <div class="result-value">${importZSieci.toFixed(2)} kWh</div>
+            </div>
+          </div>
         `;
       }
       
       // Recommendations
       if (parseFloat(procentAutokonsumpcji) < 30) {
-        wynik += `<p style="color: #ef4444;"><strong>Uwaga:</strong> Niska autokonsumpcja. Rozważ magazyn energii lub zmianę profilu zużycia.</p>`;
+        wynik += `<div class="recommendation warning">⚠️ Niska autokonsumpcja. Rozważ magazyn energii lub zmianę profilu zużycia.</div>`;
       } else if (parseFloat(procentAutokonsumpcji) > 70) {
-        wynik += `<p style="color: #22c55e;"><strong>Świetnie!</strong> Wysoka autokonsumpcja oznacza optymalne wykorzystanie instalacji.</p>`;
+        wynik += `<div class="recommendation success">✅ Świetnie! Wysoka autokonsumpcja oznacza optymalne wykorzystanie instalacji.</div>`;
       }
       
       document.getElementById('wynik-auto').innerHTML = wynik;
@@ -1084,13 +1237,33 @@
       const procentAutokonsumpcji = ((autokonsumpcja / produkcjaRoczna) * 100).toFixed(1);
       
       const wynik = `
-        <h3>Wyniki kalkulacji:</h3>
-        <p><strong>Moc instalacji:</strong> ${rzeczywistaMoc.toFixed(2)} kWp</p>
-        <p><strong>Liczba paneli:</strong> ${iloscPaneli} x ${panelWp}Wp</p>
-        <p><strong>Roczna produkcja:</strong> ${produkcjaRoczna} kWh</p>
-        <p><strong>Autokonsumpcja:</strong> ${autokonsumpcja} kWh (${procentAutokonsumpcji}%)</p>
-        <p><strong>Eksport do sieci:</strong> ${eksport} kWh</p>
-        <p><strong>Pokrycie potrzeb:</strong> ${Math.min(100, (autokonsumpcja / zuzycie * 100)).toFixed(1)}%</p>
+        <h3>Wyniki kalkulacji instalacji PV</h3>
+        <div class="result-grid">
+          <div class="result-item result-highlight">
+            <div class="result-label">Moc instalacji</div>
+            <div class="result-value">${rzeczywistaMoc.toFixed(2)} kWp</div>
+          </div>
+          <div class="result-item">
+            <div class="result-label">Liczba paneli</div>
+            <div class="result-value">${iloscPaneli} x ${panelWp}Wp</div>
+          </div>
+          <div class="result-item">
+            <div class="result-label">Roczna produkcja</div>
+            <div class="result-value">${produkcjaRoczna} kWh</div>
+          </div>
+          <div class="result-item result-highlight">
+            <div class="result-label">Autokonsumpcja</div>
+            <div class="result-value">${autokonsumpcja} kWh (${procentAutokonsumpcji}%)</div>
+          </div>
+          <div class="result-item">
+            <div class="result-label">Eksport do sieci</div>
+            <div class="result-value">${eksport} kWh</div>
+          </div>
+          <div class="result-item">
+            <div class="result-label">Pokrycie potrzeb</div>
+            <div class="result-value">${Math.min(100, (autokonsumpcja / zuzycie * 100)).toFixed(1)}%</div>
+          </div>
+        </div>
       `;
       
       document.getElementById('wynik').innerHTML = wynik;
@@ -1152,13 +1325,32 @@
         okresZwrotu = rok;
       }
       
+      const zyskPo25Latach = (rocznePrzychody * 25 - cenaInstalacji);
+      
       const wynik = `
-        <h3>Analiza zwrotu inwestycji:</h3>
-        <p><strong>Roczne oszczędności (autokonsumpcja):</strong> ${oszczednosciAutokonsumpcja.toFixed(0)} zł</p>
-        <p><strong>Roczny przychód (eksport):</strong> ${przychodEksport.toFixed(0)} zł</p>
-        <p><strong>Łączne roczne korzyści:</strong> ${rocznePrzychody.toFixed(0)} zł</p>
-        <p><strong>Okres zwrotu:</strong> ${okresZwrotu.toFixed(1)} lat</p>
-        <p><strong>Zysk po 25 latach:</strong> ${(rocznePrzychody * 25 - cenaInstalacji).toFixed(0)} zł</p>
+        <h3>Analiza zwrotu inwestycji</h3>
+        <div class="result-grid">
+          <div class="result-item">
+            <div class="result-label">Roczne oszczędności (autokonsumpcja)</div>
+            <div class="result-value">${oszczednosciAutokonsumpcja.toFixed(0)} zł</div>
+          </div>
+          <div class="result-item">
+            <div class="result-label">Roczny przychód (eksport)</div>
+            <div class="result-value">${przychodEksport.toFixed(0)} zł</div>
+          </div>
+          <div class="result-item result-highlight">
+            <div class="result-label">Łączne roczne korzyści</div>
+            <div class="result-value">${rocznePrzychody.toFixed(0)} zł</div>
+          </div>
+          <div class="result-item result-highlight">
+            <div class="result-label">Okres zwrotu</div>
+            <div class="result-value">${okresZwrotu.toFixed(1)} lat</div>
+          </div>
+          <div class="result-item">
+            <div class="result-label">Zysk po 25 latach</div>
+            <div class="result-value">${zyskPo25Latach.toFixed(0)} zł</div>
+          </div>
+        </div>
       `;
       
       document.getElementById('extra-result').innerHTML = wynik;
