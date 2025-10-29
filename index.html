@@ -717,8 +717,8 @@
     <!-- MENU GŁÓWNE -->
     <div id="main-menu" class="content-page active">
       <div class="header">
-        <div class="logo">⚡ Instalacje Fotowoltaiczne</div>
-        <div class="subtitle">Twoja droga do energetycznej niezależności</div>
+        <div class="logo">Doradca techniczny</div>
+        <div class="subtitle">Autokonsumpcja, edukacja</div>
       </div>
       <div class="main-menu">
         <div class="menu-card" onclick="showSubmenu('checklista')">
@@ -780,7 +780,21 @@
     <div id="autokonsumpcja-kalkulator" class="content-page">
       <div class="page-header"><div class="page-title">Kalkulator Autokonsumpcji</div></div>
       <div class="calculator-container">
-        <!-- Wklej tutaj swój kalkulator autokonsumpcji -->
+                <h3>Wprowadź dane z falownika i licznika</h3>
+                
+                <label>Produkcja prądu [kWh]</label>
+                <input type="number" id="produkcja" step="0.01" placeholder="np. 18.5">
+
+                <label>Eksport do sieci [kWh]</label>
+                <input type="number" id="eksport" step="0.01" placeholder="np. 10.2">
+
+                <label>Całkowite zużycie domu [kWh] <small style="color:#86efac;">(opcjonalne)</small></label>
+                <input type="number" id="zuzycie_au" step="0.01" placeholder="np. 15.3">
+
+                <button onclick="obliczAutokonsumpcje()">OBLICZ AUTOKONSUMPCJĘ</button>
+
+                <div class="calc-result" id="wynik-auto" style="display: none;"></div>
+            </div>
       </div>
     </div>
 
@@ -800,13 +814,56 @@
     </div>
 
     <!-- KALKULATOR PV -->
-    <div id="pv-kalkulator" class="content-page">
-      <div class="page-header"><div class="page-title">Kalkulator PV</div></div>
-      <div class="calculator-container">
-        <!-- Wklej tutaj swój kalkulator PV -->
-      </div>
-    </div>
-  </div>
+     <div id="calculator" class="content-page">
+            <div class="page-header">
+                <div class="page-title">Kalkulator Instalacji PV</div>
+                <div class="page-subtitle">Oblicz swoją instalację fotowoltaiczną i zobacz oszczędności!</div>
+            </div>
+            <div class="calculator-container">
+                <label>Roczne zużycie energii [kWh]</label>
+                <input type="number" id="zuzycie" placeholder="np. 4000">
+
+                <label>Wybór paneli [Wp]</label>
+                <select id="panel">
+                    <option value="450">450 (dla instalacji jednofazowych do 3,68 kWp)</option>
+                    <option value="480">480 (dla instalacji powyżej 3,68 kWp)</option>
+                </select>
+
+                <label>Orientacja dachu</label>
+                <select id="orientacja">
+                    <option value="0.95">Południe</option>
+                    <option value="0.9">Wschód-Zachód</option>
+                </select>
+
+                <label>Tryb magazynu energii</label>
+                <select id="trybMagazynu">
+                    <option value="export">On-grid (autokonsumpcja)</option>
+                    <option value="no-export">Off-grid</option>
+                </select>
+
+                <button onclick="oblicz()">OBLICZ INSTALACJĘ</button>
+
+                <div class="calc-result" id="wynik" style="display: none;"></div>
+
+                <div class="extra-calc" id="extra-calc">
+                    <h3 style="color: #4ade80; text-align: center; margin-bottom: 20px;">Oblicz okres zwrotu inwestycji</h3>
+                    <label>Obecna cena prądu [zł/kWh]</label>
+                    <input type="number" id="cenaPradu" placeholder="np. 0.85" step="0.01" min="0">
+
+                    <label>Cena instalacji [zł]</label>
+                    <input type="number" id="cenaInstalacji" placeholder="np. 35000" min="0">
+
+                    <label>Tryb kalkulacji zwrotu</label>
+                    <select id="trybKalkulacji">
+                        <option value="standardowa">Standardowa (stała cena prądu)</option>
+                        <option value="optymistyczna">Realistyczna (5% wzrostu ceny prądu rocznie)</option>
+                    </select>
+
+                    <button onclick="obliczZwrot()">Oblicz zwrot inwestycji</button>
+                    <div class="extra-result" id="extra-result"></div>
+                </div>
+            </div>
+        </div>
 
   <!-- Skrypty JS -->
   <script>
@@ -820,10 +877,34 @@
       document.getElementById(id)?.classList.add('active');
     }
     function goBack() {
-      // Dodaj logikę powrotu
+      if (currentPageStack.length > 1) {
+                currentPageStack.pop();
+                const previousPage = currentPageStack[currentPageStack.length - 1];
+                document.querySelectorAll('.content-page').forEach(page => page.classList.remove('active'));
+                document.getElementById(previousPage).classList.add('active');
+                
+                if (currentPageStack.length === 1) {
+                    document.querySelector('.back-button').classList.remove('active');
+                }
+                
+                // Update next button for the previous page
+                updateNextButton(previousPage);
+            }
     }
-    function goNext() {
-      // Dodaj logikę przejścia dalej
+    function goNext(currentPageId) {
+        const nextButton = document.querySelector('.next-button');
+            
+      // Check if current page is a subcategory page and find its sequence
+      let currentSequence = null;
+      let currentIndex = -1;
+            
+      for (const [category, sequence] of Object.entries(navigationSequences)) {
+           const index = sequence.indexOf(currentPageId);
+           if (index !== -1) {
+           currentSequence = sequence;
+           currentIndex = index;
+           break;
+        }
     }
   </script>
 </body>
