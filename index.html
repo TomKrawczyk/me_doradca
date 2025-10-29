@@ -729,7 +729,7 @@
           <div class="menu-title">Wywiad</div>
           <div class="menu-description">Rozmowa z klientem / analiza potrzeb</div>
         </div>
-        <div class="menu-card" onclick="showSubmenu('autokonsumpcja-kalkulator')">
+        <div class="menu-card" onclick="showPage('autokonsumpcja-kalkulator')">
           <div class="menu-title">Kalkulator Autokonsumpcji</div>
           <div class="menu-description">Oblicz opłacalność zużycia własnego</div>
         </div>
@@ -737,7 +737,7 @@
           <div class="menu-title">Edukacja / Autokonsumpcja</div>
           <div class="menu-description">Jak działa system, co warto wiedzieć</div>
         </div>
-        <div class="menu-card" onclick="showSubmenu('pv-kalkulator')">
+        <div class="menu-card" onclick="showPage('pv-kalkulator')">
           <div class="menu-title">Kalkulator PV</div>
           <div class="menu-description">Dobierz moc instalacji i sprawdź zysk</div>
         </div>
@@ -758,7 +758,18 @@
     </div>
     <div id="checklista-start" class="content-page">
       <div class="page-header"><div class="page-title">Checklista: Start</div></div>
-      <div class="slide-content"><p>Tu dodaj swoją treść.</p></div>
+      <div class="slide-content">
+        <h3>Pierwsze kroki przed instalacją PV</h3>
+        <ul>
+          <li>Sprawdź stan techniczny dachu</li>
+          <li>Zweryfikuj orientację i nachylenie dachu</li>
+          <li>Oceń zacienienie w ciągu dnia</li>
+          <li>Sprawdź dostępność miejsca na falownik</li>
+          <li>Przeanalizuj roczne zużycie energii</li>
+          <li>Skontaktuj się z operatorem sieci dystrybucyjnej</li>
+          <li>Sprawdź warunki techniczne przyłączenia</li>
+        </ul>
+      </div>
     </div>
 
     <!-- WYWIAD -->
@@ -773,28 +784,39 @@
     </div>
     <div id="wywiad-pytania" class="content-page">
       <div class="page-header"><div class="page-title">Wywiad: Pytania</div></div>
-      <div class="slide-content"><p>Tu dodaj swoją treść.</p></div>
+      <div class="slide-content">
+        <h3>Kluczowe pytania dla klienta</h3>
+        <ul>
+          <li>Jakie jest Państwa roczne zużycie energii elektrycznej?</li>
+          <li>O jakiej porze dnia zużywają Państwo najwięcej prądu?</li>
+          <li>Czy planują Państwo zakup samochodu elektrycznego?</li>
+          <li>Czy rozważają Państwo instalację pompy ciepła?</li>
+          <li>Jaki jest wiek i stan techniczny dachu?</li>
+          <li>Czy w pobliżu są wysokie drzewa lub budynki?</li>
+          <li>Jaki jest budżet na instalację?</li>
+          <li>Czy interesuje Państwa magazyn energii?</li>
+        </ul>
+      </div>
     </div>
 
     <!-- KALKULATOR AUTOKONSUMPCJI -->
     <div id="autokonsumpcja-kalkulator" class="content-page">
       <div class="page-header"><div class="page-title">Kalkulator Autokonsumpcji</div></div>
       <div class="calculator-container">
-                <h3>Wprowadź dane z falownika i licznika</h3>
-                
-                <label>Produkcja prądu [kWh]</label>
-                <input type="number" id="produkcja" step="0.01" placeholder="np. 18.5">
+        <h3>Wprowadź dane z falownika i licznika</h3>
+        
+        <label>Produkcja prądu [kWh]</label>
+        <input type="number" id="produkcja" step="0.01" placeholder="np. 18.5">
 
-                <label>Eksport do sieci [kWh]</label>
-                <input type="number" id="eksport" step="0.01" placeholder="np. 10.2">
+        <label>Eksport do sieci [kWh]</label>
+        <input type="number" id="eksport" step="0.01" placeholder="np. 10.2">
 
-                <label>Całkowite zużycie domu [kWh] <small style="color:#86efac;">(opcjonalne)</small></label>
-                <input type="number" id="zuzycie_au" step="0.01" placeholder="np. 15.3">
+        <label>Całkowite zużycie domu [kWh] <small style="color:#86efac;">(opcjonalne)</small></label>
+        <input type="number" id="zuzycie_au" step="0.01" placeholder="np. 15.3">
 
-                <button onclick="obliczAutokonsumpcje()">OBLICZ AUTOKONSUMPCJĘ</button>
+        <button onclick="obliczAutokonsumpcje()">OBLICZ AUTOKONSUMPCJĘ</button>
 
-                <div class="calc-result" id="wynik-auto" style="display: none;"></div>
-            </div>
+        <div class="calc-result" id="wynik-auto" style="display: none;"></div>
       </div>
     </div>
 
@@ -810,102 +832,342 @@
     </div>
     <div id="edukacja-dzialanie" class="content-page">
       <div class="page-header"><div class="page-title">Jak działa PV</div></div>
-      <div class="slide-content"><p>Tu dodaj swoją treść.</p></div>
+      <div class="slide-content">
+        <h3>Zasada działania instalacji fotowoltaicznej</h3>
+        <p>Instalacja fotowoltaiczna przekształca energię słoneczną w energię elektryczną za pomocą paneli słonecznych. Proces ten odbywa się w kilku etapach:</p>
+        <ul>
+          <li>Panele fotowoltaiczne wychwytują promieniowanie słoneczne</li>
+          <li>Energia słoneczna jest przekształcana w prąd stały (DC)</li>
+          <li>Falownik konwertuje prąd stały na prąd przemienny (AC)</li>
+          <li>Energia jest wykorzystywana w domu lub oddawana do sieci</li>
+          <li>Nadwyżka energii może być magazynowana w bateriach</li>
+        </ul>
+        <h3>Autokonsumpcja</h3>
+        <p>Autokonsumpcja to wykorzystanie wyprodukowanej energii bezpośrednio w gospodarstwie domowym. Im wyższa autokonsumpcja, tym większe oszczędności na rachunkach za prąd.</p>
+      </div>
     </div>
 
     <!-- KALKULATOR PV -->
-     <div id="calculator" class="content-page">
-            <div class="page-header">
-                <div class="page-title">Kalkulator Instalacji PV</div>
-                <div class="page-subtitle">Oblicz swoją instalację fotowoltaiczną i zobacz oszczędności!</div>
-            </div>
-            <div class="calculator-container">
-                <label>Roczne zużycie energii [kWh]</label>
-                <input type="number" id="zuzycie" placeholder="np. 4000">
+    <div id="pv-kalkulator" class="content-page">
+      <div class="page-header">
+        <div class="page-title">Kalkulator Instalacji PV</div>
+        <div class="page-subtitle">Oblicz swoją instalację fotowoltaiczną i zobacz oszczędności!</div>
+      </div>
+      <div class="calculator-container">
+        <label>Roczne zużycie energii [kWh]</label>
+        <input type="number" id="zuzycie" placeholder="np. 4000">
 
-                <label>Wybór paneli [Wp]</label>
-                <select id="panel">
-                    <option value="450">450 (dla instalacji jednofazowych do 3,68 kWp)</option>
-                    <option value="480">480 (dla instalacji powyżej 3,68 kWp)</option>
-                </select>
+        <label>Wybór paneli [Wp]</label>
+        <select id="panel">
+          <option value="450">450 (dla instalacji jednofazowych do 3,68 kWp)</option>
+          <option value="480">480 (dla instalacji powyżej 3,68 kWp)</option>
+        </select>
 
-                <label>Orientacja dachu</label>
-                <select id="orientacja">
-                    <option value="0.95">Południe</option>
-                    <option value="0.9">Wschód-Zachód</option>
-                </select>
+        <label>Orientacja dachu</label>
+        <select id="orientacja">
+          <option value="0.95">Południe</option>
+          <option value="0.9">Wschód-Zachód</option>
+        </select>
 
-                <label>Tryb magazynu energii</label>
-                <select id="trybMagazynu">
-                    <option value="export">On-grid (autokonsumpcja)</option>
-                    <option value="no-export">Off-grid</option>
-                </select>
+        <label>Tryb magazynu energii</label>
+        <select id="trybMagazynu">
+          <option value="export">On-grid (autokonsumpcja)</option>
+          <option value="no-export">Off-grid</option>
+        </select>
 
-                <button onclick="oblicz()">OBLICZ INSTALACJĘ</button>
+        <button onclick="oblicz()">OBLICZ INSTALACJĘ</button>
 
-                <div class="calc-result" id="wynik" style="display: none;"></div>
+        <div class="calc-result" id="wynik" style="display: none;"></div>
 
-                <div class="extra-calc" id="extra-calc">
-                    <h3 style="color: #4ade80; text-align: center; margin-bottom: 20px;">Oblicz okres zwrotu inwestycji</h3>
-                    <label>Obecna cena prądu [zł/kWh]</label>
-                    <input type="number" id="cenaPradu" placeholder="np. 0.85" step="0.01" min="0">
+        <div class="extra-calc" id="extra-calc">
+          <h3 style="color: #4ade80; text-align: center; margin-bottom: 20px;">Oblicz okres zwrotu inwestycji</h3>
+          <label>Obecna cena prądu [zł/kWh]</label>
+          <input type="number" id="cenaPradu" placeholder="np. 0.85" step="0.01" min="0">
 
-                    <label>Cena instalacji [zł]</label>
-                    <input type="number" id="cenaInstalacji" placeholder="np. 35000" min="0">
+          <label>Cena instalacji [zł]</label>
+          <input type="number" id="cenaInstalacji" placeholder="np. 35000" min="0">
 
-                    <label>Tryb kalkulacji zwrotu</label>
-                    <select id="trybKalkulacji">
-                        <option value="standardowa">Standardowa (stała cena prądu)</option>
-                        <option value="optymistyczna">Realistyczna (5% wzrostu ceny prądu rocznie)</option>
-                    </select>
+          <label>Tryb kalkulacji zwrotu</label>
+          <select id="trybKalkulacji">
+            <option value="standardowa">Standardowa (stała cena prądu)</option>
+            <option value="optymistyczna">Realistyczna (5% wzrostu ceny prądu rocznie)</option>
+          </select>
 
-                    <button onclick="obliczZwrot()">Oblicz zwrot inwestycji</button>
-                    <div class="extra-result" id="extra-result"></div>
-                </div>
-            </div>
+          <button onclick="obliczZwrot()">Oblicz zwrot inwestycji</button>
+          <div class="extra-result" id="extra-result"></div>
         </div>
+      </div>
+    </div>
+  </div>
 
   <!-- Skrypty JS -->
   <script>
+    // Navigation state management
+    let currentPageStack = ['main-menu'];
+    
+    // Navigation sequences for different sections
+    const navigationSequences = {
+      checklista: ['submenu-checklista', 'checklista-start'],
+      wywiad: ['submenu-wywiad', 'wywiad-pytania'],
+      edukacja: ['submenu-edukacja', 'edukacja-dzialanie']
+    };
+
     function showSubmenu(id) {
-      document.querySelectorAll('.content-page').forEach(el => el.classList.remove('active'));
-      document.getElementById('submenu-' + id)?.classList.add('active');
-      document.getElementById(id)?.classList.add('active');
+      const targetPage = 'submenu-' + id;
+      navigateToPage(targetPage);
     }
+
     function showPage(id) {
-      document.querySelectorAll('.content-page').forEach(el => el.classList.remove('active'));
-      document.getElementById(id)?.classList.add('active');
+      navigateToPage(id);
     }
+
+    function navigateToPage(pageId) {
+      // Hide all pages
+      document.querySelectorAll('.content-page').forEach(el => el.classList.remove('active'));
+      
+      // Show target page
+      const targetElement = document.getElementById(pageId);
+      if (targetElement) {
+        targetElement.classList.add('active');
+        
+        // Update navigation stack
+        currentPageStack.push(pageId);
+        
+        // Update navigation buttons
+        updateNavigationButtons();
+      }
+    }
+
+    function updateNavigationButtons() {
+      const backButton = document.querySelector('.back-button');
+      const nextButton = document.querySelector('.next-button');
+      
+      // Show/hide back button
+      if (currentPageStack.length > 1) {
+        backButton.classList.add('active');
+      } else {
+        backButton.classList.remove('active');
+      }
+      
+      // Update next button
+      updateNextButton();
+    }
+
+    function updateNextButton() {
+      const nextButton = document.querySelector('.next-button');
+      const currentPage = currentPageStack[currentPageStack.length - 1];
+      
+      // Check if current page has a next page in sequence
+      let hasNext = false;
+      for (const [category, sequence] of Object.entries(navigationSequences)) {
+        const currentIndex = sequence.indexOf(currentPage);
+        if (currentIndex !== -1 && currentIndex < sequence.length - 1) {
+          hasNext = true;
+          break;
+        }
+      }
+      
+      if (hasNext) {
+        nextButton.classList.add('active');
+      } else {
+        nextButton.classList.remove('active');
+      }
+    }
+
     function goBack() {
       if (currentPageStack.length > 1) {
-                currentPageStack.pop();
-                const previousPage = currentPageStack[currentPageStack.length - 1];
-                document.querySelectorAll('.content-page').forEach(page => page.classList.remove('active'));
-                document.getElementById(previousPage).classList.add('active');
-                
-                if (currentPageStack.length === 1) {
-                    document.querySelector('.back-button').classList.remove('active');
-                }
-                
-                // Update next button for the previous page
-                updateNextButton(previousPage);
-            }
+        currentPageStack.pop();
+        const previousPage = currentPageStack[currentPageStack.length - 1];
+        
+        // Hide all pages and show previous
+        document.querySelectorAll('.content-page').forEach(page => page.classList.remove('active'));
+        document.getElementById(previousPage).classList.add('active');
+        
+        // Update navigation buttons
+        updateNavigationButtons();
+      }
     }
-    function goNext(currentPageId) {
-        const nextButton = document.querySelector('.next-button');
-            
-      // Check if current page is a subcategory page and find its sequence
-      let currentSequence = null;
-      let currentIndex = -1;
-            
+
+    function goNext() {
+      const currentPage = currentPageStack[currentPageStack.length - 1];
+      
+      // Find next page in sequence
       for (const [category, sequence] of Object.entries(navigationSequences)) {
-           const index = sequence.indexOf(currentPageId);
-           if (index !== -1) {
-           currentSequence = sequence;
-           currentIndex = index;
-           break;
+        const currentIndex = sequence.indexOf(currentPage);
+        if (currentIndex !== -1 && currentIndex < sequence.length - 1) {
+          const nextPage = sequence[currentIndex + 1];
+          navigateToPage(nextPage);
+          break;
         }
+      }
     }
+
+    // Calculator functions
+    function obliczAutokonsumpcje() {
+      const produkcja = parseFloat(document.getElementById('produkcja').value);
+      const eksport = parseFloat(document.getElementById('eksport').value);
+      const zuzycie = parseFloat(document.getElementById('zuzycie_au').value) || null;
+      
+      if (isNaN(produkcja) || isNaN(eksport)) {
+        alert('Proszę wprowadzić poprawne wartości dla produkcji i eksportu.');
+        return;
+      }
+      
+      if (eksport > produkcja) {
+        alert('Eksport nie może być większy od produkcji.');
+        return;
+      }
+      
+      const autokonsumpcja = produkcja - eksport;
+      const procentAutokonsumpcji = ((autokonsumpcja / produkcja) * 100).toFixed(1);
+      
+      let wynik = `
+        <h3>Wyniki analizy autokonsumpcji:</h3>
+        <p><strong>Produkcja energii:</strong> ${produkcja.toFixed(2)} kWh</p>
+        <p><strong>Eksport do sieci:</strong> ${eksport.toFixed(2)} kWh</p>
+        <p><strong>Autokonsumpcja:</strong> ${autokonsumpcja.toFixed(2)} kWh</p>
+        <p><strong>Procent autokonsumpcji:</strong> ${procentAutokonsumpcji}%</p>
+      `;
+      
+      if (zuzycie) {
+        const procentPokrycia = ((autokonsumpcja / zuzycie) * 100).toFixed(1);
+        const importZSieci = Math.max(0, zuzycie - autokonsumpcja);
+        
+        wynik += `
+          <p><strong>Całkowite zużycie:</strong> ${zuzycie.toFixed(2)} kWh</p>
+          <p><strong>Pokrycie potrzeb:</strong> ${procentPokrycia}%</p>
+          <p><strong>Import z sieci:</strong> ${importZSieci.toFixed(2)} kWh</p>
+        `;
+      }
+      
+      // Recommendations
+      if (parseFloat(procentAutokonsumpcji) < 30) {
+        wynik += `<p style="color: #ef4444;"><strong>Uwaga:</strong> Niska autokonsumpcja. Rozważ magazyn energii lub zmianę profilu zużycia.</p>`;
+      } else if (parseFloat(procentAutokonsumpcji) > 70) {
+        wynik += `<p style="color: #22c55e;"><strong>Świetnie!</strong> Wysoka autokonsumpcja oznacza optymalne wykorzystanie instalacji.</p>`;
+      }
+      
+      document.getElementById('wynik-auto').innerHTML = wynik;
+      document.getElementById('wynik-auto').style.display = 'block';
+    }
+
+    function oblicz() {
+      const zuzycie = parseFloat(document.getElementById('zuzycie').value);
+      const panelWp = parseFloat(document.getElementById('panel').value);
+      const orientacja = parseFloat(document.getElementById('orientacja').value);
+      const trybMagazynu = document.getElementById('trybMagazynu').value;
+      
+      if (isNaN(zuzycie) || zuzycie <= 0) {
+        alert('Proszę wprowadzić poprawne zużycie energii.');
+        return;
+      }
+      
+      // Calculations
+      const mocInstalacji = Math.ceil(zuzycie / 1000) * panelWp / 1000; // kWp
+      const iloscPaneli = Math.ceil(mocInstalacji * 1000 / panelWp);
+      const rzeczywistaMoc = iloscPaneli * panelWp / 1000;
+      
+      // Annual production (assuming 1000 kWh/kWp in Poland)
+      const produkcjaRoczna = Math.round(rzeczywistaMoc * 1000 * orientacja);
+      
+      // Self-consumption calculation
+      let autokonsumpcja, eksport;
+      if (trybMagazynu === 'no-export') {
+        autokonsumpcja = Math.min(produkcjaRoczna, zuzycie);
+        eksport = 0;
+      } else {
+        // Simplified model: assume 40% self-consumption without battery
+        autokonsumpcja = Math.round(produkcjaRoczna * 0.4);
+        eksport = produkcjaRoczna - autokonsumpcja;
+      }
+      
+      const procentAutokonsumpcji = ((autokonsumpcja / produkcjaRoczna) * 100).toFixed(1);
+      
+      const wynik = `
+        <h3>Wyniki kalkulacji:</h3>
+        <p><strong>Moc instalacji:</strong> ${rzeczywistaMoc.toFixed(2)} kWp</p>
+        <p><strong>Liczba paneli:</strong> ${iloscPaneli} x ${panelWp}Wp</p>
+        <p><strong>Roczna produkcja:</strong> ${produkcjaRoczna} kWh</p>
+        <p><strong>Autokonsumpcja:</strong> ${autokonsumpcja} kWh (${procentAutokonsumpcji}%)</p>
+        <p><strong>Eksport do sieci:</strong> ${eksport} kWh</p>
+        <p><strong>Pokrycie potrzeb:</strong> ${Math.min(100, (autokonsumpcja / zuzycie * 100)).toFixed(1)}%</p>
+      `;
+      
+      document.getElementById('wynik').innerHTML = wynik;
+      document.getElementById('wynik').style.display = 'block';
+      document.getElementById('extra-calc').style.display = 'block';
+    }
+
+    function obliczZwrot() {
+      const cenaPradu = parseFloat(document.getElementById('cenaPradu').value);
+      const cenaInstalacji = parseFloat(document.getElementById('cenaInstalacji').value);
+      const trybKalkulacji = document.getElementById('trybKalkulacji').value;
+      
+      if (isNaN(cenaPradu) || isNaN(cenaInstalacji) || cenaPradu <= 0 || cenaInstalacji <= 0) {
+        alert('Proszę wprowadzić poprawne wartości.');
+        return;
+      }
+      
+      // Get production data from previous calculation
+      const wynikElement = document.getElementById('wynik');
+      if (!wynikElement.innerHTML) {
+        alert('Najpierw oblicz parametry instalacji.');
+        return;
+      }
+      
+      // Extract autokonsumpcja from previous calculation (simplified)
+      const zuzycie = parseFloat(document.getElementById('zuzycie').value);
+      const panelWp = parseFloat(document.getElementById('panel').value);
+      const orientacja = parseFloat(document.getElementById('orientacja').value);
+      
+      const mocInstalacji = Math.ceil(zuzycie / 1000) * panelWp / 1000;
+      const iloscPaneli = Math.ceil(mocInstalacji * 1000 / panelWp);
+      const rzeczywistaMoc = iloscPaneli * panelWp / 1000;
+      const produkcjaRoczna = Math.round(rzeczywistaMoc * 1000 * orientacja);
+      
+      const autokonsumpcja = Math.round(produkcjaRoczna * 0.4); // Simplified
+      const eksport = produkcjaRoczna - autokonsumpcja;
+      
+      // Savings calculation
+      const oszczednosciAutokonsumpcja = autokonsumpcja * cenaPradu;
+      const przychodEksport = eksport * cenaPradu * 0.8; // 80% of retail price for export
+      const rocznePrzychody = oszczednosciAutokonsumpcja + przychodEksport;
+      
+      let okresZwrotu;
+      if (trybKalkulacji === 'standardowa') {
+        okresZwrotu = cenaInstalacji / rocznePrzychody;
+      } else {
+        // With 5% annual price increase
+        let suma = 0;
+        let rok = 0;
+        let cenaBiezaca = cenaPradu;
+        
+        while (suma < cenaInstalacji && rok < 30) {
+          rok++;
+          const roczneOszczednosci = autokonsumpcja * cenaBiezaca;
+          const rocznyEksport = eksport * cenaBiezaca * 0.8;
+          suma += roczneOszczednosci + rocznyEksport;
+          cenaBiezaca *= 1.05; // 5% increase
+        }
+        okresZwrotu = rok;
+      }
+      
+      const wynik = `
+        <h3>Analiza zwrotu inwestycji:</h3>
+        <p><strong>Roczne oszczędności (autokonsumpcja):</strong> ${oszczednosciAutokonsumpcja.toFixed(0)} zł</p>
+        <p><strong>Roczny przychód (eksport):</strong> ${przychodEksport.toFixed(0)} zł</p>
+        <p><strong>Łączne roczne korzyści:</strong> ${rocznePrzychody.toFixed(0)} zł</p>
+        <p><strong>Okres zwrotu:</strong> ${okresZwrotu.toFixed(1)} lat</p>
+        <p><strong>Zysk po 25 latach:</strong> ${(rocznePrzychody * 25 - cenaInstalacji).toFixed(0)} zł</p>
+      `;
+      
+      document.getElementById('extra-result').innerHTML = wynik;
+    }
+
+    // Initialize navigation on page load
+    document.addEventListener('DOMContentLoaded', function() {
+      updateNavigationButtons();
+    });
   </script>
 </body>
 </html>
