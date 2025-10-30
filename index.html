@@ -1107,205 +1107,215 @@
       updateNavigationButtons();
     }
 
-    // Calculator functions
-    function obliczAutokonsumpcje() {
-      const produkcja = parseFloat(document.getElementById('produkcja').value);
-      const eksport = parseFloat(document.getElementById('eksport').value);
-      const zuzycie = parseFloat(document.getElementById('zuzycie_au').value) || null;
-      
-      if (isNaN(produkcja) || isNaN(eksport)) {
-        alert('Proszę wprowadzić poprawne wartości dla produkcji i eksportu.');
-        return;
-      }
-      
-      if (eksport > produkcja) {
-        alert('Eksport nie może być większy od produkcji.');
-        return;
-      }
-      
-      const autokonsumpcja = produkcja - eksport;
-      const procentAutokonsumpcji = ((autokonsumpcja / produkcja) * 100).toFixed(1);
-      
-      let wynik = `
-        <div class="result-header">
-          <div class="result-title">Wyniki analizy</div>
-          <div class="result-subtitle">Sprawdź, ile energii zużywasz na bieżąco z własnej instalacji</div>
-        </div>
-        
-        <div class="stats-grid">
-          <div class="stat-card">
-            <div class="stat-number">${produkcja.toFixed(1)}</div>
-            <div class="stat-label">Produkcja energii <span class="stat-unit">[kWh]</span></div>
-          </div>
-          <div class="stat-card">
-            <div class="stat-number">${eksport.toFixed(1)}</div>
-            <div class="stat-label">Eksport do sieci <span class="stat-unit">[kWh]</span></div>
-          </div>
-          <div class="stat-card">
-            <div class="stat-number">${autokonsumpcja.toFixed(1)}</div>
-            <div class="stat-label">Autokonsumpcja <span class="stat-unit">[kWh]</span></div>
-          </div>
-          <div class="stat-card">
-            <div class="stat-number">${procentAutokonsumpcji}%</div>
-            <div class="stat-label">Procent autokonsumpcji</div>
-          </div>
-      `;
-      
-      if (zuzycie) {
-        const procentPokrycia = ((autokonsumpcja / zuzycie) * 100).toFixed(1);
-        const importZSieci = Math.max(0, zuzycie - autokonsumpcja);
-        
-        wynik += `
-          <div class="stat-card">
-            <div class="stat-number">${zuzycie.toFixed(1)}</div>
-            <div class="stat-label">Całkowite zużycie <span class="stat-unit">[kWh]</span></div>
-          </div>
-          <div class="stat-card">
-            <div class="stat-number">${procentPokrycia}%</div>
-            <div class="stat-label">Pokrycie potrzeb</div>
-          </div>
-          <div class="stat-card">
-            <div class="stat-number">${importZSieci.toFixed(1)}</div>
-            <div class="stat-label">Import z sieci <span class="stat-unit">[kWh]</span></div>
-          </div>
-        `;
-      }
-      
-      wynik += `</div>`;
-      
-      // Recommendations
-      if (parseFloat(procentAutokonsumpcji) < 30) {
-        wynik += `
-          <div class="stat-card" style="grid-column: 1 / -1; background: rgba(239, 68, 68, 0.1); border-color: #ef4444;">
-            <div style="color: #ef4444; font-size: 1.2em; font-weight: bold;">⚠️ Uwaga</div>
-            <div class="stat-label">Niska autokonsumpcja. Rozważ magazyn energii lub zmianę profilu zużycia.</div>
-          </div>
-        `;
-      } else if (parseFloat(procentAutokonsumpcji) > 70) {
-        wynik += `
-          <div class="stat-card" style="grid-column: 1 / -1; background: rgba(34, 197, 94, 0.1); border-color: #22c55e;">
-            <div style="color: #22c55e; font-size: 1.2em; font-weight: bold;">✅ Świetnie!</div>
-            <div class="stat-label">Wysoka autokonsumpcja oznacza optymalne wykorzystanie instalacji.</div>
-          </div>
-        `;
-      }
-      
-      document.getElementById('wynik-auto').innerHTML = wynik;
-      document.getElementById('wynik-auto').style.display = 'block';
-    }
+    // PV Calculator Functions
+        function oblicz() {
+            let zuzycie = parseFloat(document.getElementById('zuzycie').value);
+            let orientacja = parseFloat(document.getElementById('orientacja').value);
+            let trybMagazynu = document.getElementById('trybMagazynu').value;
+            const powierzchniaPanelu = 2.34; // Stała powierzchnia panelu w m²
+            const limitJednofazowy = 3.68; // Limit dla instalacji jednofazowej w kWp
 
-    function oblicz() {
-      const zuzycie = parseFloat(document.getElementById('zuzycie').value);
-      const panelWp = parseFloat(document.getElementById('panel').value);
-      const orientacja = parseFloat(document.getElementById('orientacja').value);
-      const trybMagazynu = document.getElementById('trybMagazynu').value;
-      
-      if (isNaN(zuzycie) || zuzycie <= 0) {
-        alert('Proszę wprowadzić poprawne zużycie energii.');
-        return;
-      }
-      
-      // Calculations
-      const mocInstalacji = Math.ceil(zuzycie / 1000) * panelWp / 1000; // kWp
-      const iloscPaneli = Math.ceil(mocInstalacji * 1000 / panelWp);
-      const rzeczywistaMoc = iloscPaneli * panelWp / 1000;
-      
-      // Annual production (assuming 1000 kWh/kWp in Poland)
-      const produkcjaRoczna = Math.round(rzeczywistaMoc * 1000 * orientacja);
-      
-      // Self-consumption calculation
-      let autokonsumpcja, eksport;
-      if (trybMagazynu === 'no-export') {
-        autokonsumpcja = Math.min(produkcjaRoczna, zuzycie);
-        eksport = 0;
-      } else {
-        // Simplified model: assume 40% self-consumption without battery
-        autokonsumpcja = Math.round(produkcjaRoczna * 0.4);
-        eksport = produkcjaRoczna - autokonsumpcja;
-      }
-      
-      const procentAutokonsumpcji = ((autokonsumpcja / produkcjaRoczna) * 100).toFixed(1);
-      
-      const wynik = `
-        <h3>Wyniki kalkulacji:</h3>
-        <p><strong>Moc instalacji:</strong> ${rzeczywistaMoc.toFixed(2)} kWp</p>
-        <p><strong>Liczba paneli:</strong> ${iloscPaneli} x ${panelWp}Wp</p>
-        <p><strong>Roczna produkcja:</strong> ${produkcjaRoczna} kWh</p>
-        <p><strong>Autokonsumpcja:</strong> ${autokonsumpcja} kWh (${procentAutokonsumpcji}%)</p>
-        <p><strong>Eksport do sieci:</strong> ${eksport} kWh</p>
-        <p><strong>Pokrycie potrzeb:</strong> ${Math.min(100, (autokonsumpcja / zuzycie * 100)).toFixed(1)}%</p>
-      `;
-      
-      document.getElementById('wynik').innerHTML = wynik;
-      document.getElementById('wynik').style.display = 'block';
-      document.getElementById('extra-calc').style.display = 'block';
-    }
+            if (isNaN(zuzycie)) {
+                showNotification("Podaj roczne zużycie energii!");
+                return;
+            }
 
-    function obliczZwrot() {
-      const cenaPradu = parseFloat(document.getElementById('cenaPradu').value);
-      const cenaInstalacji = parseFloat(document.getElementById('cenaInstalacji').value);
-      const trybKalkulacji = document.getElementById('trybKalkulacji').value;
-      
-      if (isNaN(cenaPradu) || isNaN(cenaInstalacji) || cenaPradu <= 0 || cenaInstalacji <= 0) {
-        alert('Proszę wprowadzić poprawne wartości.');
-        return;
-      }
-      
-      // Get production data from previous calculation
-      const wynikElement = document.getElementById('wynik');
-      if (!wynikElement.innerHTML) {
-        alert('Najpierw oblicz parametry instalacji.');
-        return;
-      }
-      
-      // Extract autokonsumpcja from previous calculation (simplified)
-      const zuzycie = parseFloat(document.getElementById('zuzycie').value);
-      const panelWp = parseFloat(document.getElementById('panel').value);
-      const orientacja = parseFloat(document.getElementById('orientacja').value);
-      
-      const mocInstalacji = Math.ceil(zuzycie / 1000) * panelWp / 1000;
-      const iloscPaneli = Math.ceil(mocInstalacji * 1000 / panelWp);
-      const rzeczywistaMoc = iloscPaneli * panelWp / 1000;
-      const produkcjaRoczna = Math.round(rzeczywistaMoc * 1000 * orientacja);
-      
-      const autokonsumpcja = Math.round(produkcjaRoczna * 0.4); // Simplified
-      const eksport = produkcjaRoczna - autokonsumpcja;
-      
-      // Savings calculation
-      const oszczednosciAutokonsumpcja = autokonsumpcja * cenaPradu;
-      const przychodEksport = eksport * cenaPradu * 0.8; // 80% of retail price for export
-      const rocznePrzychody = oszczednosciAutokonsumpcja + przychodEksport;
-      
-      let okresZwrotu;
-      if (trybKalkulacji === 'standardowa') {
-        okresZwrotu = cenaInstalacji / rocznePrzychody;
-      } else {
-        // With 5% annual price increase
-        let suma = 0;
-        let rok = 0;
-        let cenaBiezaca = cenaPradu;
-        
-        while (suma < cenaInstalacji && rok < 30) {
-          rok++;
-          const roczneOszczednosci = autokonsumpcja * cenaBiezaca;
-          const rocznyEksport = eksport * cenaBiezaca * 0.8;
-          suma += roczneOszczednosci + rocznyEksport;
-          cenaBiezaca *= 1.05; // 5% increase
+            // Obliczenie wstępnej mocy instalacji (z marginesem 20%)
+            let mocWstępna = (zuzycie * 1.2) / 1000;
+
+            // Automatyczny wybór paneli: 450 Wp dla instalacji <= 3,68 kWp, 480 Wp powyżej
+            let panel = mocWstępna <= limitJednofazowy ? 450 : 480;
+            let typInstalacji = mocWstępna <= limitJednofazowy ? "jednofazowa" : "trójfazowa";
+
+            // Obliczenie liczby paneli (zaokrąglenie w górę)
+            let liczbaPaneli = Math.ceil((mocWstępna * 1000) / panel);
+            // Rzeczywista moc instalacji na podstawie liczby paneli
+            let mocInstalacji = (liczbaPaneli * panel) / 1000;
+            // Obliczenie rocznej produkcji energii
+            let produkcja = mocInstalacji * 1000 * orientacja;
+            // Obliczenie powierzchni
+            let powierzchnia = liczbaPaneli * powierzchniaPanelu;
+
+            // Dobór pojemności magazynu energii na podstawie mocy instalacji (w kWh)
+            let magazynPojemnosc;
+            if (mocInstalacji <= 5) magazynPojemnosc = 5;
+            else if (mocInstalacji > 5 && mocInstalacji <= 9) magazynPojemnosc = 10;
+            else magazynPojemnosc = 15;
+
+            // Wynik główny
+            let wynik = `
+                <b>Typ instalacji:</b> ${typInstalacji}<br>
+                <b>Liczba paneli:</b> ${liczbaPaneli} x ${panel} Wp<br>
+                <b>Moc instalacji:</b> ${mocInstalacji.toFixed(2)} kWp<br>
+                <b>Szacowana roczna produkcja:</b> ${produkcja.toFixed(0)} kWh<br>
+                <b>Powierzchnia dachu potrzebna:</b> ${powierzchnia.toFixed(1)} m²<br>
+                <b>Magazyn energii:</b> ${magazynPojemnosc} kWh
+            `;
+
+            if (trybMagazynu === 'export') {
+                wynik += "<br><b>Tryb rozliczenia:</b> Eksport energii do sieci";
+            } else {
+                wynik += "<br><b>Tryb rozliczenia:</b> Bez eksportu (tylko zużycie lokalne)";
+            }
+
+            document.getElementById('wynik').innerHTML = wynik;
+            document.getElementById('wynik').style.display = 'block';
+
+            // Pokazanie kalkulatora zwrotu
+            document.getElementById('extra-calc').style.display = 'block';
+            ostatniaProdukcja = produkcja;
         }
-        okresZwrotu = rok;
-      }
-      
-      const wynik = `
-        <h3>Analiza zwrotu inwestycji:</h3>
-        <p><strong>Roczne oszczędności (autokonsumpcja):</strong> ${oszczednosciAutokonsumpcja.toFixed(0)} zł</p>
-        <p><strong>Roczny przychód (eksport):</strong> ${przychodEksport.toFixed(0)} zł</p>
-        <p><strong>Łączne roczne korzyści:</strong> ${rocznePrzychody.toFixed(0)} zł</p>
-        <p><strong>Okres zwrotu:</strong> ${okresZwrotu.toFixed(1)} lat</p>
-        <p><strong>Zysk po 25 latach:</strong> ${(rocznePrzychody * 25 - cenaInstalacji).toFixed(0)} zł</p>
-      `;
-      
-      document.getElementById('extra-result').innerHTML = wynik;
-    }
+
+        function obliczZwrot() {
+            let cenaPradu = parseFloat(document.getElementById('cenaPradu').value);
+            let cenaInstalacji = parseFloat(document.getElementById('cenaInstalacji').value);
+            let trybKalkulacji = document.getElementById('trybKalkulacji').value;
+
+            if (isNaN(cenaPradu) || isNaN(cenaInstalacji) || ostatniaProdukcja === 0) {
+                showNotification("Podaj wszystkie dane do kalkulacji zwrotu!");
+                return;
+            }
+
+            let lata = 0, oszczednosci = 0, wynikZwrotu = "";
+
+            if (trybKalkulacji === "standardowa") {
+                lata = cenaInstalacji / (cenaPradu * ostatniaProdukcja);
+                oszczednosci = cenaPradu * ostatniaProdukcja;
+                wynikZwrotu = `
+                    <b>Szacowany okres zwrotu:</b> ${lata.toFixed(1)} lat<br>
+                    <b>Roczne oszczędności:</b> ${oszczednosci.toFixed(2)} zł
+                `;
+            } else {
+                // Optymistyczna - 5% wzrost ceny prądu rocznie
+                let suma = 0, cena = cenaPradu;
+                while (suma < cenaInstalacji && lata < 50) {
+                    suma += cena * ostatniaProdukcja;
+                    cena *= 1.05;
+                    lata++;
+                }
+                oszczednosci = suma;
+                wynikZwrotu = `
+                    <b>Szacowany okres zwrotu:</b> ${lata} lat<br>
+                    <b>Łączne oszczędności w tym czasie:</b> ${oszczednosci.toFixed(2)} zł
+                `;
+            }
+            document.getElementById('extra-result').innerHTML = wynikZwrotu;
+        }
+
+        // Autokonsumpcja Calculator Functions
+        function obliczAutokonsumpcje() {
+            const produkcja = parseFloat(document.getElementById('produkcja').value);
+            const eksport = parseFloat(document.getElementById('eksport').value);
+            const zuzycieCalkowite = parseFloat(document.getElementById('zuzycie_au').value);
+            const wynik = document.getElementById('wynik-auto');
+
+            if (isNaN(produkcja) || produkcja <= 0) {
+                pokazBlad("Produkcja musi być większa od 0", wynik);
+                return;
+            }
+            if (isNaN(eksport) || eksport < 0) {
+                pokazBlad("Eksport nie może być ujemny", wynik);
+                return;
+            }
+            if (eksport > produkcja) {
+                pokazBlad("Eksport nie może przekraczać produkcji!", wynik);
+                return;
+            }
+
+            const autokonsumpcja = ((produkcja - eksport) / produkcja) * 100;
+            const zuzyte = produkcja - eksport;
+
+            let poziom, sugestia, kolorKlasa;
+            if (autokonsumpcja < 30) {
+                poziom = "NISKA AUTOKONSUMPCJA";
+                sugestia = "Konieczna zmiena nawyków w codziennym użytkowaniu urządzeń energochłonnych - edukacja użytkowo-techniczna. <strong>Proponowane rozwiązanie magazyn energii!</strong>";
+                kolorKlasa = "background: rgba(239, 68, 68, 0.1); border-left-color: #ef4444;";
+            } else if (autokonsumpcja < 60) {
+                poziom = "ŚREDNIA AUTOKONSUMPCJA";
+                sugestia = "Jest dobrze, ale może być lepiej. Rozważ magazyn energii";
+                kolorKlasa = "background: rgba(255, 193, 7, 0.1); border-left-color: #ffc107;";
+            } else {
+                poziom = "WYSOKA AUTOKONSUMPCJA";
+                sugestia = "Świetnie! Maksymalizujesz zyski z instalacji fotowoltaicznej. Monitoruj dalej.";
+                kolorKlasa = "background: rgba(74, 222, 128, 0.1); border-left-color: #4ade80;";
+            }
+
+            wynik.innerHTML = `
+                <div style="font-size: 2.2em; font-weight: 700; color: #4ade80; margin-bottom: 10px;">
+                    ${autokonsumpcja.toFixed(1)}%
+                </div>
+                <div style="font-weight: 600; font-size: 1.3em; margin-bottom: 15px; color: #86efac;">
+                    ${poziom}
+                </div>
+                <div style="font-size: 1.1em; line-height: 1.5; margin-bottom: 20px;">
+                    ${sugestia}
+                </div>
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px; font-size: 1em;">
+                    <div style="text-align: center; padding: 15px; background: rgba(255,255,255,0.1); border-radius: 10px;">
+                        <div style="color: #86efac; font-weight: 600;">Zużyto z PV</div>
+                        <div style="font-size: 1.3em; font-weight: 700; color: #4ade80;">${zuzyte.toFixed(2)} kWh</div>
+                    </div>
+                    <div style="text-align: center; padding: 15px; background: rgba(255,255,255,0.1); border-radius: 10px;">
+                        <div style="color: #86efac; font-weight: 600;">Eksport</div>
+                        <div style="font-size: 1.3em; font-weight: 700; color: #4ade80;">${eksport.toFixed(2)} kWh</div>
+                    </div>
+                </div>
+            `;
+
+            wynik.style.cssText = `
+                display: block;
+                margin-top: 20px;
+                padding: 25px;
+                border-radius: 15px;
+                border-left: 5px solid;
+                font-size: 1.1em;
+                line-height: 1.6;
+                text-align: center;
+                ${kolorKlasa}
+            `;
+
+            // Dodaj informację o całkowitym zużyciu jeśli podane
+            if (!isNaN(zuzycieCalkowite) && zuzycieCalkowite > 0) {
+                const importZSieci = Math.max(0, zuzycieCalkowite - zuzyte);
+                const dodatkoweInfo = `
+                    <div style="margin-top: 20px; padding: 15px; background: rgba(255,255,255,0.05); border-radius: 10px;">
+                        <div style="font-size: 1.1em; font-weight: 600; margin-bottom: 10px; color: #86efac;">Dodatkowe informacje:</div>
+                        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px; font-size: 0.95em;">
+                            <div>Całkowite zużycie: <strong>${zuzycieCalkowite.toFixed(2)} kWh</strong></div>
+                            <div>Import z sieci: <strong>${importZSieci.toFixed(2)} kWh</strong></div>
+                        </div>
+                    </div>
+                `;
+                wynik.innerHTML += dodatkoweInfo;
+            }
+        }
+
+        function pokazBlad(tekst, element) {
+            element.innerHTML = `<strong style="color:#ef4444;">Błąd: ${tekst}</strong>`;
+            element.style.cssText = `
+                display: block;
+                margin-top: 20px;
+                padding: 20px;
+                background: rgba(239, 68, 68, 0.1);
+                border-radius: 15px;
+                border-left: 5px solid #ef4444;
+                font-size: 1.1em;
+                line-height: 1.6;
+                text-align: center;
+            `;
+        }
+
+        // Enter key support for calculators
+        document.addEventListener('keypress', function(e) {
+            if (e.key === 'Enter' && document.activeElement.tagName === 'INPUT') {
+                const currentPage = currentPageStack[currentPageStack.length - 1];
+                if (currentPage === 'calculator') {
+                    oblicz();
+                } else if (currentPage === 'autokonsumpcja') {
+                    obliczAutokonsumpcje();
+                }
+            }
+        });
 
     // Initialize navigation on page load
     document.addEventListener('DOMContentLoaded', function() {
