@@ -400,32 +400,33 @@
             display: block;
         }
 
-        /* Home Button */
-        .home-button {
-            display: inline-block;
-            margin: 30px auto;
-            padding: 15px 30px;
-            background: linear-gradient(135deg, #4ade80 0%, #22c55e 100%);
-            color: #fff;
-            text-decoration: none;
+        /* Home Button - Small button in top right corner */
+        .home-button-nav {
+            position: fixed;
+            top: 90px;
+            right: 30px;
+            padding: 12px 20px;
+            background: rgba(74, 222, 128, 0.2);
+            border: 2px solid #4ade80;
             border-radius: 50px;
+            color: #4ade80;
             font-weight: 700;
-            font-size: 1.2em;
-            transition: all 0.3s ease;
-            box-shadow: 0 10px 20px rgba(74, 222, 128, 0.3);
-            text-align: center;
             cursor: pointer;
-            border: none;
+            transition: all 0.3s ease;
+            z-index: 1000;
+            text-decoration: none;
+            display: none;
+            font-size: 0.9em;
         }
 
-        .home-button:hover {
-            transform: translateY(-3px);
-            box-shadow: 0 15px 30px rgba(74, 222, 128, 0.4);
-            background: linear-gradient(135deg, #22c55e 0%, #16a34a 100%);
+        .home-button-nav:hover {
+            background: #4ade80;
+            color: #0a0e27;
+            transform: translateY(-2px);
         }
 
-        .home-button:active {
-            transform: translateY(-1px);
+        .home-button-nav.active {
+            display: block;
         }
 
         /* Calculator Styles */
@@ -636,6 +637,12 @@
             .next-button {
                 right: 20px;
             }
+            .home-button-nav {
+                top: 70px;
+                right: 20px;
+                padding: 8px 15px;
+                font-size: 0.8em;
+            }
             .stats-grid {
                 grid-template-columns: 1fr 1fr;
                 gap: 15px;
@@ -789,6 +796,7 @@
   <!-- Nawigacja -->
   <a href="#" class="back-button" onclick="goBack()">← Wstecz</a>
   <a href="#" class="next-button" onclick="goNext()">Dalej →</a>
+  <a href="#" class="home-button-nav" onclick="goToHome()">Strona główna</a>
 
   <div class="container">
     <!-- MENU GŁÓWNE -->
@@ -846,9 +854,6 @@
           <li>Skontaktuj się z operatorem sieci dystrybucyjnej</li>
           <li>Sprawdź warunki techniczne przyłączenia</li>
         </ul>
-        <div style="text-align: center; margin-top: 40px;">
-          <button class="home-button" onclick="goToHome()">🏠 Powrót do menu głównego</button>
-        </div>
       </div>
     </div>
 
@@ -876,9 +881,6 @@
           <li>Jaki jest budżet na instalację?</li>
           <li>Czy interesuje Państwa magazyn energii?</li>
         </ul>
-        <div style="text-align: center; margin-top: 40px;">
-          <button class="home-button" onclick="goToHome()">🏠 Powrót do menu głównego</button>
-        </div>
       </div>
     </div>
 
@@ -900,9 +902,6 @@
         <button onclick="obliczAutokonsumpcje()">OBLICZ AUTOKONSUMPCJĘ</button>
 
         <div class="calc-result" id="wynik-auto" style="display: none;"></div>
-      </div>
-      <div style="text-align: center; margin-top: 40px;">
-        <button class="home-button" onclick="goToHome()">🏠 Powrót do menu głównego</button>
       </div>
     </div>
 
@@ -930,9 +929,6 @@
         </ul>
         <h3>Autokonsumpcja</h3>
         <p>Autokonsumpcja to wykorzystanie wyprodukowanej energii bezpośrednio w gospodarstwie domowym. Im wyższa autokonsumpcja, tym większe oszczędności na rachunkach za prąd.</p>
-        <div style="text-align: center; margin-top: 40px;">
-          <button class="home-button" onclick="goToHome()">🏠 Powrót do menu głównego</button>
-        </div>
       </div>
     </div>
 
@@ -986,9 +982,6 @@
           <div class="extra-result" id="extra-result"></div>
         </div>
       </div>
-      <div style="text-align: center; margin-top: 40px;">
-        <button class="home-button" onclick="goToHome()">🏠 Powrót do menu głównego</button>
-      </div>
     </div>
   </div>
 
@@ -1033,12 +1026,20 @@
     function updateNavigationButtons() {
       const backButton = document.querySelector('.back-button');
       const nextButton = document.querySelector('.next-button');
+      const homeButton = document.querySelector('.home-button-nav');
       
       // Show/hide back button
       if (currentPageStack.length > 1) {
         backButton.classList.add('active');
       } else {
         backButton.classList.remove('active');
+      }
+      
+      // Show/hide home button (show on all pages except main menu)
+      if (currentPageStack[currentPageStack.length - 1] !== 'main-menu') {
+        homeButton.classList.add('active');
+      } else {
+        homeButton.classList.remove('active');
       }
       
       // Update next button
