@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+s<!DOCTYPE html>
 <html lang="pl">
 <head>
   <meta charset="UTF-8" />
@@ -830,49 +830,95 @@
     </div>
 
     <!-- CHECKLISTA -->
-    <div id="submenu-checklista" class="content-page">
-      <div class="page-header">
-        <div class="page-title">Checklista</div>
-      </div>
-      <div class="submenu">
-        <div class="submenu-card" onclick="showPage('checklista-start')">
-          <div class="submenu-title">Start</div>
-          <div class="submenu-description"> CHECKLISTA DORADCY TECHNICZNEGO </div>
+<div class="container" id="pdf-content">
+  <div class="page-header">
+    <div class="page-title">CHECKLISTA DORADCY TECHNICZNEGO – ANALIZA I MODERNIZACJA INSTALACJI</div>
+  </div>
+
+  <div class="slide-content">
+    <h3>Wizyta u klienta - pierwsze kroki</h3>
+    <ul>
+      <li>Dane klienta i lokalizacji (adres, kontakt):<br>
+        <input type="text" placeholder="np. Jan Kowalski, ul. Słoneczna 12, 00-000 Warszawa, tel. 600 123 456" />
+      </li>
+      <li>Rodzaj instalacji:
+        <div class="checkbox-group">
+          <label class="checkbox-item"><input type="checkbox"> PV</label>
+          <label class="checkbox-item"><input type="checkbox"> Pompa ciepła</label>
+          <label class="checkbox-item"><input type="checkbox"> Magazyn energii</label>
         </div>
+      </li>
+      <li>Data uruchomienia i wykonawca:<br>
+        <input type="date" /> | <input type="text" placeholder="Nazwa firmy wykonawcy" style="width: 300px;" />
+      </li>
+      <li>Roczna produkcja energii [kWh] (falownik):<br>
+        <input type="text" placeholder="np. 8500" />
+      </li>
+      <li>Roczne zużycie energii w budynku [kWh] / eksport do sieci [kWh] (licznik):<br>
+        <strong>1.8.0</strong> <input type="text" placeholder="Całkowita energia pobrana z sieci" style="width: 180px;" /> kWh &nbsp;&nbsp;
+        <strong>2.8.0</strong> <input type="text" placeholder="Całkowita energia oddana do sieci" style="width: 180px;" /> kWh
+      </li>
+      <li>Ocena autokonsumpcji i bilansu z siecią:<br>
+        <textarea placeholder="np. Autokonsumpcja ok. 35%, eksport 65% produkcji. Potencjał poprawy poprzez magazyn energii."></textarea>
+      </li>
+      <li>Wizualna kontrola paneli/modułów (pęknięcia, zabrudzenia):<br>
+        <textarea placeholder="np. Panele czyste, brak pęknięć, lekkie zabrudzenia ptasie na 3 modułach."></textarea>
+      </li>
+      <li>Kontrola mocowań i konstrukcji nośnej:<br>
+        <textarea placeholder="np. Mocowania stabilne, brak korozji, konstrukcja w dobrym stanie."></textarea>
+      </li>
+      <li>Sprawdzenie przewodów DC/AC, połączeń MC4:<br>
+        <textarea placeholder="np. Wszystkie MC4 szczelne, brak przegrzewania, izolacja OK."></textarea>
+      </li>
+      <li>Stan zabezpieczeń: SPD, RCD, wyłączniki:<br>
+        <textarea placeholder="np. SPD sprawne, RCD testowane – OK, wyłączniki bez śladów przegrzania."></textarea>
+      </li>
+      <li>Odczyt falownika: błędy, produkcja, komunikacja:<br>
+        <textarea placeholder="np. Brak błędów, komunikacja Wi-Fi OK, aktualna produkcja 4.2 kW."></textarea>
+      </li>
+      <li>Pomiar kluczowych parametrów: napięcie, prąd, temperatura zasilania:<br>
+        <input type="text" placeholder="Napięcie DC: 380V" /> | 
+        <input type="text" placeholder="Prąd: 11A" /> | 
+        <input type="text" placeholder="Temp. zasilania: 45°C" />
+      </li>
+      <li>Ocena pracy pompy ciepła: temp. zasilania/powrotu, COP (jeśli dane):<br>
+        <input type="text" placeholder="Zasilanie: 45°C" /> | 
+        <input type="text" placeholder="Powrót: 40°C" /> | 
+        <input type="text" placeholder="COP: 4.2" />
+      </li>
+      <li>Wizualna kontrola uziemienia i ciągłości przewodów ochronnych:<br>
+        <textarea placeholder="np. Uziemienie wizualnie OK, ciągłość PE potwierdzona."></textarea>
+      </li>
+      <li>Ocena możliwości rozbudowy: miejsce, przyłącze, ograniczenia:<br>
+        <textarea placeholder="np. Dach pozwala na +6 paneli, moc przyłącza 25 kW – wystarczająca."></textarea>
+      </li>
+      <li>Wstępna kalkulacja potencjału modernizacji (kWh/rok):<br>
+        <input type="text" placeholder="np. +3200 kWh/rok po dodaniu magazynu 10 kWh" />
+      </li>
+      <li>Rekomendacje: serwis, czyszczenie, wymiana elementów krytycznych:<br>
+        <textarea placeholder="Zalecane: czyszczenie paneli, przegląd SPD za 6 miesięcy, rozważenie magazynu energii."></textarea>
+      </li>
+      <li>Dodatkowa rekomendacja:<br>
+        <textarea placeholder="np. Montaż optymalizatorów na zacienionych modułach."></textarea>
+      </li>
+    </ul>
+
+    <div class="footer">
+      <div class="signature">
+        <strong>Data:</strong> <input type="date" />
+      </div>
+      <div class="signature">
+        <strong>Podpis doradcy:</strong> <input type="text" placeholder="Imię i nazwisko" style="width: 200px;" />
       </div>
     </div>
-    <div id="checklista-start" class="content-page">
-      <div class="page-header"><div class="page-title"> CHECKLISTA DORADCY TECHNICZNEGO – ANALIZA I MODERNIZACJA INSTALACJI </div></div>
-      <div class="slide-content">
-        <h3>Wizyta u klienta - pierwsze kroki</h3>
-        <ul>
-          <li>Dane klienta i lokalizacji (adres, kontakt)</li>
-          <li>Rodzaj instalacji: PV / pompa ciepła / magazyn energii</li>
-          <li>Data uruchomienia i wykonawca</li>
-          <li>Roczna produkcja energii [kWh] ( falownik)</li>
-          <li>Roczne zużycie energii w budynku [kWh] / eksport do sieci [kWh] (licznik)
-              1.8.0 ………………………………………………… (Całkowita ilość energii pobranej z sieci)
-              2.8.0 ………………………………………………… (Całkowita ilość energii oddanej do sieci)</li>
-          <li>Ocena autokonsumpcji i bilansu z siecią </li>
-          <li>Wizualna kontrola paneli/modułów (pęknięcia, zabrudzenia)</li>
-          <li>Kontrola mocowań i konstrukcji nośnej</li>
-          <li>Sprawdzenie przewodów DC/AC, połączeń MC4</li>
-          <li>Stan zabezpieczeń: SPD, RCD, wyłączniki</li>
-          <li>Odczyt falownika: błędy, produkcja, komunikacja</li>
-          <li>Pomiar kluczowych parametrów: napięcie, prąd, temperatura zasilania</li>
-          <li>Ocena pracy pompy ciepła: temp. zasilania/powrotu, COP (jeśli dane)</li>
-          <li>Wizualna kontrola uziemienia i ciągłości przewodów ochronnych</li>
-          <li>Ocena możliwości rozbudowy: miejsce, przyłącze, ograniczenia</li>
-          <li>Wstępna kalkulacja potencjału modernizacji (kWh/rok)</li>
-          <li>Rekomendacje: serwis, czyszczenie, wymiana elementów krytycznych</li>
-          <li>Dodatkowa rekomendacja :</li>
-          <li>Data: ………………………					Podpis: ……………………………</li>
 
+    <p class="note">
+      <strong>Uwaga:</strong> dokument ma charakter kontrolny. Po audycie wprowadź obserwacje i pomiary do systemu.
+    </p>
+  </div>
+</div>
 
-          <li>Uwaga: dokument ma charakter kontrolny. Po audycie wprowadzą obserwacje i pomiary do systemu. </li>
-        </ul>
-      </div>
-    </div>
+<button class="btn" onclick="generatePDF()">Pobierz PDF</button>
 
     <!-- WYWIAD -->
     <div id="submenu-wywiad" class="content-page">
@@ -1321,6 +1367,49 @@
                 text-align: center;
             `;
         }
+    const { jsPDF } = window.jspdf;
+
+  function generatePDF() {
+    const element = document.getElementById('pdf-content');
+    const button = document.querySelector('.btn');
+    button.textContent = 'Generowanie PDF...';
+    button.disabled = true;
+
+    html2canvas(element, {
+      scale: 2,
+      useCORS: true,
+      backgroundColor: '#ffffff'
+    }).then(canvas => {
+      const imgData = canvas.toDataURL('image/png');
+      const pdf = new jsPDF('p', 'mm', 'a4');
+      const imgWidth = 190;
+      const pageHeight = 297;
+      const imgHeight = (canvas.height * imgWidth) / canvas.width;
+      let heightLeft = imgHeight;
+      let position = 10;
+
+      pdf.addImage(imgData, 'PNG', 10, position, imgWidth, imgHeight);
+      heightLeft -= pageHeight - 20;
+
+      while (heightLeft >= 0) {
+        position = heightLeft - imgHeight + 10;
+        pdf.addPage();
+        pdf.addImage(imgData, 'PNG', 10, position, imgWidth, imgHeight);
+        heightLeft -= pageHeight - 20;
+      }
+
+      const today = new Date().toISOString().slice(0,10);
+      pdf.save(`Checklista_Doradcy_${today}.pdf`);
+
+      button.textContent = 'Pobierz PDF';
+      button.disabled = false;
+    }).catch(err => {
+      console.error(err);
+      alert('Błąd podczas generowania PDF. Spróbuj ponownie.');
+      button.textContent = 'Pobierz PDF';
+      button.disabled = false;
+    });
+  }
 
         // Enter key support for calculators
         document.addEventListener('keypress', function(e) {
