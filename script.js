@@ -173,14 +173,14 @@ function generateChecklistaPDF(pdf, data) {
   pdf.setFillColor(240, 253, 244);
   pdf.rect(margin, yPos - 5, contentWidth, 12, 'F');
   pdf.setFontSize(10);
-  pdf.setFont('helvetica', 'bold');
+  pdf.setFont('arial', 'bold');
   pdf.text(`Data wizyty: ${data.dataPodpisu || today}`, margin + 5, yPos + 2);
   yPos += 20;
   
   // Section title
   pdf.setFontSize(13);
   pdf.setTextColor(22, 163, 74);
-  pdf.setFont('helvetica', 'bold');
+  pdf.setFont('arial', 'bold');
   pdf.text('Wizyta u klienta - pierwsze kroki', margin, yPos);
   yPos += 10;
   
@@ -243,7 +243,7 @@ function generateChecklistaPDF(pdf, data) {
   
   yPos += 10;
   pdf.setFontSize(12);
-  pdf.setFont('helvetica', 'bold');
+  pdf.setFont('arial', 'bold');
   pdf.setTextColor(22, 163, 74);
   pdf.text('Podpisy:', margin, yPos);
   yPos += 12;
@@ -270,11 +270,11 @@ function generateChecklistaPDF(pdf, data) {
   // Note section
   pdf.setFillColor(254, 243, 199);
   pdf.rect(margin, yPos - 5, contentWidth, 18, 'F');
-  pdf.setFontSize(9);
-  pdf.setFont('helvetica', 'bold');
+  pdf.setFontSize(8);
+  pdf.setFont('arial', 'bold');
   pdf.setTextColor(146, 64, 14);
   pdf.text('Uwaga: ', margin + 3, yPos + 2);
-  pdf.setFont('helvetica', 'normal');
+  pdf.setFont('arial', 'normal');
   const noteText = 'dokument ma charakter kontrolny. Po spotkaniu wprowadź obserwacje i pomiary do systemu.';
   const noteLines = pdf.splitTextToSize(noteText, contentWidth - 20);
   pdf.text(noteLines, margin + 18, yPos + 2);
