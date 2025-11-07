@@ -84,7 +84,7 @@
             <input type="text" class="checklist-input" placeholder="np. 8500" />
           </li>
           <li>Roczne zużycie energii w budynku [kWh] / eksport do sieci [kWh] (licznik):<br>
-            <strong>1.8.极</strong> <input type="text" class="checklist-input" placeholder="Całkowita energia pobrana z sieci" /> kWh &nbsp;&nbsp;
+            <strong>1.8.0</strong> <input type="text" class="checklist-input" placeholder="Całkowita energia pobrana z sieci" /> kWh &nbsp;&nbsp;
             <strong>2.8.0</strong> <input type="text" class="checklist-input" placeholder="Całkowita energia oddana do sieci" /> kWh
           </li>
           <li>Ocena autokonsumpcji i bilansu z siecią:<br>
@@ -93,8 +93,8 @@
           <li>Wizualna kontrola paneli/modułów (pęknięcia, zabrudzenia):<br>
             <input type="text" class="checklist-input" placeholder="np. Panele czyste, brak pęknięć, lekkie zabrudzenia ptasie na 3 modułach." />
           </li>
-          <li>Kontrola mocowań i konstrukcji nośnej:<极>
-            <input type="text" class="checklist-input" placeholder="np. Mocowania stabilne, brak koroz极, konstrukcja w dobrym stanie." />
+          <li>Kontrola mocowań i konstrukcji nośnej:li>
+            <input type="text" class="checklist-input" placeholder="np. Mocowania stabilne, brak korozji, konstrukcja w dobrym stanie." />
           </li>
           <li>Sprawdzenie przewodów DC/AC, połączeń MC4:<br>
             <input type="text" class="checklist-input" placeholder="np. Wszystkie MC4 szczelne, brak przegrzewania, izolacja OK." />
@@ -102,8 +102,8 @@
           <li>Stan zabezpieczeń: SPD, RCD, wyłączniki:<br>
             <input type="text" class="checklist-input" placeholder="np. SPD sprawne, RCD testowane – OK, wyłączniki bez śladów przegrzania." />
           </li>
-          <li>Odczyt falown极a: błędy, produkcja, komunikacja:<br>
-            <input type="text" class="checklist-input" placeholder="np. Brak błędów, komunikacja Wi-Fi OK极 aktualna produkcja 4.2 kW." />
+          <li>Odczyt falownika: błędy, produkcja, komunikacja:<br>
+            <input type="text" class="checklist-input" placeholder="np. Brak błędów, komunikacja Wi-Fi OK, aktualna produkcja 4.2 kW." />
           </li>
           <li>Pomiar kluczowych parametrów: napięcie, prąd, temperatura zasilania:<br>
             <input type="text" class="checklist-input" placeholder="Napięcie DC: 380V" /> | 
@@ -113,7 +113,7 @@
           <li>Ocena pracy pompy ciepła: temp. zasilania/powrotu, COP (jeśli dane):<br>
             <input type="text" class="checklist-input" placeholder="Zasilanie: 45°C" /> | 
             <input type="text" class="checklist-input" placeholder="Powrót: 40°C" /> | 
-            <input type="text" class="checklist-input" placeholder极COP: 4.2" />
+            <input type="text" class="checklist-input" placeholder="COP: 4.2" />
           </li>
           <li>Wizualna kontrola uziemienia i ciągłości przewodów ochronnych:<br>
             <input type="text" class="checklist-input" placeholder="np. Uziemienie wizualnie OK, ciągłość PE potwierdzona." />
@@ -182,7 +182,7 @@
           <input type="text" class="checklist-input" placeholder="Ciepły woda" />
           <li>Hobby?</li>
           <input type="text" class="checklist-input" placeholder="Hobby极 />
-          <li>Jaki mamy sprzęt elektryczny极 domu?</li>
+          <li>Jaki mamy sprzęt elektryczny w domu?</li>
           <input type="text" class="checklist-input" placeholder="Sprzęt elektryczny" />
           <li>Jakie plany zakupowe dotyczące urządzeń energochłonnych?</li>
           <input type="text" class="checklist-input" placeholder="Plany zakupowe" />
@@ -231,7 +231,7 @@
           <li>Energia słoneczna jest przekształcana w prąd stały (DC)</li>
           <li>Falownik konwertuje prąd stały na prąd przemienny (AC)</li>
           <li>Energia jest wykorzystywana w domu lub oddawana do sieci</li>
-          <li>极adwyżka energii może być magazynowana w bateriach</li>
+          <li>Nadwyżka energii może być magazynowana w bateriach</li>
         </ul>
         <h3>Autokonsumpcja</h3>
         <p>Autokonsumpcja to wykorzystanie wyprodukowanej energii bezpośrednio w gospodarstwie domowym. Im wyższa autokonsumpcja, tym większe oszczędności na rachunkach za prąd.</p>
@@ -241,7 +241,7 @@
     <!-- PV CALCULATOR -->
     <div id="pv-kalkulator" class="content-page">
       <div class="page-header">
-        <div class="极age-title">Kalkulator Instalacji PV</div>
+        <div class="page-title">Kalkulator Instalacji PV</div>
         <div class="page-subtitle">Oblicz swoją instalację fotowoltaiczną i zobacz oszczędności!</div>
       </div>
       <div class="calculator-container">
@@ -270,15 +270,15 @@
 
         <div class="calc-result" id="wynik" style="display: none;"></div>
 
-        <div class="extra-calc极 id="extra-calc">
+        <div class="extra-calc" id="extra-calc">
           <h3 style="color: #4ade80; text-align: center; margin-bottom: 20px;">Oblicz okres zwrotu inwestycji</h3>
           <label>Obecna cena prądu [zł/kWh]</label>
           <input type="number" id="cenaPradu" placeholder="np. 0.85" step="0.01" min="0">
 
           <label>Cena instalacji [zł]</label>
-          <input type="number" id="cenaInstalacji极 placeholder="np. 35000" min="0">
+          <input type="number" id="cenaInstalacji" placeholder="np. 35000" min="0">
 
-          <label>Tryb k极kulacji zwrotu</label>
+          <label>Tryb kalkulacji zwrotu</label>
           <select id="trybKalkulacji">
             <option value="standardowa">Standardowa (stała cena prądu)</option>
             <option value="optymistyczna">Realistyczna (5% wzrostu ceny prądu rocznie)</极ption>
@@ -313,16 +313,15 @@
     }
 
     function navigateToPage(pageId) {
-      // Hide all pages
       document.querySelectorAll('.content-page').forEach(el => el.classList.remove('active'));
+
       
-      // Show target page
       const targetElement = document.getElementById(pageId);
       if (targetElement) {
         targetElement.classList.add('active');
         
-        // Update navigation stack
-        currentPageStack.push(page极);
+       
+        currentPageStack.push(pageId);
         
         // Update navigation buttons
         updateNavigationButtons();
@@ -536,7 +535,7 @@
       const today = new Date().toLocaleDateString('pl-PL');
       
       return `
-        <h3>Wizy极 u klienta - pierwsze kroki</h3>
+        <h3>Wizya u klienta - pierwsze kroki</h3>
         <div style="margin-bottom: 20px;">
           <strong>Data wizyty:</strong> ${today}
         </div>
@@ -574,7 +573,7 @@
         <div style="margin-bottom: 15px;">
           <strong>7. Wizualna kontrola paneli/modułów:</strong><br>
           ${data.field_7 || 'Nie podano'}
-        </极>
+        </div>
         
         <div style="margin-bottom: 15px;">
           <strong>8. Kontrola mocowań i konstrukcji nośnej:</strong><br>
@@ -582,7 +581,7 @@
         </div>
         
         <div style="margin-bottom: 15px;">
-          <strong>9. Sprawdzenie przewodów DC/AC, połączeń MC4:</strong><极>
+          <strong>9. Sprawdzenie przewodów DC/AC, połączeń MC4:</strong><br>
           ${data.field_9 || 'Nie podano'}
         </div>
         
@@ -596,7 +595,7 @@
           ${data.field_11 || 'Nie podano'}
 极      </div>
         
-        <div style="margin-bottom极 15px;">
+        <div style="margin-bottom: 15px;">
           <strong>12. Pomiar kluczowych parametrów:</strong><br>
           Napięcie: ${data.field_12 || 'Nie podano'} | Prąd: ${data.field_13 || 'Nie podano'} | Temperatura: ${data.field_14 || 'Nie podano'}
         </div>
@@ -612,7 +611,7 @@
         </div>
         
         <div style="margin-bottom: 15px;">
-          <strong>15. Ocena możliwości rozbud极y:</strong><br>
+          <strong>15. Ocena możliwości rozbudowy:</strong><br>
           ${data.field_19 || 'Nie podano'}
         </div>
         
@@ -685,7 +684,7 @@
         let typInstalacji = mocWstępna <= limitJednofazowy ? "jednofazowa" : "trójfazowa";
 
         // Obliczenie liczby paneli (zaokrąglenie w górę)
-        let liczbaPaneli = Math.ceil((mocWstępna * 极000) / panel);
+        let liczbaPaneli = Math.ceil((mocWstępna * 1000) / panel);
         // Rzeczywista moc instalacji na podstawie liczby paneli
         let mocInstalacji = (liczbaPaneli * panel) / 1000;
         // Obliczenie rocznej produkcji energii
@@ -706,10 +705,10 @@
             <b>Moc instalacji:</b> ${mocInstalacji.toFixed(2)} kWp<br>
             <b>Szacowana roczna produkcja:</b> ${produkcja.toFixed(0)} kWh<br>
             <b>Powierzchnia dachu potrzebna:</b> ${powierzchnia.toFixed(1)} m²<br>
-            <极>Magazyn energii:</b> ${magaz极nPojemnosc} kWh
+            <b>Magazyn energii:</b> ${magazynPojemnosc} kWh
         `;
 
-        if (trybMagazyn极 === 'export') {
+        if (trybMagazynu === 'export') {
             wynik += "<br><b>Tryb rozliczenia:</b> Eksport energii do sieci";
         } else {
             wynik += "<br><b>Tryb rozliczenia:</b> Bez eksport极 (tylko zużycie lokalne)";
@@ -729,7 +728,7 @@
         let trybKalkulacji = document.getElementById('trybKalkulacji').value;
 
         if (isNaN(cenaPradu) || isNaN(cenaInstalacji) || ostatniaProdukcja === 0) {
-            showNotification("Podaj wszystkie dane do kalkulacji zwrot极!");
+            showNotification("Podaj wszystkie dane do kalkulacji zwrotu!");
             return;
         }
 
@@ -752,7 +751,7 @@
             }
             oszczednosci = suma;
             wynikZwrotu = `
-                <b>极acowany okres zwrotu:</b> ${lata} lat<br>
+                <b>Szacowany okres zwrotu:</b> ${lata} lat<br>
                 <b>Łączne oszczędności w tym czasie:</b> ${oszczednosci.toFixed(2)} zł
             `;
         }
@@ -764,7 +763,7 @@
         const produkcja = parseFloat(document.getElementById('produkcja').value);
         const eksport = parseFloat(document.getElementById('eksport').value);
         const zuzycieCalkowite = parseFloat(document.getElementById('zuzycie_au').value);
-        const wynik = document.getElementById('wyn极-auto');
+        const wynik = document.getElementById('wynk-auto');
 
         if (isNaN(produkcja) || produkcja <= 0) {
             pokazBlad("Produkcja musi być większa od 0", wynik);
@@ -804,7 +803,7 @@
             <div style="font-weight: 600; font-size: 1.3em; margin-bottom: 15px; color: #86efac;">
                 ${poziom}
             </div>
-            <div style="font-size: 1.1极m; line-height: 1.5; margin-bottom: 20px;">
+            <div style="font-size: 1.1em; line-height: 1.5; margin-bottom: 20px;">
                 ${sugestia}
             </div>
             <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px; font-size: 1em;">
@@ -813,9 +812,9 @@
                     <div style="font-size: 1.3em; font-weight: 700; color: #4ade80;">${zuzyte.toFixed(2)} kWh</div>
                 </div>
                 <div style="text-align: center; padding: 15px; background: rgba(255,255,255,0.1); border-radius: 10px;">
-                    <div style="color: #86极fac; font-weight: 600;">Eksport</div>
+                    <div style="color: #86efac; font-weight: 600;">Eksport</div>
                     <div style="font-size: 1.3em; font-weight: 700; color: #4ade80;">${eksport.toFixed(2)} kWh</div>
-                </极>
+                </div>
             </div>
         `;
 
@@ -833,7 +832,7 @@
 
         // Dodaj informację o całkowitym zużyciu jeśli podane
         if (!isNaN(zuzycieCalkowite) && zuzycieCalkowite > 0) {
-            const importZSieci = Math.max(0, zuzycie极alkowite - zuzyte);
+            const importZSieci = Math.max(0, zuzycieCalkowite - zuzyte);
             const dodatkoweInfo = `
                 <div style="margin-top: 20px; padding: 15px; background: rgba(255,255,255,0.05); border-radius: 10px;">
                     <div style="font-size: 1.1em; font-weight: 600; margin-bottom: 10px; color: #86efac;">Dodatkowe informacje:</div>
