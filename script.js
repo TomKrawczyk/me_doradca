@@ -198,12 +198,12 @@ function generateChecklistaPDF(data) {
     content.push({
       text: item.label,
       style: 'itemLabel',
-      margin: [0, 5, 0, 2]
+      margin: [0, 8, 0, 3]
     });
     content.push({
       text: item.value,
       style: 'itemValue',
-      margin: [10, 0, 0, 5]
+      margin: [10, 0, 0, 8]
     });
     content.push({
       canvas: [{ type: 'line', x1: 0, y1: 0, x2: 515, y2: 0, lineWidth: 0.5, lineColor: '#d1d5db' }],
@@ -215,31 +215,32 @@ function generateChecklistaPDF(data) {
   content.push({
     text: 'Podpisy:',
     style: 'sectionTitle',
-    margin: [0, 15, 0, 10]
+    margin: [0, 20, 0, 15],
+    pageBreak: 'before'
   });
   
   content.push({
     columns: [
-      { text: `Data: ${data.dataPodpisu || today}`, style: 'normal' },
-      { text: `Podpis klienta: ${data.podpisKlienta || ''}`, style: 'normal' }
-    ],
-    margin: [0, 0, 0, 10]
-  });
-  
-  content.push({
-    columns: [
-      { text: '_____________________', alignment: 'left' },
-      { text: '_____________________', alignment: 'center' }
-    ],
-    margin: [0, 0, 0, 3]
-  });
-  
-  content.push({
-    columns: [
-      { text: 'Podpis doradcy', style: 'small', alignment: 'center' },
-      { text: 'Podpis klienta', style: 'small', alignment: 'center' }
+      { text: `Data: ${data.dataPodpisu || today}`, style: 'normal', width: '50%' },
+      { text: `Podpis klienta: ${data.podpisKlienta || ''}`, style: 'normal', width: '50%' }
     ],
     margin: [0, 0, 0, 15]
+  });
+  
+  content.push({
+    columns: [
+      { text: '_____________________', alignment: 'center', width: '50%' },
+      { text: '_____________________', alignment: 'center', width: '50%' }
+    ],
+    margin: [0, 0, 0, 5]
+  });
+  
+  content.push({
+    columns: [
+      { text: 'Podpis doradcy', style: 'small', alignment: 'center', width: '50%' },
+      { text: 'Podpis klienta', style: 'small', alignment: 'center', width: '50%' }
+    ],
+    margin: [0, 0, 0, 20]
   });
   
   // Note
@@ -254,45 +255,48 @@ function generateChecklistaPDF(data) {
   
   return {
     content: content,
+    pageSize: 'A4',
+    pageMargins: [40, 60, 40, 60],
     styles: {
       header: {
-        fontSize: 18,
+        fontSize: 20,
         bold: true,
         color: '#16a34a'
       },
       subheader: {
-        fontSize: 11,
+        fontSize: 12,
         color: '#16a34a'
       },
       dateBox: {
-        fontSize: 10,
+        fontSize: 11,
         bold: true,
         fillColor: '#f0fdf4',
         margin: [0, 5, 0, 5]
       },
       sectionTitle: {
-        fontSize: 13,
+        fontSize: 14,
         bold: true,
         color: '#16a34a'
       },
       itemLabel: {
-        fontSize: 9,
+        fontSize: 10,
         bold: true,
         color: '#166534'
       },
       itemValue: {
-        fontSize: 9,
-        color: '#374151'
+        fontSize: 10,
+        color: '#374151',
+        lineHeight: 1.3
       },
       normal: {
         fontSize: 10
       },
       small: {
-        fontSize: 8,
+        fontSize: 9,
         color: '#6b7280'
       },
       note: {
-        fontSize: 9,
+        fontSize: 10,
         fillColor: '#fef3c7',
         color: '#92400e',
         margin: [5, 5, 5, 5]
@@ -349,13 +353,13 @@ function generateWywiadPDF(data) {
     content.push({
       text: item.q,
       style: 'question',
-      margin: [0, 5, 0, 3]
+      margin: [0, 8, 0, 5]
     });
     content.push({
       text: item.a,
       style: 'answer',
       fillColor: '#f9fafb',
-      margin: [0, 0, 0, 8]
+      margin: [0, 0, 0, 10]
     });
     content.push({
       canvas: [{ type: 'line', x1: 0, y1: 0, x2: 515, y2: 0, lineWidth: 0.5, lineColor: '#e5e7eb' }],
@@ -367,32 +371,32 @@ function generateWywiadPDF(data) {
   content.push({
     text: 'Potwierdzenie:',
     style: 'sectionTitle',
-    margin: [0, 15, 0, 10]
+    margin: [0, 20, 0, 15]
   });
   
   content.push({
     text: `Data: ${data.data || today}`,
     style: 'normal',
-    margin: [0, 0, 0, 5]
+    margin: [0, 0, 0, 10]
   });
   
   content.push({
     text: `Podpis klienta: ${data.podpisKlienta || ''}`,
     style: 'normal',
-    margin: [0, 0, 0, 10]
+    margin: [0, 0, 0, 15]
   });
   
   content.push({
     text: '________________________________',
     alignment: 'left',
-    margin: [0, 0, 0, 3]
+    margin: [0, 0, 0, 5]
   });
   
   content.push({
     text: 'Podpis klienta',
     style: 'small',
     alignment: 'left',
-    margin: [0, 0, 0, 15]
+    margin: [0, 0, 0, 20]
   });
   
   // Note
@@ -407,46 +411,49 @@ function generateWywiadPDF(data) {
   
   return {
     content: content,
+    pageSize: 'A4',
+    pageMargins: [40, 60, 40, 60],
     styles: {
       header: {
-        fontSize: 18,
+        fontSize: 20,
         bold: true,
         color: '#16a34a'
       },
       subheader: {
-        fontSize: 11,
+        fontSize: 12,
         color: '#16a34a'
       },
       dateBox: {
-        fontSize: 10,
+        fontSize: 11,
         bold: true,
         fillColor: '#f0fdf4',
         margin: [0, 5, 0, 5]
       },
       sectionTitle: {
-        fontSize: 13,
+        fontSize: 14,
         bold: true,
         color: '#16a34a'
       },
       question: {
-        fontSize: 10,
+        fontSize: 11,
         bold: true,
         color: '#166534'
       },
       answer: {
-        fontSize: 9,
+        fontSize: 10,
         color: '#374151',
-        margin: [5, 5, 5, 5]
+        margin: [5, 5, 5, 5],
+        lineHeight: 1.3
       },
       normal: {
         fontSize: 10
       },
       small: {
-        fontSize: 8,
+        fontSize: 9,
         color: '#6b7280'
       },
       note: {
-        fontSize: 9,
+        fontSize: 10,
         fillColor: '#fef3c7',
         color: '#92400e',
         margin: [5, 5, 5, 5]
