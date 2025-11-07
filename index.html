@@ -65,76 +65,76 @@
         <h3>Wizyta u klienta - pierwsze kroki</h3>
         <ul>
          <li>Dane klienta i lokalizacji (adres, kontakt):<br>
-            <input type="text" class="checklist-input" placeholder="np. Jan Kowalski, ul. Słoneczna 12, 00-000 Warszawa, tel. 600 123 456" />
+            <input type="text" class="checklist-input" id="dane-klienta" placeholder="np. Jan Kowalski, ul. Słoneczna 12, 00-000 Warszawa, tel. 600 123 456" />
          </li>
           <li>Rodzaj instalacji:
             <div class="checkbox-group">
-              <label class="checkbox-item"><input type="checkbox"> PV</label>
-              <label class="checkbox-item"><input type="checkbox"> Pompa ciepła</label>
-              <label class="checkbox-item"><input type="checkbox"> Magazyn energii</label>
+              <label class="checkbox-item"><input type="checkbox" id="pv-checkbox"> PV</label>
+              <label class="checkbox-item"><input type="checkbox" id="pompa-checkbox"> Pompa ciepła</label>
+              <label class="checkbox-item"><input type="checkbox" id="magazyn-checkbox"> Magazyn energii</label>
             </div>
           </li>
           <li>Data uruchomienia i wykonawca:<br>
-            <input type="date" class="checklist-input" /> | <input type="text" class="checklist-input" placeholder="Nazwa firma wykonawcy" />
+            <input type="date" class="checklist-input" id="data-uruchomienia" /> | <input type="text" class="checklist-input" id="wykonawca" placeholder="Nazwa firma wykonawcy" />
           </li>
           <li>Roczna produkcja energii [kWh] (falownik):<br>
-            <input type="text" class="checklist-input" placeholder="np. 8500" />
+            <input type="text" class="checklist-input" id="produkcja-energii" placeholder="np. 8500" />
           </li>
           <li>Roczne zużycie energii w budynku [kWh] / eksport do sieci [kWh] (licznik):<br>
-            <strong>1.8.0</strong> <input type="text" class="checklist-input" placeholder="Całkowita energia pobrana z sieci" /> kWh &nbsp;&nbsp;
-            <strong>2.8.0</strong> <input type="text" class="checklist-input" placeholder="Całkowita energia oddana do sieci" /> kWh
+            <strong>1.8.0</strong> <input type="text" class="checklist-input" id="energia-pobrana" placeholder="Całkowita energia pobrana z sieci" /> kWh &nbsp;&nbsp;
+            <strong>2.8.0</strong> <input type="text" class="checklist-input" id="energia-oddana" placeholder="Całkowita energia oddana do sieci" /> kWh
           </li>
           <li>Ocena autokonsumpcji i bilansu z siecią:<br>
-            <input type="text" class="checklist-input" placeholder="np. Autokonsumpcja ok. 35%, eksport 65% produkcji. Potencjał poprawy poprzez magazyn energii." />
+            <input type="text" class="checklist-input" id="ocena-autokonsumpcji" placeholder="np. Autokonsumpcja ok. 35%, eksport 65% produkcji. Potencjał poprawy poprzez magazyn energii." />
           </li>
           <li>Wizualna kontrola paneli/modułów (pęknięcia, zabrudzenia):<br>
-            <input type="text" class="checklist-input" placeholder="np. Panele czyste, brak pęknięć, lekkie zabrudzenia ptasie na 3 modułach." />
+            <input type="text" class="checklist-input" id="kontrola-paneli" placeholder="np. Panele czyste, brak pęknięć, lekkie zabrudzenia ptasie na 3 modułach." />
           </li>
           <li>Kontrola mocowań i konstrukcji nośnej:<br>
-            <input type="text" class="checklist-input" placeholder="np. Mocowania stabilne, brak korozji, konstrukcja w dobrym stanie." />
+            <input type="text" class="checklist-input" id="kontrola-mocowan" placeholder="np. Mocowania stabilne, brak korozji, konstrukcja w dobrym stanie." />
           </li>
           <li>Sprawdzenie przewodów DC/AC, połączeń MC4:<br>
-            <input type="text" class="checklist-input" placeholder="np. Wszystkie MC4 szczelne, brak przegrzewania, izolacja OK." />
+            <input type="text" class="checklist-input" id="kontrola-przewodow" placeholder="np. Wszystkie MC4 szczelne, brak przegrzewania, izolacja OK." />
           </li>
           <li>Stan zabezpieczeń: SPD, RCD, wyłączniki:<br>
-            <input type="text" class="checklist-input" placeholder="np. SPD sprawne, RCD testowane – OK, wyłączniki bez śladów przegrzania." />
+            <input type="text" class="checklist-input" id="stan-zabezpieczen" placeholder="np. SPD sprawne, RCD testowane – OK, wyłączniki bez śladów przegrzania." />
           </li>
           <li>Odczyt falownika: błędy, produkcja, komunikacja:<br>
-            <input type="text" class="checklist-input" placeholder="np. Brak błędów, komunikacja Wi-Fi OK, aktualna produkcja 4.2 kW." />
+            <input type="text" class="checklist-input" id="odczyt-falownika" placeholder="np. Brak błędów, komunikacja Wi-Fi OK, aktualna produkcja 4.2 kW." />
           </li>
           <li>Pomiar kluczowych parametrów: napięcie, prąd, temperatura zasilania:<br>
-            <input type="text" class="checklist-input" placeholder="Napięcie DC: 380V" /> | 
-            <input type="text" class="checklist-input" placeholder="Prąd: 11A" /> | 
-            <input type="text" class="checklist-input" placeholder="Temp. zasilania: 45°C" />
+            <input type="text" class="checklist-input" id="napiecie" placeholder="Napięcie DC: 380V" /> | 
+            <input type="text" class="checklist-input" id="prad" placeholder="Prąd: 11A" /> | 
+            <input type="text" class="checklist-input" id="temperatura" placeholder="Temp. zasilania: 45°C" />
           </li>
           <li>Ocena pracy pompy ciepła: temp. zasilania/powrotu, COP (jeśli dane):<br>
-            <input type="text" class="checklist-input" placeholder="Zasilanie: 45°C" /> | 
-            <input type="text" class="checklist-input" placeholder="Powrót: 40°C" /> | 
-            <input type="text" class="checklist-input" placeholder="COP: 4.2" />
+            <input type="text" class="checklist-input" id="temp-zasilania" placeholder="Zasilanie: 45°C" /> | 
+            <input type="text" class="checklist-input" id="temp-powrotu" placeholder="Powrót: 40°C" /> | 
+            <input type="text" class="checklist-input" id="cop" placeholder="COP: 4.2" />
           </li>
           <li>Wizualna kontrola uziemienia i ciągłości przewodów ochronnych:<br>
-            <input type="text" class="checklist-input" placeholder="np. Uziemienie wizualnie OK, ciągłość PE potwierdzona." />
+            <input type="text" class="checklist-input" id="kontrola-uziemienia" placeholder="np. Uziemienie wizualnie OK, ciągłość PE potwierdzona." />
           </li>
           <li>Ocena możliwości rozbudowy: miejsce, przyłącze, ograniczenia:<br>
-            <input type="text" class="checklist-input" placeholder="np. Dach pozwala na +6 paneli, moc przyłącza 25 kW – wystarczająca." />
+            <input type="text" class="checklist-input" id="mozliwosci-rozbudowy" placeholder="np. Dach pozwala na +6 paneli, moc przyłącza 25 kW – wystarczająca." />
           </li>
           <li>Wstępna kalkulacja potencjału modernizacji (kWh/rok):<br>
-            <input type="text" class="checklist-input" placeholder="np. +3200 kWh/rok po dodaniu magazynu 10 kWh" />
+            <input type="text" class="checklist-input" id="kalkulacja-potencjalu" placeholder="np. +3200 kWh/rok po dodaniu magazynu 10 kWh" />
           </li>
           <li>Rekomendacje: serwis, czyszczenie, wymiana elementów krytycznych:<br>
-            <input type="text" class="checklist-input" placeholder="Zalecane: czyszczenie paneli, przegląd SPD za 6 miesięcy, rozważenie magazynu energii." />
+            <input type="text" class="checklist-input" id="rekomendacje" placeholder="Zalecane: czyszczenie paneli, przegląd SPD za 6 miesięcy, rozważenie magazynu energii." />
           </li>
           <li>Dodatkowa rekomendacja:<br>
-            <input type="text" class="checklist-input" placeholder="np. Montaż optymalizatorów na zacienionych modułach." />
+            <input type="text" class="checklist-input" id="dodatkowa-rekomendacja" placeholder="np. Montaż optymalizatorów na zacienionych modułach." />
           </li>
         </ul>
 
         <div class="footer">
           <div class="signature">
-            <strong>Data:</strong> <input type="date" />
+            <strong>Data:</strong> <input type="date" id="data-podpisu" />
           </div>
           <div class="signature">
-            <strong>Podpis klienta:</strong> <input type="text" placeholder="Imię i nazwisko" style="width: 200px;" />
+            <strong>Podpis klienta:</strong> <input type="text" id="podpis-klienta" placeholder="Imię i nazwisko" style="width: 200px;" />
           </div>
         </div>
 
@@ -146,8 +146,8 @@
       </div>
     </div>
 
-    <div id="pdf-content">
-      <h1>CHECKLISTA DORADCY TECHNICZNEGO – ANALIZA I MODERNIZACJA INSTALACJI</h1>
+    <!-- Hidden PDF content for generation -->
+    <div id="pdf-content" style="display: none; position: absolute; left: -9999px; width: 794px; background: white; padding: 40px; font-family: Arial, sans-serif; font-size: 12px; line-height: 1.4; color: black;">
       <div id="pdf-form-content"></div>
     </div>
 
@@ -400,33 +400,40 @@
         const pdfElement = document.getElementById('pdf-content');
         const pdfFormContent = document.getElementById('pdf-form-content');
         pdfFormContent.innerHTML = pdfContent;
-        pdfElement.classList.add('generating');
+        
+        // Show the PDF content temporarily for rendering
+        pdfElement.style.display = 'block';
+        pdfElement.style.position = 'absolute';
+        pdfElement.style.left = '-9999px';
         
         html2canvas(pdfElement, {
-          scale: 2,
+          scale: 1.5,
           useCORS: true,
           backgroundColor: '#ffffff',
           width: 794,
-          height: 1123
+          height: null, // Let it calculate height automatically
+          logging: false
         }).then(canvas => {
           const { jsPDF } = window.jspdf;
           const pdf = new jsPDF('p', 'mm', 'a4');
           
           const imgData = canvas.toDataURL('image/png');
           const imgWidth = 190;
-          const pageHeight = 297;
+          const pageHeight = 277; // A4 height minus margins
           const imgHeight = (canvas.height * imgWidth) / canvas.width;
           let heightLeft = imgHeight;
           let position = 10;
 
+          // Add first page
           pdf.addImage(imgData, 'PNG', 10, position, imgWidth, imgHeight);
-          heightLeft -= pageHeight - 20;
+          heightLeft -= pageHeight;
 
+          // Add additional pages if needed
           while (heightLeft >= 0) {
             position = heightLeft - imgHeight + 10;
             pdf.addPage();
             pdf.addImage(imgData, 'PNG', 10, position, imgWidth, imgHeight);
-            heightLeft -= pageHeight - 20;
+            heightLeft -= pageHeight;
           }
 
           const today = new Date().toISOString().slice(0, 10);
@@ -434,7 +441,8 @@
           
           pdf.save(filename);
           
-          pdfElement.classList.remove('generating');
+          // Hide PDF content again
+          pdfElement.style.display = 'none';
           
           button.textContent = originalText;
           button.disabled = false;
@@ -444,7 +452,7 @@
         }).catch(error => {
           console.error('Error generating PDF:', error);
           
-          pdfElement.classList.remove('generating');
+          pdfElement.style.display = 'none';
           
           button.textContent = originalText;
           button.disabled = false;
@@ -463,25 +471,42 @@
     }
 
     function collectFormData() {
-      const checklistSection = document.getElementById('checklista-start');
-      const inputs = checklistSection.querySelectorAll('input, textarea');
-      const checkboxes = checklistSection.querySelectorAll('input[type="checkbox"]');
-      
       const data = {};
       
-      inputs.forEach((input, index) => {
-        if (input.type !== 'checkbox') {
-          data[`field_${index}`] = input.value || input.placeholder || '';
-        }
-      });
+      // Collect all form data with proper IDs
+      data.daneKlienta = document.getElementById('dane-klienta')?.value || '';
       
+      // Collect checkbox data
       const selectedTypes = [];
-      checkboxes.forEach(checkbox => {
-        if (checkbox.checked) {
-          selectedTypes.push(checkbox.parentElement.textContent.trim());
-        }
-      });
-      data.installationTypes = selectedTypes.join(', ') || 'Nie wybrano';
+      if (document.getElementById('pv-checkbox')?.checked) selectedTypes.push('PV');
+      if (document.getElementById('pompa-checkbox')?.checked) selectedTypes.push('Pompa ciepła');
+      if (document.getElementById('magazyn-checkbox')?.checked) selectedTypes.push('Magazyn energii');
+      data.rodzajInstalacji = selectedTypes.join(', ') || 'Nie wybrano';
+      
+      data.dataUruchomienia = document.getElementById('data-uruchomienia')?.value || '';
+      data.wykonawca = document.getElementById('wykonawca')?.value || '';
+      data.produkcjaEnergii = document.getElementById('produkcja-energii')?.value || '';
+      data.energiaPobrana = document.getElementById('energia-pobrana')?.value || '';
+      data.energiaOddana = document.getElementById('energia-oddana')?.value || '';
+      data.ocenaAutokonsumpcji = document.getElementById('ocena-autokonsumpcji')?.value || '';
+      data.kontrolaPaneli = document.getElementById('kontrola-paneli')?.value || '';
+      data.kontrolaMocowan = document.getElementById('kontrola-mocowan')?.value || '';
+      data.kontrolaPrzewodow = document.getElementById('kontrola-przewodow')?.value || '';
+      data.stanZabezpieczen = document.getElementById('stan-zabezpieczen')?.value || '';
+      data.odczytFalownika = document.getElementById('odczyt-falownika')?.value || '';
+      data.napiecie = document.getElementById('napiecie')?.value || '';
+      data.prad = document.getElementById('prad')?.value || '';
+      data.temperatura = document.getElementById('temperatura')?.value || '';
+      data.tempZasilania = document.getElementById('temp-zasilania')?.value || '';
+      data.tempPowrotu = document.getElementById('temp-powrotu')?.value || '';
+      data.cop = document.getElementById('cop')?.value || '';
+      data.kontrolaUziemienia = document.getElementById('kontrola-uziemienia')?.value || '';
+      data.mozliwosciRozbudowy = document.getElementById('mozliwosci-rozbudowy')?.value || '';
+      data.kalkulacjaPotencjalu = document.getElementById('kalkulacja-potencjalu')?.value || '';
+      data.rekomendacje = document.getElementById('rekomendacje')?.value || '';
+      data.dodatkowaRekomendacja = document.getElementById('dodatkowa-rekomendacja')?.value || '';
+      data.dataPodpisu = document.getElementById('data-podpisu')?.value || '';
+      data.podpisKlienta = document.getElementById('podpis-klienta')?.value || '';
       
       return data;
     }
@@ -490,112 +515,124 @@
       const today = new Date().toLocaleDateString('pl-PL');
       
       return `
-        <h3>Wizyta u klienta - pierwsze kroki</h3>
-        <div style="margin-bottom: 20px;">
-          <strong>Data wizyty:</strong> ${today}
+        <div style="text-align: center; margin-bottom: 30px; border-bottom: 2px solid #333; padding-bottom: 20px;">
+          <h1 style="margin: 0; font-size: 18px; font-weight: bold; color: #333;">CHECKLISTA DORADCY TECHNICZNEGO</h1>
+          <h2 style="margin: 5px 0 0 0; font-size: 14px; color: #666;">Analiza i modernizacja instalacji</h2>
         </div>
         
-        <div style="margin-bottom: 15px;">
+        <div style="margin-bottom: 20px; padding: 10px; background: #f5f5f5; border-left: 4px solid #4ade80;">
+          <strong>Data wizyty:</strong> ${data.dataPodpisu || today}
+        </div>
+        
+        <h3 style="color: #333; margin-bottom: 20px; font-size: 14px;">Wizyta u klienta - pierwsze kroki</h3>
+        
+        <div style="margin-bottom: 15px; padding: 8px; border-bottom: 1px solid #eee;">
           <strong>1. Dane klienta i lokalizacji:</strong><br>
-          ${data.field_0 || 'Nie podano'}
+          <span style="color: #555;">${data.daneKlienta || 'Nie podano'}</span>
         </div>
         
-        <div style="margin-bottom: 15px;">
+        <div style="margin-bottom: 15px; padding: 8px; border-bottom: 1px solid #eee;">
           <strong>2. Rodzaj instalacji:</strong><br>
-          ${data.installationTypes}
+          <span style="color: #555;">${data.rodzajInstalacji}</span>
         </div>
         
-        <div style="margin-bottom: 15px;">
+        <div style="margin-bottom: 15px; padding: 8px; border-bottom: 1px solid #eee;">
           <strong>3. Data uruchomienia i wykonawca:</strong><br>
-          Data: ${data.field_1 || 'Nie podano'} | Wykonawca: ${data.field_2 || 'Nie podano'}
+          <span style="color: #555;">Data: ${data.dataUruchomienia || 'Nie podano'} | Wykonawca: ${data.wykonawca || 'Nie podano'}</span>
         </div>
         
-        <div style="margin-bottom: 15px;">
+        <div style="margin-bottom: 15px; padding: 8px; border-bottom: 1px solid #eee;">
           <strong>4. Roczna produkcja energii [kWh]:</strong><br>
-          ${data.field_3 || 'Nie podano'}
+          <span style="color: #555;">${data.produkcjaEnergii || 'Nie podano'}</span>
         </div>
         
-        <div style="margin-bottom: 15px;">
+        <div style="margin-bottom: 15px; padding: 8px; border-bottom: 1px solid #eee;">
           <strong>5. Roczne zużycie energii / eksport do sieci:</strong><br>
-          1.8.0: ${data.field_4 || 'Nie podano'} kWh | 2.8.0: ${data.field_5 || 'Nie podano'} kWh
+          <span style="color: #555;">1.8.0: ${data.energiaPobrana || 'Nie podano'} kWh | 2.8.0: ${data.energiaOddana || 'Nie podano'} kWh</span>
         </div>
         
-        <div style="margin-bottom: 15px;">
+        <div style="margin-bottom: 15px; padding: 8px; border-bottom: 1px solid #eee;">
           <strong>6. Ocena autokonsumpcji i bilansu z siecią:</strong><br>
-          ${data.field_6 || 'Nie podano'}
+          <span style="color: #555;">${data.ocenaAutokonsumpcji || 'Nie podano'}</span>
         </div>
         
-        <div style="margin-bottom: 15px;">
+        <div style="margin-bottom: 15px; padding: 8px; border-bottom: 1px solid #eee;">
           <strong>7. Wizualna kontrola paneli/modułów:</strong><br>
-          ${data.field_7 || 'Nie podano'}
+          <span style="color: #555;">${data.kontrolaPaneli || 'Nie podano'}</span>
         </div>
         
-        <div style="margin-bottom: 15px;">
+        <div style="margin-bottom: 15px; padding: 8px; border-bottom: 1px solid #eee;">
           <strong>8. Kontrola mocowań i konstrukcji nośnej:</strong><br>
-          ${data.field_8 || 'Nie podano'}
+          <span style="color: #555;">${data.kontrolaMocowan || 'Nie podano'}</span>
         </div>
         
-        <div style="margin-bottom: 15px;">
+        <div style="margin-bottom: 15px; padding: 8px; border-bottom: 1px solid #eee;">
           <strong>9. Sprawdzenie przewodów DC/AC, połączeń MC4:</strong><br>
-          ${data.field_9 || 'Nie podano'}
+          <span style="color: #555;">${data.kontrolaPrzewodow || 'Nie podano'}</span>
         </div>
         
-        <div style="margin-bottom: 15px;">
+        <div style="margin-bottom: 15px; padding: 8px; border-bottom: 1px solid #eee;">
           <strong>10. Stan zabezpieczeń: SPD, RCD, wyłączniki:</strong><br>
-          ${data.field_10 || 'Nie podano'}
+          <span style="color: #555;">${data.stanZabezpieczen || 'Nie podano'}</span>
         </div>
         
-        <div style="margin-bottom: 15px;">
+        <div style="margin-bottom: 15px; padding: 8px; border-bottom: 1px solid #eee;">
           <strong>11. Odczyt falownika: błędy, produkcja, komunikacja:</strong><br>
-          ${data.field_11 || 'Nie podano'}
+          <span style="color: #555;">${data.odczytFalownika || 'Nie podano'}</span>
         </div>
         
-        <div style="margin-bottom: 15px;">
+        <div style="margin-bottom: 15px; padding: 8px; border-bottom: 1px solid #eee;">
           <strong>12. Pomiar kluczowych parametrów:</strong><br>
-          Napięcie: ${data.field_12 || 'Nie podano'} | Prąd: ${data.field_13 || 'Nie podano'} | Temperatura: ${data.field_14 || 'Nie podano'}
+          <span style="color: #555;">Napięcie: ${data.napiecie || 'Nie podano'} | Prąd: ${data.prad || 'Nie podano'} | Temperatura: ${data.temperatura || 'Nie podano'}</span>
         </div>
         
-        <div style="margin-bottom: 15px;">
+        <div style="margin-bottom: 15px; padding: 8px; border-bottom: 1px solid #eee;">
           <strong>13. Ocena pracy pompy ciepła:</strong><br>
-          Zasilanie: ${data.field_15 || 'Nie podano'} | Powrót: ${data.field_16 || 'Nie podano'} | COP: ${data.field_17 || 'Nie podano'}
+          <span style="color: #555;">Zasilanie: ${data.tempZasilania || 'Nie podano'} | Powrót: ${data.tempPowrotu || 'Nie podano'} | COP: ${data.cop || 'Nie podano'}</span>
         </div>
         
-        <div style="margin-bottom: 15px;">
+        <div style="margin-bottom: 15px; padding: 8px; border-bottom: 1px solid #eee;">
           <strong>14. Wizualna kontrola uziemienia:</strong><br>
-          ${data.field_18 || 'Nie podano'}
+          <span style="color: #555;">${data.kontrolaUziemienia || 'Nie podano'}</span>
         </div>
         
-        <div style="margin-bottom: 15px;">
+        <div style="margin-bottom: 15px; padding: 8px; border-bottom: 1px solid #eee;">
           <strong>15. Ocena możliwości rozbudowy:</strong><br>
-          ${data.field_19 || 'Nie podano'}
+          <span style="color: #555;">${data.mozliwosciRozbudowy || 'Nie podano'}</span>
         </div>
         
-        <div style="margin-bottom: 15px;">
+        <div style="margin-bottom: 15px; padding: 8px; border-bottom: 1px solid #eee;">
           <strong>16. Wstępna kalkulacja potencjału modernizacji:</strong><br>
-          ${data.field_20 || 'Nie podano'}
+          <span style="color: #555;">${data.kalkulacjaPotencjalu || 'Nie podano'}</span>
         </div>
         
-        <div style="margin-bottom: 15px;">
+        <div style="margin-bottom: 15px; padding: 8px; border-bottom: 1px solid #eee;">
           <strong>17. Rekomendacje:</strong><br>
-          ${data.field_21 || 'Nie podano'}
+          <span style="color: #555;">${data.rekomendacje || 'Nie podano'}</span>
         </div>
         
-        <div style="margin-bottom: 15px;">
+        <div style="margin-bottom: 30px; padding: 8px; border-bottom: 1px solid #eee;">
           <strong>18. Dodatkowa rekomendacja:</strong><br>
-          ${data.field_22 || 'Nie podano'}
+          <span style="color: #555;">${data.dodatkowaRekomendacja || 'Nie podano'}</span>
         </div>
         
-        <div style="margin-top: 40px; display: flex; justify-content: space-between;">
-          <div>
-            <strong>Data:</strong> ${data.field_23 || today}
+        <div style="margin-top: 40px; display: flex; justify-content: space-between; padding-top: 20px; border-top: 1px solid #333;">
+          <div style="width: 45%;">
+            <strong>Data:</strong> ${data.dataPodpisu || today}<br><br>
+            <div style="border-top: 1px solid #333; margin-top: 30px; padding-top: 5px; text-align: center;">
+              Podpis doradcy
+            </div>
           </div>
-          <div>
-            <strong>Podpis doradcy:</strong> ${data.field_24 || 'Nie podano'}
+          <div style="width: 45%;">
+            <strong>Podpis klienta:</strong> ${data.podpisKlienta || 'Nie podano'}<br><br>
+            <div style="border-top: 1px solid #333; margin-top: 30px; padding-top: 5px; text-align: center;">
+              Podpis klienta
+            </div>
           </div>
         </div>
         
         <div style="margin-top: 30px; padding: 15px; background: #f0f0f0; border-left: 4px solid #4ade80;">
-          <strong>Uwaga:</strong> dokument ma charakter kontrolny. Po audycie wprowadź obserwacje i pomiary do systemu.
+          <strong>Uwaga:</strong> dokument ma charakter kontrolny. Po spotkaniu wprowadź obserwacje i pomiary do systemu.
         </div>
       `;
     }
@@ -605,6 +642,19 @@
       if (!notification) {
         notification = document.createElement('div');
         notification.className = 'notification';
+        notification.style.cssText = `
+          position: fixed;
+          top: 20px;
+          right: 20px;
+          background: #4ade80;
+          color: white;
+          padding: 15px 20px;
+          border-radius: 8px;
+          box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+          z-index: 1000;
+          font-weight: 600;
+          display: none;
+        `;
         document.body.appendChild(notification);
       }
       
