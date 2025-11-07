@@ -1040,7 +1040,7 @@
       <div class="main-menu">
         <div class="menu-card" onclick="showSubmenu('checklista')">
           <div class="menu-title">Checklista</div>
-          <div class="menu-description">Krok po kroku przed instalacją PV</div>
+          <div class="menu-description">Podstawowe zadania doradcy</div>
         </div>
         <div class="menu-card" onclick="showSubmenu('wywiad')">
           <div class="menu-title">Wywiad</div>
@@ -1068,8 +1068,8 @@
       </div>
       <div class="submenu">
         <div class="submenu-card" onclick="showPage('checklista-start')">
-          <div class="submenu-title">Start</div>
-          <div class="submenu-description">Pierwsze kroki</div>
+          <div class="submenu-title">Checklista Doradcy Technicznego</div>
+          <div class="submenu-description">Priorytet u klienta</div>
         </div>
       </div>
     </div>
@@ -1179,23 +1179,29 @@
       <div class="submenu">
         <div class="submenu-card" onclick="showPage('wywiad-pytania')">
           <div class="submenu-title">Pytania</div>
-          <div class="submenu-description">Co warto zapytać</div>
+          <div class="submenu-description">Trochę szczegołów....</div>
         </div>
       </div>
     </div>
     <div id="wywiad-pytania" class="content-page">
       <div class="page-header"><div class="page-title">Wywiad: Pytania</div></div>
       <div class="slide-content">
-        <h3>Kluczowe pytania dla klienta</h3>
+        <h3>Kluczowe pytania</h3>
         <ul>
-          <li>Jakie jest Państwa roczne zużycie energii elektrycznej?</li>
-          <li>O jakiej porze dnia zużywają Państwo najwięcej prądu?</li>
-          <li>Czy planują Państwo zakup samochodu elektrycznego?</li>
-          <li>Czy rozważają Państwo instalację pompy ciepła?</li>
-          <li>Jaki jest wiek i stan techniczny dachu?</li>
-          <li>Czy w pobliżu są wysokie drzewa lub budynki?</li>
-          <li>Jaki jest budżet na instalację?</li>
-          <li>Czy interesuje Państwa magazyn energii?</li>
+          <li>Jaki jest roczny koszt za energi elektryczną?</li>
+          <input type="text" placeholder="Roczny koszt" />
+          <li>Ile osób zamieszkuje dom/mieszkanie?</li>
+          <input type="text" placeholder="Osoby zamieszkujące" />
+          <li>O jakiej porze dnia zużycie prądu jest największe?</li>
+          <input type="text" placeholder="Zużycie prądu" />
+          <li>Czym ogrzewana jest ciepłą wodę?</li>
+          <input type="text" placeholder="Ciepły woda" />
+          <li>Hobby?</li>
+          <input type="text" placeholder="Hobby" />
+          <li>Jaki mamy sprzęt elektryczny w domu?</li>
+          <input type="text" placeholder="Sprzęt elektryczny" />
+          <li>Jakie plany zakupowe dotyczące urządzeń energochłonnych?</li>
+          <input type="text" placeholder="Plany zakupowe" />
         </ul>
       </div>
     </div>
