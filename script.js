@@ -173,14 +173,14 @@ function generateChecklistaPDF(pdf, data) {
   pdf.setFillColor(240, 253, 244);
   pdf.rect(margin, yPos - 5, contentWidth, 12, 'F');
   pdf.setFontSize(10);
-  pdf.setFont('arial', 'bold');
+  pdf.setFont('helvetica', 'bold');
   pdf.text(`Data wizyty: ${data.dataPodpisu || today}`, margin + 5, yPos + 2);
   yPos += 20;
   
   // Section title
   pdf.setFontSize(13);
   pdf.setTextColor(22, 163, 74);
-  pdf.setFont('arial', 'bold');
+  pdf.setFont('helvetica', 'bold');
   pdf.text('Wizyta u klienta - pierwsze kroki', margin, yPos);
   yPos += 10;
   
@@ -218,16 +218,16 @@ function generateChecklistaPDF(pdf, data) {
     // Item number and label
     pdf.setFont('helvetica', 'bold');
     pdf.setTextColor(22, 101, 52);
-    const lines = pdf.splitTextToSize(item.label, contentWidth);
-    pdf.text(lines, margin, yPos);
-    yPos += lines.length * 4 + 2;
+    pdf.text(item.label, margin, yPos, { maxWidth: contentWidth, align: 'left' });
+    const labelHeight = pdf.getTextDimensions(item.label, { maxWidth: contentWidth }).h;
+    yPos += labelHeight + 2;
     
     // Value
     pdf.setFont('helvetica', 'normal');
     pdf.setTextColor(55, 65, 81);
-    const valueLines = pdf.splitTextToSize(item.value, contentWidth - 5);
-    pdf.text(valueLines, margin + 3, yPos);
-    yPos += valueLines.length * 4 + 6;
+    pdf.text(item.value, margin + 3, yPos, { maxWidth: contentWidth - 5, align: 'left' });
+    const valueHeight = pdf.getTextDimensions(item.value, { maxWidth: contentWidth - 5 }).h;
+    yPos += valueHeight + 6;
     
     // Separator
     pdf.setDrawColor(209, 213, 219);
@@ -243,7 +243,7 @@ function generateChecklistaPDF(pdf, data) {
   
   yPos += 10;
   pdf.setFontSize(12);
-  pdf.setFont('arial', 'bold');
+  pdf.setFont('helvetica', 'bold');
   pdf.setTextColor(22, 163, 74);
   pdf.text('Podpisy:', margin, yPos);
   yPos += 12;
@@ -270,14 +270,13 @@ function generateChecklistaPDF(pdf, data) {
   // Note section
   pdf.setFillColor(254, 243, 199);
   pdf.rect(margin, yPos - 5, contentWidth, 18, 'F');
-  pdf.setFontSize(8);
-  pdf.setFont('arial', 'bold');
+  pdf.setFontSize(9);
+  pdf.setFont('helvetica', 'bold');
   pdf.setTextColor(146, 64, 14);
   pdf.text('Uwaga: ', margin + 3, yPos + 2);
-  pdf.setFont('arial', 'normal');
+  pdf.setFont('helvetica', 'normal');
   const noteText = 'dokument ma charakter kontrolny. Po spotkaniu wprowadź obserwacje i pomiary do systemu.';
-  const noteLines = pdf.splitTextToSize(noteText, contentWidth - 20);
-  pdf.text(noteLines, margin + 18, yPos + 2);
+  pdf.text(noteText, margin + 18, yPos + 2, { maxWidth: contentWidth - 20, align: 'left' });
 }
 
 function generateWywiadPDF(pdf, data) {
@@ -339,19 +338,19 @@ function generateWywiadPDF(pdf, data) {
     // Question
     pdf.setFont('helvetica', 'bold');
     pdf.setTextColor(22, 101, 52);
-    const qLines = pdf.splitTextToSize(item.q, contentWidth);
-    pdf.text(qLines, margin, yPos);
-    yPos += qLines.length * 5 + 3;
+    pdf.text(item.q, margin, yPos, { maxWidth: contentWidth, align: 'left' });
+    const qHeight = pdf.getTextDimensions(item.q, { maxWidth: contentWidth }).h;
+    yPos += qHeight + 3;
     
     // Answer box
     pdf.setFillColor(249, 250, 251);
-    const aLines = pdf.splitTextToSize(item.a, contentWidth - 10);
-    const boxHeight = Math.max(10, aLines.length * 5 + 4);
+    const aHeight = pdf.getTextDimensions(item.a, { maxWidth: contentWidth - 10 }).h;
+    const boxHeight = Math.max(10, aHeight + 4);
     pdf.rect(margin, yPos - 3, contentWidth, boxHeight, 'F');
     
     pdf.setFont('helvetica', 'normal');
     pdf.setTextColor(55, 65, 81);
-    pdf.text(aLines, margin + 3, yPos + 2);
+    pdf.text(item.a, margin + 3, yPos + 2, { maxWidth: contentWidth - 10, align: 'left' });
     yPos += boxHeight + 8;
     
     // Separator
@@ -399,8 +398,7 @@ function generateWywiadPDF(pdf, data) {
   pdf.text('Uwaga: ', margin + 3, yPos + 2);
   pdf.setFont('helvetica', 'normal');
   const noteText = 'dokument ma charakter informacyjny. Odpowiedzi pomogą w doborze optymalnej instalacji.';
-  const noteLines = pdf.splitTextToSize(noteText, contentWidth - 20);
-  pdf.text(noteLines, margin + 18, yPos + 2);
+  pdf.text(noteText, margin + 18, yPos + 2, { maxWidth: contentWidth - 20, align: 'left' });
 }
 
 function collectChecklistaData() {
