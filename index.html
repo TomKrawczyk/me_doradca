@@ -4,1034 +4,18 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Autokonsumpcja - 4ECO</title>
+  <link rel="stylesheet" href="style.css">
   <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
-    <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-
-        body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background: linear-gradient(135deg, #334155 0%, #64748b 100%);
-            color: #fff;
-            overflow-x: hidden;
-            min-height: 100vh;
-        }
-
-        .container {
-            max-width: 1400px;
-            margin: 0 auto;
-            padding: 20px;
-        }
-
-        /* Header */
-        .header {
-            text-align: center;
-            padding: 40px 0;
-            position: relative;
-        }
-
-        .header::before {
-            content: '';
-            position: absolute;
-            top: -50%;
-            left: -50%;
-            width: 200%;
-            height: 200%;
-            background: radial-gradient(circle, rgba(74, 222, 128, 0.1) 0%, transparent 70%);
-            animation: pulse 8s ease-in-out infinite;
-            z-index: -1;
-        }
-
-        @keyframes pulse {
-            0%, 100% { transform: scale(1); opacity: 0.5; }
-            50% { transform: scale(1.1); opacity: 0.8; }
-        }
-
-        .logo {
-            font-size: 3em;
-            font-weight: 800;
-            background: linear-gradient(135deg, #4ade80 0%, #22c55e 100%);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
-            margin-bottom: 20px;
-            text-shadow: 0 0 40px rgba(74, 222, 128, 0.3);
-        }
-
-        .subtitle {
-            font-size: 1.8em;
-            color: #86efac;
-            margin-bottom: 30px;
-        }
-
-        .quote-box {
-            background: linear-gradient(135deg, rgba(74, 222, 128, 0.2) 0%, rgba(34, 197, 94, 0.2) 100%);
-            padding: 30px;
-            border-radius: 15px;
-            border-left: 5px solid #4ade80;
-            margin: 30px auto;
-            font-style: italic;
-            font-size: 1.3em;
-            text-align: center;
-            position: relative;
-            max-width: 800px;
-        }
-
-        .quote-box::before {
-            content: '"';
-            position: absolute;
-            top: -20px;
-            left: 30px;
-            font-size: 4em;
-            color: rgba(74, 222, 128, 0.3);
-            font-family: Georgia, serif;
-        }
-
-        /* Main Menu */
-        .main-menu {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-            gap: 30px;
-            margin: 60px 0;
-        }
-
-        .menu-card {
-            background: rgba(255, 255, 255, 0.05);
-            backdrop-filter: blur(10px);
-            border-radius: 20px;
-            border: 2px solid rgba(74, 222, 128, 0.3);
-            padding: 40px;
-            text-align: center;
-            cursor: pointer;
-            transition: all 0.4s ease;
-            position: relative;
-            overflow: hidden;
-        }
-
-        .menu-card::before {
-            content: '';
-            position: absolute;
-            top: -50%;
-            right: -50%;
-            width: 200%;
-            height: 200%;
-            background: radial-gradient(circle, rgba(74, 222, 128, 0.1) 0%, transparent 70%);
-            opacity: 0;
-            transition: all 0.4s ease;
-        }
-
-        .menu-card:hover {
-            transform: translateY(-10px) scale(1.02);
-            border-color: #4ade80;
-            box-shadow: 0 20px 40px rgba(74, 222, 128, 0.3);
-        }
-
-        .menu-card:hover::before {
-            opacity: 1;
-        }
-
-        .menu-title {
-            font-size: 1.8em;
-            font-weight: 700;
-            color: #4ade80;
-            margin-bottom: 15px;
-        }
-
-        .menu-description {
-            font-size: 1.1em;
-            color: rgba(255, 255, 255, 0.8);
-            line-height: 1.6;
-        }
-
-        /* Content Pages */
-        .content-page {
-            display: none;
-            min-height: 100vh;
-            padding: 40px 0;
-        }
-
-        .content-page.active {
-            display: block;
-            animation: fadeIn 0.6s ease;
-        }
-
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(30px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-
-        .page-header {
-            text-align: center;
-            margin-bottom: 50px;
-        }
-
-        .page-title {
-            font-size: 3em;
-            font-weight: 800;
-            background: linear-gradient(135deg, #4ade80 0%, #22c55e 100%);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
-            margin-bottom: 20px;
-        }
-
-        .page-subtitle {
-            font-size: 1.4em;
-            color: #86efac;
-            margin-bottom: 30px;
-        }
-
-        /* Submenu */
-        .submenu {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-            gap: 30px;
-            margin: 40px 0;
-        }
-
-        .submenu-card {
-            background: rgba(255, 255, 255, 0.05);
-            backdrop-filter: blur(10px);
-            border-radius: 20px;
-            border: 2px solid rgba(74, 222, 128, 0.3);
-            padding: 30px;
-            text-align: center;
-            cursor: pointer;
-            transition: all 0.4s ease;
-        }
-
-        .submenu-card:hover {
-            transform: translateY(-10px);
-            border-color: #4ade80;
-            box-shadow: 0 20px 40px rgba(74, 222, 128, 0.3);
-        }
-
-        .submenu-title {
-            font-size: 1.6em;
-            color: #86efac;
-            margin-bottom: 10px;
-        }
-
-        .submenu-description {
-            font-size: 1.1em;
-            color: rgba(255, 255, 255, 0.8);
-        }
-
-        /* Slide Content - INCREASED FONT SIZES */
-        .slide-content {
-            max-width: 900px;
-            margin: 0 auto;
-        }
-
-        .slide-content p {
-            line-height: 1.8;
-            margin-bottom: 25px;
-            color: rgba(255, 255, 255, 0.9);
-            font-size: 1.3em; /* Increased from 1em to 1.3em */
-        }
-
-        .slide-content h3 {
-            font-size: 1.8em; /* Increased from 1.5em to 1.8em */
-            color: #4ade80;
-            margin-bottom: 20px;
-            margin-top: 30px;
-        }
-
-        .slide-content ul {
-            list-style: none;
-            padding: 0;
-        }
-
-        /* Slide Content - INCREASED FONT SIZES */
-        .slide-content li { 
-          margin-bottom: 25px;
-          font-size: 1.2em;
-          position: relative;
-          padding: 20px 20px 20px 50px;
-          line-height: 1.7;
-          background: rgba(255, 255, 255, 0.03);
-          border-radius: 12px;
-          border-left: 4px solid #4ade80;
-          transition: all 0.3s ease;
-}
-
-          .slide-content li:hover {
-          background: rgba(255, 255, 255, 0.06);
-          transform: translateX(5px);
-}
-
-          .slide-content li::before {
-            content: '✔';
-              position: absolute;
-    left: 20px;
-    top: 20px;
-    color: #4ade80;
-    font-size: 1.2em;
-    font-weight: bold;
-    width: 20px; /* Dodana szerokość */
-    text-align: center; /* Wyśrodkowanie ikony */
-}
-        }
-
-        /* Enhanced Form Styling for Checklist */
-        .slide-content input[type="text"],
-        .slide-content input[type="date"],
-        .slide-content textarea {
-            width: 100%;
-            padding: 12px 15px;
-            margin-top: 8px;
-            border: 2px solid rgba(74, 222, 128, 0.3);
-            border-radius: 8px;
-            background: rgba(255, 255, 255, 0.95);
-            color: #1f2937;
-            font-size: 1em;
-            font-weight: 500;
-            transition: all 0.3s ease;
-            font-family: inherit;
-        }
-
-        .slide-content input[type="text"]:focus,
-        .slide-content input[type="date"]:focus,
-        .slide-content textarea:focus {
-            outline: none;
-            border-color: #4ade80;
-            box-shadow: 0 0 0 3px rgba(74, 222, 128, 0.2);
-            background: rgba(255, 255, 255, 1);
-        }
-
-        .slide-content textarea {
-            min-height: 80px;
-            resize: vertical;
-            line-height: 1.5;
-        }
-
-        .slide-content input::placeholder,
-        .slide-content textarea::placeholder {
-            color: rgba(31, 41, 55, 0.6);
-            font-style: italic;
-        }
-
-        /* Checkbox Group Styling */
-        .checkbox-group {
-            display: flex;
-            gap: 20px;
-            margin-top: 10px;
-            flex-wrap: wrap;
-        }
-
-        .checkbox-item {
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            background: rgba(255, 255, 255, 0.1);
-            padding: 10px 15px;
-            border-radius: 8px;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            font-size: 1em;
-            font-weight: 500;
-        }
-
-        .checkbox-item:hover {
-            background: rgba(74, 222, 128, 0.2);
-        }
-
-        .checkbox-item input[type="checkbox"] {
-            width: 18px;
-            height: 18px;
-            accent-color: #4ade80;
-            cursor: pointer;
-        }
-
-        /* Inline input styling */
-        .slide-content input[style*="width: 180px"],
-        .slide-content input[style*="width: 300px"] {
-            display: inline-block;
-            margin: 0 5px;
-        }
-
-        /* Footer styling for checklist */
-        .footer {
-            display: flex;
-            justify-content: space-between;
-            margin-top: 40px;
-            padding: 20px;
-            background: rgba(255, 255, 255, 0.05);
-            border-radius: 12px;
-            border: 2px solid rgba(74, 222, 128, 0.3);
-        }
-
-        .signature {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            font-size: 1.1em;
-            font-weight: 600;
-        }
-
-        .signature input {
-            border: none;
-            border-bottom: 2px solid #4ade80;
-            background: transparent;
-            color: #fff;
-            padding: 5px 10px;
-            font-size: 1em;
-            font-weight: 500;
-        }
-
-        .signature input:focus {
-            outline: none;
-            border-bottom-color: #22c55e;
-        }
-
-        /* Note styling */
-        .note {
-            margin-top: 30px;
-            padding: 20px;
-            background: rgba(255, 193, 7, 0.1);
-            border-left: 5px solid #ffc107;
-            border-radius: 8px;
-            font-size: 1.1em;
-            font-style: italic;
-            color: #fde68a;
-        }
-
-        /* PDF Button Styling */
-        .btn {
-            display: block;
-            margin: 30px auto;
-            padding: 15px 40px;
-            background: linear-gradient(135deg, #4ade80 0%, #22c55e 100%);
-            color: #fff;
-            border: none;
-            border-radius: 50px;
-            font-size: 1.3em;
-            font-weight: 700;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            box-shadow: 0 10px 20px rgba(74, 222, 128, 0.3);
-        }
-
-        .btn:hover {
-            transform: translateY(-3px);
-            box-shadow: 0 15px 30px rgba(74, 222, 128, 0.4);
-            background: linear-gradient(135deg, #22c55e 0%, #16a34a 100%);
-        }
-
-        .btn:active {
-            transform: translateY(-1px);
-        }
-
-        .btn:disabled {
-            opacity: 0.6;
-            cursor: not-allowed;
-            transform: none;
-        }
-
-        .realizations-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-            gap: 20px;
-        }
-
-        .realization-img {
-            width: 100%;
-            height: auto;
-            border-radius: 15px;
-            box-shadow: 0 10px 20px rgba(0,0,0,0.2);
-            transition: transform 0.3s, box-shadow 0.3s;
-            cursor: pointer;
-        }
-
-        .realization-img:hover {
-            transform: scale(1.05);
-            box-shadow: 0 15px 30px rgba(74, 222, 128, 0.3);
-        }
-
-        .interactive-section {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 20px;
-        }
-
-        .interactive-item {
-            flex: 1 1 200px;
-            background: rgba(255,255,255,0.1);
-            padding: 20px;
-            border-radius: 15px;
-            cursor: pointer;
-            text-align: center;
-            transition: all 0.3s;
-            font-size: 1.2em; /* Increased font size */
-        }
-
-        .interactive-item:hover {
-            background: rgba(74,222,128,0.2);
-        }
-
-        .anger-section {
-            color: #ef4444;
-            font-weight: bold;
-            margin: 20px 0;
-            font-size: 1.3em; /* Increased font size */
-            line-height: 1.7; /* Added line-height */
-        }
-
-        .chart {
-            width: 100%;
-            height: auto;
-            border-radius: 15px;
-            margin: 20px 0;
-        }
-
-        /* Calculator Link Button */
-        .calculator-link {
-            display: inline-block;
-            margin: 30px 0;
-            padding: 15px 30px;
-            background: linear-gradient(135deg, #4ade80 0%, #22c55e 100%);
-            color: #fff;
-            text-decoration: none;
-            border-radius: 50px;
-            font-weight: 700;
-            font-size: 1.2em;
-            transition: all 0.3s ease;
-            box-shadow: 0 10px 20px rgba(74, 222, 128, 0.3);
-            text-align: center;
-        }
-
-        .calculator-link:hover {
-            transform: translateY(-3px);
-            box-shadow: 0 15px 30px rgba(74, 222, 128, 0.4);
-            background: linear-gradient(135deg, #22c55e 0%, #16a34a 100%);
-        }
-
-        .calculator-link:active {
-            transform: translateY(-1px);
-        }
-
-        /* Navigation */
-        .back-button {
-            position: fixed;
-            top: 30px;
-            left: 30px;
-            padding: 15px 30px;
-            background: rgba(74, 222, 128, 0.2);
-            border: 2px solid #4ade80;
-            border-radius: 50px;
-            color: #4ade80;
-            font-weight: 700;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            z-index: 1000;
-            text-decoration: none;
-            display: none;
-            font-size: 1.1em; /* Increased font size */
-        }
-
-        .back-button:hover {
-            background: #4ade80;
-            color: #0a0e27;
-            transform: translateX(-5px);
-        }
-
-        .back-button.active {
-            display: block;
-        }
-
-        /* Next Button */
-        .next-button {
-            position: fixed;
-            top: 30px;
-            right: 30px;
-            padding: 15px 30px;
-            background: rgba(74, 222, 128, 0.2);
-            border: 2px solid #4ade80;
-            border-radius: 50px;
-            color: #4ade80;
-            font-weight: 700;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            z-index: 1000;
-            text-decoration: none;
-            display: none;
-            font-size: 1.1em;
-        }
-
-        .next-button:hover {
-            background: #4ade80;
-            color: #0a0e27;
-            transform: translateX(5px);
-        }
-
-        .next-button.active {
-            display: block;
-        }
-
-        /* Home Button - Small button in top right corner */
-        .home-button-nav {
-            position: fixed;
-            top: 90px;
-            right: 30px;
-            padding: 12px 20px;
-            background: rgba(74, 222, 128, 0.2);
-            border: 2px solid #4ade80;
-            border-radius: 50px;
-            color: #4ade80;
-            font-weight: 700;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            z-index: 1000;
-            text-decoration: none;
-            display: none;
-            font-size: 0.9em;
-        }
-
-        .home-button-nav:hover {
-            background: #4ade80;
-            color: #0a0e27;
-            transform: translateY(-2px);
-        }
-
-        .home-button-nav.active {
-            display: block;
-        }
-
-        /* Calculator Styles */
-        .calculator-container {
-            max-width: 600px;
-            margin: 0 auto;
-            background: rgba(255, 255, 255, 0.05);
-            backdrop-filter: blur(10px);
-            padding: 30px;
-            border-radius: 20px;
-            border: 2px solid rgba(74, 222, 128, 0.3);
-            box-shadow: 0 20px 40px rgba(74, 222, 128, 0.2);
-        }
-
-        .calculator-container h3 {
-            text-align: center;
-            color: #4ade80;
-            margin-bottom: 20px;
-            font-size: 2em;
-        }
-
-        .calculator-container label {
-            display: block;
-            margin-top: 15px;
-            font-weight: bold;
-            color: #86efac;
-            font-size: 1.1em;
-        }
-
-        .calculator-container input, 
-        .calculator-container select {
-            width: 100%;
-            padding: 12px;
-            margin-top: 8px;
-            border: 2px solid rgba(74, 222, 128, 0.3);
-            border-radius: 10px;
-            background: rgba(255, 255, 255, 0.9);
-            color: #1f2937;
-            font-size: 1.1em;
-            font-weight: 500;
-        }
-
-        .calculator-container input::placeholder {
-            color: rgba(31, 41, 55, 0.6);
-        }
-
-        /* Enhanced Select Styling */
-        .calculator-container select {
-            cursor: pointer;
-            appearance: none;
-            background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%234ade80' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3e%3cpolyline points='6,9 12,15 18,9'%3e%3c/polyline%3e%3c/svg%3e");
-            background-repeat: no-repeat;
-            background-position: right 12px center;
-            background-size: 20px;
-            padding-right: 40px;
-        }
-
-        .calculator-container select:focus {
-            outline: none;
-            border-color: #4ade80;
-            box-shadow: 0 0 0 3px rgba(74, 222, 128, 0.1);
-        }
-
-        .calculator-container select option {
-            background: #ffffff;
-            color: #1f2937;
-            padding: 10px;
-            font-size: 1.1em;
-            font-weight: 500;
-        }
-
-        .calculator-container select option:hover,
-        .calculator-container select option:checked {
-            background: #f0f9ff;
-            color: #1f2937;
-        }
-
-        .calculator-container button {
-            margin-top: 20px;
-            width: 100%;
-            padding: 15px;
-            background: linear-gradient(135deg, #4ade80 0%, #22c55e 100%);
-            color: white;
-            border: none;
-            border-radius: 10px;
-            cursor: pointer;
-            font-size: 1.2em;
-            font-weight: bold;
-            transition: all 0.3s ease;
-        }
-
-        .calculator-container button:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 10px 20px rgba(74, 222, 128, 0.3);
-        }
-
-        /* Stats Grid - Updated to match reference site */
-        .stats-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-            gap: 20px;
-            margin: 30px 0;
-        }
-
-        .stat-card {
-            background: rgba(255, 255, 255, 0.05);
-            backdrop-filter: blur(10px);
-            border-radius: 15px;
-            border: 2px solid rgba(74, 222, 128, 0.3);
-            padding: 25px;
-            text-align: center;
-            transition: all 0.3s ease;
-        }
-
-        .stat-card:hover {
-            transform: translateY(-5px);
-            border-color: #4ade80;
-            box-shadow: 0 15px 30px rgba(74, 222, 128, 0.2);
-        }
-
-        .stat-number {
-            font-size: 2.5em;
-            color: #4ade80;
-            font-weight: bold;
-            margin-bottom: 10px;
-            text-shadow: 0 0 20px rgba(74, 222, 128, 0.3);
-        }
-
-        .stat-label {
-            font-size: 1.2em;
-            color: rgba(255, 255, 255, 0.9);
-            font-weight: 600;
-            line-height: 1.4;
-        }
-
-        .stat-unit {
-            font-size: 0.9em;
-            color: #86efac;
-            font-weight: 500;
-        }
-
-        .calc-result {
-            margin-top: 30px;
-            padding: 0;
-            background: transparent;
-            border: none;
-            font-size: 1.1em;
-            line-height: 1.6;
-        }
-
-        .result-header {
-            text-align: center;
-            margin-bottom: 30px;
-        }
-
-        .result-title {
-            font-size: 2.2em;
-            color: #4ade80;
-            font-weight: bold;
-            margin-bottom: 10px;
-        }
-
-        .result-subtitle {
-            font-size: 1.3em;
-            color: #86efac;
-            margin-bottom: 20px;
-        }
-
-        .extra-calc {
-            margin-top: 25px;
-            padding: 20px;
-            background: rgba(255, 255, 255, 0.05);
-            border-radius: 15px;
-            display: none;
-        }
-
-        .extra-result {
-            margin-top: 20px;
-            padding: 20px;
-            background: rgba(255, 193, 7, 0.1);
-            border-radius: 15px;
-            border-left: 5px solid #ffc107;
-            font-size: 1.1em;
-            line-height: 1.6;
-        }
-
-        /* PDF Content Styling - Hidden from main view */
-        #pdf-content {
-            background: white;
-            color: black;
-            padding: 40px;
-            font-family: Arial, sans-serif;
-            line-height: 1.6;
-            display: none;
-        }
-
-        #pdf-content.generating {
-            display: block;
-            position: fixed;
-            top: -9999px;
-            left: -9999px;
-            width: 210mm;
-            min-height: 297mm;
-        }
-
-        #pdf-content h1 {
-            color: #2d5a27;
-            text-align: center;
-            margin-bottom: 30px;
-            font-size: 24px;
-        }
-
-        #pdf-content h3 {
-            color: #2d5a27;
-            margin: 20px 0 15px 0;
-            font-size: 18px;
-        }
-
-        #pdf-content ul {
-            list-style: none;
-            padding: 0;
-        }
-
-        #pdf-content li {
-            margin-bottom: 15px;
-            padding: 10px;
-            border-left: 3px solid #4ade80;
-            background: #f8f9fa;
-        }
-
-        #pdf-content input, #pdf-content textarea {
-            border: 1px solid #ccc;
-            padding: 2px;
-            margin: 2px 0;
-            background: white;
-            color: black;
-        }
-
-        /* Responsive */
-        @media (max-width: 768px) {
-            .main-menu, .submenu {
-                grid-template-columns: 1fr;
-            }
-            .logo { font-size: 2em; }
-            .page-title { font-size: 2em; }
-            .slide-content p { font-size: 1.2em; } /* Responsive font size */
-            .slide-content li { font-size: 1.15em; } /* Responsive font size */
-            .calculator-container {
-                padding: 15px;
-                margin: 10px;
-            }
-            .back-button, .next-button {
-                top: 20px;
-                padding: 10px 20px;
-                font-size: 1em;
-            }
-            .back-button {
-                left: 20px;
-            }
-            .next-button {
-                right: 20px;
-            }
-            .home-button-nav {
-                top: 70px;
-                right: 20px;
-                padding: 8px 15px;
-                font-size: 0.8em;
-            }
-            .stats-grid {
-                grid-template-columns: 1fr 1fr;
-                gap: 15px;
-            }
-            .stat-card {
-                padding: 20px;
-            }
-            .stat-number {
-                font-size: 2em;
-            }
-            .stat-label {
-                font-size: 1.1em;
-            }
-            .checkbox-group {
-                flex-direction: column;
-                gap: 10px;
-            }
-            .footer {
-                flex-direction: column;
-                gap: 15px;
-            }
-        }
-
-        /* Modal Styles - Enhanced for Gallery */
-        .modal {
-            display: none;
-            position: fixed;
-            z-index: 1000;
-            left: 0;
-            top: 0;
-            width: 100%;
-            height: 100%;
-            overflow: auto;
-            background-color: rgba(0,0,0,0.9);
-            justify-content: center;
-            align-items: center;
-        }
-
-        .modal-content {
-            background: linear-gradient(135deg, #334155 0%, #64748b 100%);
-            margin: auto;
-            padding: 30px;
-            border: 2px solid #4ade80;
-            width: 90%;
-            max-width: 900px;
-            border-radius: 20px;
-            text-align: center;
-            position: relative;
-            max-height: 90vh;
-            overflow-y: auto;
-            color: #fff;
-        }
-
-        .modal-content img {
-            max-width: 100%;
-            height: auto;
-            border-radius: 15px;
-            box-shadow: 0 20px 40px rgba(74, 222, 128, 0.3);
-            margin: 20px 0;
-        }
-
-        .modal-content p {
-            font-size: 1.3em;
-            color: rgba(255, 255, 255, 0.9);
-            line-height: 1.6;
-            margin-top: 15px;
-        }
-
-        .modal-content h2 {
-            color: #4ade80;
-            margin-bottom: 20px;
-            font-size: 2em;
-        }
-
-        /* Gallery Modal Specific Styles */
-        .gallery-modal .modal-content {
-            background: linear-gradient(135deg, #334155 0%, #64748b 100%);
-            border: 2px solid #4ade80;
-            color: #fff;
-        }
-
-        .gallery-modal .modal-content img {
-            max-width: 100%;
-            max-height: 70vh;
-            object-fit: contain;
-            border-radius: 15px;
-            box-shadow: 0 20px 40px rgba(74, 222, 128, 0.3);
-        }
-
-        .gallery-modal .modal-content h2 {
-            color: #4ade80;
-            margin-bottom: 20px;
-            font-size: 1.8em;
-        }
-
-        .gallery-modal .modal-content p {
-            color: rgba(255, 255, 255, 0.9);
-            font-size: 1.3em;
-            margin-top: 15px;
-        }
-
-        .close {
-            color: #4ade80;
-            float: right;
-            font-size: 35px;
-            font-weight: bold;
-            position: absolute;
-            top: 10px;
-            right: 20px;
-            cursor: pointer;
-            z-index: 1001;
-            transition: all 0.3s ease;
-        }
-
-        .close:hover,
-        .close:focus {
-            color: #22c55e;
-            text-decoration: none;
-            transform: scale(1.1);
-        }
-
-        /* Notification */
-        .notification {
-            display: none;
-            position: fixed;
-            bottom: 20px;
-            left: 50%;
-            transform: translateX(-50%);
-            background: #22c55e;
-            color: #fff;
-            padding: 15px 25px; /* Increased padding */
-            border-radius: 8px;
-            font-size: 1.1em; /* Increased font size */
-        }
-
-        /* FAQ Box */
-        .faq-box {
-            background: rgba(255,255,255,0.05);
-            padding: 25px; /* Increased padding */
-            border-radius: 15px;
-            margin-bottom: 20px;
-        }
-
-        .faq-question {
-            color: #4ade80;
-            font-weight: bold;
-            margin-bottom: 15px; /* Increased margin */
-            font-size: 1.3em; /* Increased font size */
-        }
-
-        .faq-answer {
-            color: rgba(255,255,255,0.9);
-            font-size: 1.2em; /* Increased font size */
-            line-height: 1.7; /* Added line-height */
-        }
-  </style>
 </head>
 <body>
-  <!-- Nawigacja -->
+  <!-- Navigation -->
   <a href="#" class="back-button" onclick="goBack()">← Wstecz</a>
   <a href="#" class="next-button" onclick="goNext()">Dalej →</a>
   <a href="#" class="home-button-nav" onclick="goToHome()">Strona główna</a>
 
   <div class="container">
-    <!-- MENU GŁÓWNE -->
+    <!-- MAIN MENU -->
     <div id="main-menu" class="content-page active">
       <div class="header">
         <div class="logo">Doradca techniczny</div>
@@ -1043,7 +27,7 @@
           <div class="menu-description">Podstawowe zadania doradcy</div>
         </div>
         <div class="menu-card" onclick="showSubmenu('wywiad')">
-          <div class="menu-title">Wywiad</div>
+          <div class极menu-title">Wywiad</div>
           <div class="menu-description">Rozmowa z klientem / analiza potrzeb</div>
         </div>
         <div class="menu-card" onclick="showPage('autokonsumpcja-kalkulator')">
@@ -1061,7 +45,7 @@
       </div>
     </div>
 
-    <!-- CHECKLISTA -->
+    <!-- CHECKLIST -->
     <div id="submenu-checklista" class="content-page">
       <div class="page-header">
         <div class="page-title">Checklista</div>
@@ -1069,7 +53,7 @@
       <div class="submenu">
         <div class="submenu-card" onclick="showPage('checklista-start')">
           <div class="submenu-title">Checklista Doradcy Technicznego</div>
-          <div class="submenu-description">Priorytet u klienta</div>
+          <div class="submenu-description">Priorytet u klienta</极>
         </div>
       </div>
     </div>
@@ -1077,74 +61,74 @@
     <div id="checklista-start" class="content-page">
       <div class="page-header">
         <div class="page-title">CHECKLISTA DORADCY TECHNICZNEGO</div>
-        <div class="page-subtitle">Analiza i modernizacja instalacji</div>
+        <div class="page极ubtitle">Analiza i modernizacja instalacji</div>
       </div>
 
       <div class="slide-content">
         <h3>Wizyta u klienta - pierwsze kroki</h3>
         <ul>
-         <li>     Dane klienta i lokalizacji (adres, kontakt):<br>
-            <input type="text" placeholder="np. Jan Kowalski, ul. Słoneczna 12, 00-000 Warszawa, tel. 600 123 456" />
+         <li>Dane klienta i lokalizacji (adres, kontakt):<br>
+            <input type="text" class="checklist-input" placeholder="np. Jan Kowalski, ul. Słoneczna 12, 00-000 Warszawa, tel. 600 123 456" />
          </li>
-          <li>    Rodzaj instalacji:
+          <li>Rodzaj instalacji:
             <div class="checkbox-group">
               <label class="checkbox-item"><input type="checkbox"> PV</label>
               <label class="checkbox-item"><input type="checkbox"> Pompa ciepła</label>
               <label class="checkbox-item"><input type="checkbox"> Magazyn energii</label>
             </div>
           </li>
-          <li>    Data uruchomienia i wykonawca:<br>
-            <input type="date" /> | <input type="text" placeholder="Nazwa firmy wykonawcy" style="width: 300px;" />
+          <li>Data uruchomienia i wykonawca:<br>
+            <input type="date" class="checklist-input" /> | <input type="text" class="checklist-input" placeholder="Nazwa firma wykonawcy" />
           </li>
-          <li>    Roczna produkcja energii [kWh] (falownik):<br>
-            <input type="text" placeholder="np. 8500" />
+          <li>Roczna produkcja energii [kWh] (falownik):<br>
+            <input type="text" class="checklist-input" placeholder="np. 8500" />
           </li>
-          <li>    Roczne zużycie energii w budynku [kWh] / eksport do sieci [kWh] (licznik):<br>
-            <strong>1.8.0</strong> <input type="text" placeholder="Całkowita energia pobrana z sieci" style="width: 180px;" /> kWh &nbsp;&nbsp;
-            <strong>2.8.0</strong> <input type="text" placeholder="Całkowita energia oddana do sieci" style="width: 180px;" /> kWh
+          <li>Roczne zużycie energii w budynku [kWh] / eksport do sieci [kWh] (licznik):<br>
+            <strong>1.8.极</strong> <input type="text" class="checklist-input" placeholder="Całkowita energia pobrana z sieci" /> kWh &nbsp;&nbsp;
+            <strong>2.8.0</strong> <input type="text" class="checklist-input" placeholder="Całkowita energia oddana do sieci" /> kWh
           </li>
-          <li>    Ocena autokonsumpcji i bilansu z siecią:<br>
-            <textarea placeholder="np. Autokonsumpcja ok. 35%, eksport 65% produkcji. Potencjał poprawy poprzez magazyn energii."></textarea>
+          <li>Ocena autokonsumpcji i bilansu z siecią:<br>
+            <input type="text" class="checklist-input" placeholder="np. Autokonsumpcja ok. 35%, eksport 65% produkcji. Potencjał poprawy poprzez magazyn energii." />
           </li>
-          <li>    Wizualna kontrola paneli/modułów (pęknięcia, zabrudzenia):<br>
-            <textarea placeholder="np. Panele czyste, brak pęknięć, lekkie zabrudzenia ptasie na 3 modułach."></textarea>
+          <li>Wizualna kontrola paneli/modułów (pęknięcia, zabrudzenia):<br>
+            <input type="text" class="checklist-input" placeholder="np. Panele czyste, brak pęknięć, lekkie zabrudzenia ptasie na 3 modułach." />
           </li>
-          <li>    Kontrola mocowań i konstrukcji nośnej:<br>
-            <textarea placeholder="np. Mocowania stabilne, brak korozji, konstrukcja w dobrym stanie."></textarea>
+          <li>Kontrola mocowań i konstrukcji nośnej:<极>
+            <input type="text" class="checklist-input" placeholder="np. Mocowania stabilne, brak koroz极, konstrukcja w dobrym stanie." />
           </li>
-          <li>    Sprawdzenie przewodów DC/AC, połączeń MC4:<br>
-            <textarea placeholder="np. Wszystkie MC4 szczelne, brak przegrzewania, izolacja OK."></textarea>
+          <li>Sprawdzenie przewodów DC/AC, połączeń MC4:<br>
+            <input type="text" class="checklist-input" placeholder="np. Wszystkie MC4 szczelne, brak przegrzewania, izolacja OK." />
           </li>
-          <li>    Stan zabezpieczeń: SPD, RCD, wyłączniki:<br>
-            <textarea placeholder="np. SPD sprawne, RCD testowane – OK, wyłączniki bez śladów przegrzania."></textarea>
+          <li>Stan zabezpieczeń: SPD, RCD, wyłączniki:<br>
+            <input type="text" class="checklist-input" placeholder="np. SPD sprawne, RCD testowane – OK, wyłączniki bez śladów przegrzania." />
           </li>
-          <li>    Odczyt falownika: błędy, produkcja, komunikacja:<br>
-            <textarea placeholder="np. Brak błędów, komunikacja Wi-Fi OK, aktualna produkcja 4.2 kW."></textarea>
+          <li>Odczyt falown极a: błędy, produkcja, komunikacja:<br>
+            <input type="text" class="checklist-input" placeholder="np. Brak błędów, komunikacja Wi-Fi OK极 aktualna produkcja 4.2 kW." />
           </li>
-          <li>    Pomiar kluczowych parametrów: napięcie, prąd, temperatura zasilania:<br>
-            <input type="text" placeholder="Napięcie DC: 380V" /> | 
-            <input type="text" placeholder="Prąd: 11A" /> | 
-            <input type="text" placeholder="Temp. zasilania: 45°C" />
+          <li>Pomiar kluczowych parametrów: napięcie, prąd, temperatura zasilania:<br>
+            <input type="text" class="checklist-input" placeholder="Napięcie DC: 380V" /> | 
+            <input type="text" class="checklist-input" placeholder="Prąd: 11A" /> | 
+            <input type="text" class="checklist-input" placeholder="Temp. zasilania: 45°C" />
           </li>
-          <li>    Ocena pracy pompy ciepła: temp. zasilania/powrotu, COP (jeśli dane):<br>
-            <input type="text" placeholder="Zasilanie: 45°C" /> | 
-            <input type="text" placeholder="Powrót: 40°C" /> | 
-            <input type="text" placeholder="COP: 4.2" />
+          <li>Ocena pracy pompy ciepła: temp. zasilania/powrotu, COP (jeśli dane):<br>
+            <input type="text" class="checklist-input" placeholder="Zasilanie: 45°C" /> | 
+            <input type="text" class="checklist-input" placeholder="Powrót: 40°C" /> | 
+            <input type="text" class="checklist-input" placeholder极COP: 4.2" />
           </li>
-          <li>     Wizualna kontrola uziemienia i ciągłości przewodów ochronnych:<br>
-            <textarea placeholder="np. Uziemienie wizualnie OK, ciągłość PE potwierdzona."></textarea>
+          <li>Wizualna kontrola uziemienia i ciągłości przewodów ochronnych:<br>
+            <input type="text" class="checklist-input" placeholder="np. Uziemienie wizualnie OK, ciągłość PE potwierdzona." />
           </li>
-          <li>    Ocena możliwości rozbudowy: miejsce, przyłącze, ograniczenia:<br>
-            <textarea placeholder="np. Dach pozwala na +6 paneli, moc przyłącza 25 kW – wystarczająca."></textarea>
+          <li>Ocena możliwości rozbudowy: miejsce, przyłącze, ograniczenia:<br>
+            <input type="text" class="checklist-input" placeholder="np. Dach pozwala na +6 paneli, moc przyłącza 25 kW – wystarczająca." />
           </li>
-          <li>    Wstępna kalkulacja potencjału modernizacji (kWh/rok):<br>
-            <input type="text" placeholder="np. +3200 kWh/rok po dodaniu magazynu 10 kWh" />
+          <li>Wstępna kalkulacja potencjału modernizacji (kWh/rok):<br>
+            <input type="text" class="checklist-input" placeholder="np. +3200 kWh/rok po dodaniu magazynu 10 kWh" />
           </li>
-          <li>    Rekomendacje: serwis, czyszczenie, wymiana elementów krytycznych:<br>
-            <textarea placeholder="Zalecane: czyszczenie paneli, przegląd SPD za 6 miesięcy, rozważenie magazynu energii."></textarea>
+          <li>Rekomendacje: serwis, czyszczenie, wymiana elementów krytycznych:<br>
+            <input type="text" class="checklist-input" placeholder="Zalecane: czyszczenie paneli, przegląd SPD za 6 miesięcy, rozważenie magazynu energii." />
           </li>
-          <li>    Dodatkowa rekomendacja:<br>
-            <textarea placeholder="np. Montaż optymalizatorów na zacienionych modułach."></textarea>
+          <li>Dodatkowa rekomendacja:<br>
+            <input type="text" class="checklist-input" placeholder="np. Montaż optymalizatorów na zacienionych modułach." />
           </li>
         </ul>
 
@@ -1167,13 +151,13 @@
 
     <!-- Hidden PDF Content -->
     <div id="pdf-content">
-      <h1>CHECKLISTA DORADCY TECHNICZNEGO – ANALIZA I MODERNIZACJA INSTALACJI</h1>
+      <h1>CHECKLISTA DORADCY TECHNICZNEGO – ANALIZA I MODERNIZACJA INST极LACJI</h1>
       <div id="pdf-form-content">
         <!-- Content will be populated by JavaScript -->
       </div>
     </div>
 
-    <!-- WYWIAD -->
+    <!-- INTERVIEW -->
     <div id="submenu-wywiad" class="content-page">
       <div class="page-header"><div class="page-title">Wywiad</div></div>
       <div class="submenu">
@@ -1189,24 +173,24 @@
         <h3>Kluczowe pytania</h3>
         <ul>
           <li>Jaki jest roczny koszt za energi elektryczną?</li>
-          <input type="text" placeholder="Roczny koszt" />
+          <input type="text" class="checklist-input" placeholder="Roczny koszt" />
           <li>Ile osób zamieszkuje dom/mieszkanie?</li>
-          <input type="text" placeholder="Osoby zamieszkujące" />
+          <input type="text" class="checklist-input" placeholder="Osoby zamieszkujące" />
           <li>O jakiej porze dnia zużycie prądu jest największe?</li>
-          <input type="text" placeholder="Zużycie prądu" />
+          <input type="text" class="checklist-input" placeholder="Zużycie prądu" />
           <li>Czym ogrzewana jest ciepłą wodę?</li>
-          <input type="text" placeholder="Ciepły woda" />
+          <input type="text" class="checklist-input" placeholder="Ciepły woda" />
           <li>Hobby?</li>
-          <input type="text" placeholder="Hobby" />
-          <li>Jaki mamy sprzęt elektryczny w domu?</li>
-          <input type="text" placeholder="Sprzęt elektryczny" />
+          <input type="text" class="checklist-input" placeholder="Hobby极 />
+          <li>Jaki mamy sprzęt elektryczny极 domu?</li>
+          <input type="text" class="checklist-input" placeholder="Sprzęt elektryczny" />
           <li>Jakie plany zakupowe dotyczące urządzeń energochłonnych?</li>
-          <input type="text" placeholder="Plany zakupowe" />
+          <input type="text" class="checklist-input" placeholder="Plany zakupowe" />
         </ul>
       </div>
     </div>
 
-    <!-- KALKULATOR AUTOKONSUMPCJI -->
+    <!-- AUTOCONSUMPTION CALCULATOR -->
     <div id="autokonsumpcja-kalkulator" class="content-page">
       <div class="page-header"><div class="page-title">Kalkulator Autokonsumpcji</div></div>
       <div class="calculator-container">
@@ -1219,7 +203,7 @@
         <input type="number" id="eksport" step="0.01" placeholder="np. 10.2">
 
         <label>Całkowite zużycie domu [kWh] <small style="color:#86efac;">(opcjonalne)</small></label>
-        <input type="number" id="zuzycie_au" step="0.01" placeholder="np. 15.3">
+        <input type="number" id="zuzycie_au" step="0.01" placeholder="np. 极5.3">
 
         <button onclick="obliczAutokonsumpcje()">OBLICZ AUTOKONSUMPCJĘ</button>
 
@@ -1227,11 +211,11 @@
       </div>
     </div>
 
-    <!-- EDUKACJA -->
+    <!-- EDUCATION -->
     <div id="submenu-edukacja" class="content-page">
       <div class="page-header"><div class="page-title">Edukacja / Autokonsumpcja</div></div>
       <div class="submenu">
-        <div class="submenu-card" onclick="showPage('edukacja-dzialanie')">
+        <极 class="submenu-card" onclick="showPage('edukacja-dzialanie')">
           <div class="submenu-title">Jak działa PV</div>
           <div class="submenu-description">Zasada działania</div>
         </div>
@@ -1247,17 +231,17 @@
           <li>Energia słoneczna jest przekształcana w prąd stały (DC)</li>
           <li>Falownik konwertuje prąd stały na prąd przemienny (AC)</li>
           <li>Energia jest wykorzystywana w domu lub oddawana do sieci</li>
-          <li>Nadwyżka energii może być magazynowana w bateriach</li>
+          <li>极adwyżka energii może być magazynowana w bateriach</li>
         </ul>
         <h3>Autokonsumpcja</h3>
         <p>Autokonsumpcja to wykorzystanie wyprodukowanej energii bezpośrednio w gospodarstwie domowym. Im wyższa autokonsumpcja, tym większe oszczędności na rachunkach za prąd.</p>
       </div>
     </div>
 
-    <!-- KALKULATOR PV -->
+    <!-- PV CALCULATOR -->
     <div id="pv-kalkulator" class="content-page">
       <div class="page-header">
-        <div class="page-title">Kalkulator Instalacji PV</div>
+        <div class="极age-title">Kalkulator Instalacji PV</div>
         <div class="page-subtitle">Oblicz swoją instalację fotowoltaiczną i zobacz oszczędności!</div>
       </div>
       <div class="calculator-container">
@@ -1286,18 +270,18 @@
 
         <div class="calc-result" id="wynik" style="display: none;"></div>
 
-        <div class="extra-calc" id="extra-calc">
+        <div class="extra-calc极 id="extra-calc">
           <h3 style="color: #4ade80; text-align: center; margin-bottom: 20px;">Oblicz okres zwrotu inwestycji</h3>
           <label>Obecna cena prądu [zł/kWh]</label>
           <input type="number" id="cenaPradu" placeholder="np. 0.85" step="0.01" min="0">
 
           <label>Cena instalacji [zł]</label>
-          <input type="number" id="cenaInstalacji" placeholder="np. 35000" min="0">
+          <input type="number" id="cenaInstalacji极 placeholder="np. 35000" min="0">
 
-          <label>Tryb kalkulacji zwrotu</label>
+          <label>Tryb k极kulacji zwrotu</label>
           <select id="trybKalkulacji">
             <option value="standardowa">Standardowa (stała cena prądu)</option>
-            <option value="optymistyczna">Realistyczna (5% wzrostu ceny prądu rocznie)</option>
+            <option value="optymistyczna">Realistyczna (5% wzrostu ceny prądu rocznie)</极ption>
           </select>
 
           <button onclick="obliczZwrot()">Oblicz zwrot inwestycji</button>
@@ -1307,7 +291,7 @@
     </div>
   </div>
 
-  <!-- Skrypty JS -->
+  <!-- JavaScript Scripts -->
   <script>
     // Navigation state management
     let currentPageStack = ['main-menu'];
@@ -1338,7 +322,7 @@
         targetElement.classList.add('active');
         
         // Update navigation stack
-        currentPageStack.push(pageId);
+        currentPageStack.push(page极);
         
         // Update navigation buttons
         updateNavigationButtons();
@@ -1392,7 +376,7 @@
     function goBack() {
       if (currentPageStack.length > 1) {
         currentPageStack.pop();
-        const previousPage = currentPageStack[currentPageStack.length - 1];
+        const previousPage = currentPageStack[currentPageStack.length - 极];
         
         // Hide all pages and show previous
         document.querySelectorAll('.content-page').forEach(page => page.classList.remove('active'));
@@ -1406,8 +390,7 @@
     function goNext() {
       const currentPage = currentPageStack[currentPageStack.length - 1];
       
-      // Find next page in sequence
-      for (const [category, sequence] of Object.entries(navigationSequences)) {
+      // Find next page in sequence极      for (const [category, sequence] of Object.entries(navigationSequences)) {
         const currentIndex = sequence.indexOf(currentPage);
         if (currentIndex !== -1 && currentIndex < sequence.length - 1) {
           const nextPage = sequence[currentIndex + 1];
@@ -1447,7 +430,7 @@
         
         // Show PDF content temporarily for rendering
         const pdfElement = document.getElementById('pdf-content');
-        const pdfFormContent = document.getElementById('pdf-form-content');
+        const pdfForm极ontent = document.getElementById('pdf-form-content');
         pdfFormContent.innerHTML = pdfContent;
         pdfElement.classList.add('generating');
         
@@ -1460,7 +443,7 @@
           height: 1123 // A4 height in pixels at 96 DPI
         }).then(canvas => {
           const { jsPDF } = window.jspdf;
-          const pdf = new jsPDF('p', 'mm', 'a4');
+          const pdf = new jsPDF('p', 'mm极 'a4');
           
           const imgData = canvas.toDataURL('image/png');
           const imgWidth = 190;
@@ -1553,7 +536,7 @@
       const today = new Date().toLocaleDateString('pl-PL');
       
       return `
-        <h3>Wizyta u klienta - pierwsze kroki</h3>
+        <h3>Wizy极 u klienta - pierwsze kroki</h3>
         <div style="margin-bottom: 20px;">
           <strong>Data wizyty:</strong> ${today}
         </div>
@@ -1591,7 +574,7 @@
         <div style="margin-bottom: 15px;">
           <strong>7. Wizualna kontrola paneli/modułów:</strong><br>
           ${data.field_7 || 'Nie podano'}
-        </div>
+        </极>
         
         <div style="margin-bottom: 15px;">
           <strong>8. Kontrola mocowań i konstrukcji nośnej:</strong><br>
@@ -1599,7 +582,7 @@
         </div>
         
         <div style="margin-bottom: 15px;">
-          <strong>9. Sprawdzenie przewodów DC/AC, połączeń MC4:</strong><br>
+          <strong>9. Sprawdzenie przewodów DC/AC, połączeń MC4:</strong><极>
           ${data.field_9 || 'Nie podano'}
         </div>
         
@@ -1611,9 +594,9 @@
         <div style="margin-bottom: 15px;">
           <strong>11. Odczyt falownika: błędy, produkcja, komunikacja:</strong><br>
           ${data.field_11 || 'Nie podano'}
-        </div>
+极      </div>
         
-        <div style="margin-bottom: 15px;">
+        <div style="margin-bottom极 15px;">
           <strong>12. Pomiar kluczowych parametrów:</strong><br>
           Napięcie: ${data.field_12 || 'Nie podano'} | Prąd: ${data.field_13 || 'Nie podano'} | Temperatura: ${data.field_14 || 'Nie podano'}
         </div>
@@ -1629,7 +612,7 @@
         </div>
         
         <div style="margin-bottom: 15px;">
-          <strong>15. Ocena możliwości rozbudowy:</strong><br>
+          <strong>15. Ocena możliwości rozbud极y:</strong><br>
           ${data.field_19 || 'Nie podano'}
         </div>
         
@@ -1668,7 +651,7 @@
       let notification = document.querySelector('.notification');
       if (!notification) {
         notification = document.createElement('div');
-        notification.className = 'notification';
+        notification.class极 = 'notification';
         document.body.appendChild(notification);
       }
       
@@ -1682,217 +665,217 @@
     }
 
     // PV Calculator Functions
-        function oblicz() {
-            let zuzycie = parseFloat(document.getElementById('zuzycie').value);
-            let orientacja = parseFloat(document.getElementById('orientacja').value);
-            let trybMagazynu = document.getElementById('trybMagazynu').value;
-            const powierzchniaPanelu = 2.34; // Stała powierzchnia panelu w m²
-            const limitJednofazowy = 3.68; // Limit dla instalacji jednofazowej w kWp
+    function oblicz() {
+        let zuzycie = parseFloat(document.getElementById('zuzycie').value);
+        let orientacja = parseFloat(document.getElementById('orientacja').value);
+        let trybMagazynu = document.getElementById('trybMagazynu').value;
+        const powierzchniaPanelu = 2.34; // Stała powierzchnia panelu w m²
+        const limitJednofazowy = 3.68; // Limit dla instalacji jednofazowej w kWp
 
-            if (isNaN(zuzycie)) {
-                showNotification("Podaj roczne zużycie energii!");
-                return;
-            }
+        if (isNaN(zuzycie)) {
+            showNotification("Podaj roczne zużycie energii!");
+            return;
+        }
 
-            // Obliczenie wstępnej mocy instalacji (z marginesem 20%)
-            let mocWstępna = (zuzycie * 1.2) / 1000;
+        // Obliczenie wstępnej mocy instalacji (z marginesem 20%)
+        let mocWstępna = (zuzycie * 1.2) / 1000;
 
-            // Automatyczny wybór paneli: 450 Wp dla instalacji <= 3,68 kWp, 480 Wp powyżej
-            let panel = mocWstępna <= limitJednofazowy ? 450 : 480;
-            let typInstalacji = mocWstępna <= limitJednofazowy ? "jednofazowa" : "trójfazowa";
+        // Automatyczny wybór paneli: 450 Wp dla instalacji <= 3,68 kWp, 480 Wp powyżej
+        let panel = mocWstępna <= limitJednofazowy ? 450 : 480;
+        let typInstalacji = mocWstępna <= limitJednofazowy ? "jednofazowa" : "trójfazowa";
 
-            // Obliczenie liczby paneli (zaokrąglenie w górę)
-            let liczbaPaneli = Math.ceil((mocWstępna * 1000) / panel);
-            // Rzeczywista moc instalacji na podstawie liczby paneli
-            let mocInstalacji = (liczbaPaneli * panel) / 1000;
-            // Obliczenie rocznej produkcji energii
-            let produkcja = mocInstalacji * 1000 * orientacja;
-            // Obliczenie powierzchni
-            let powierzchnia = liczbaPaneli * powierzchniaPanelu;
+        // Obliczenie liczby paneli (zaokrąglenie w górę)
+        let liczbaPaneli = Math.ceil((mocWstępna * 极000) / panel);
+        // Rzeczywista moc instalacji na podstawie liczby paneli
+        let mocInstalacji = (liczbaPaneli * panel) / 1000;
+        // Obliczenie rocznej produkcji energii
+        let produkcja = mocInstal极ci * 1000 * orientacja;
+        // Obliczenie powierzchni
+        let powierzchnia = liczbaPaneli * powierzchniaPanelu;
 
-            // Dobór pojemności magazynu energii na podstawie mocy instalacji (w kWh)
-            let magazynPojemnosc;
-            if (mocInstalacji <= 5) magazynPojemnosc = 5;
-            else if (mocInstalacji > 5 && mocInstalacji <= 9) magazynPojemnosc = 10;
-            else magazynPojemnosc = 15;
+        // Dobór pojemności magazynu energii na podstawie mocy instalacji (w kWh)
+        let magazynPojemnosc;
+        if (mocInstalacji <= 5) magazynPojemnosc = 5;
+        else if (mocInstalacji > 5 && mocInstalacji <= 9) magazynPojemnosc = 10;
+        else magazynPojemnosc = 15;
 
-            // Wynik główny
-            let wynik = `
-                <b>Typ instalacji:</b> ${typInstalacji}<br>
-                <b>Liczba paneli:</b> ${liczbaPaneli} x ${panel} Wp<br>
-                <b>Moc instalacji:</b> ${mocInstalacji.toFixed(2)} kWp<br>
-                <b>Szacowana roczna produkcja:</b> ${produkcja.toFixed(0)} kWh<br>
-                <b>Powierzchnia dachu potrzebna:</b> ${powierzchnia.toFixed(1)} m²<br>
-                <b>Magazyn energii:</b> ${magazynPojemnosc} kWh
+        // Wynik główny
+        let wynik = `
+            <b>Typ instalacji:</b> ${typInstalacji}<br>
+            <b>Liczba paneli:</b> ${liczbaPaneli} x ${panel} Wp<br>
+            <b>Moc instalacji:</b> ${mocInstalacji.toFixed(2)} kWp<br>
+            <b>Szacowana roczna produkcja:</b> ${produkcja.toFixed(0)} kWh<br>
+            <b>Powierzchnia dachu potrzebna:</b> ${powierzchnia.toFixed(1)} m²<br>
+            <极>Magazyn energii:</b> ${magaz极nPojemnosc} kWh
+        `;
+
+        if (trybMagazyn极 === 'export') {
+            wynik += "<br><b>Tryb rozliczenia:</b> Eksport energii do sieci";
+        } else {
+            wynik += "<br><b>Tryb rozliczenia:</b> Bez eksport极 (tylko zużycie lokalne)";
+        }
+
+        document.getElementById('wynik').innerHTML = wynik;
+        document.getElementById('wynik').style.display = 'block';
+
+        // Pokazanie kalkulatora zwrotu
+        document.getElementById('extra-calc').style.display = 'block';
+        ostatniaProdukcja = produkcja;
+    }
+
+    function obliczZwrot() {
+        let cenaPradu = parseFloat(document.getElementById('cenaPradu').value);
+        let cenaInstalacji = parseFloat(document.getElementById('cenaInstalacji').value);
+        let trybKalkulacji = document.getElementById('trybKalkulacji').value;
+
+        if (isNaN(cenaPradu) || isNaN(cenaInstalacji) || ostatniaProdukcja === 0) {
+            showNotification("Podaj wszystkie dane do kalkulacji zwrot极!");
+            return;
+        }
+
+        let lata = 0, oszczednosci = 0, wynikZwrotu = "";
+
+        if (trybKalkulacji === "standardowa") {
+            lata = cenaInstalacji / (cenaPradu * ostatniaProdukcja);
+            oszczednosci = cenaPradu * ostatniaProdukcja;
+            wynikZwrotu = `
+                <b>Szacowany okres zwrotu:</b> ${lata.toFixed(1)} lat<br>
+                <b>Roczne oszczędności:</b> ${oszczednosci.toFixed(2)} zł
             `;
-
-            if (trybMagazynu === 'export') {
-                wynik += "<br><b>Tryb rozliczenia:</b> Eksport energii do sieci";
-            } else {
-                wynik += "<br><b>Tryb rozliczenia:</b> Bez eksportu (tylko zużycie lokalne)";
+        } else {
+            // Optymistyczna - 5% wzrost ceny prądu rocznie
+            let suma = 0, cena = cenaPradu;
+            while (suma < cenaInstalacji && lata < 50) {
+                suma += cena * ostatniaProdukcja;
+                cena *= 1.05;
+                lata++;
             }
+            oszczednosci = suma;
+            wynikZwrotu = `
+                <b>极acowany okres zwrotu:</b> ${lata} lat<br>
+                <b>Łączne oszczędności w tym czasie:</b> ${oszczednosci.toFixed(2)} zł
+            `;
+        }
+        document.getElementById('extra-result').innerHTML = wynikZwrotu;
+    }
 
-            document.getElementById('wynik').innerHTML = wynik;
-            document.getElementById('wynik').style.display = 'block';
+    // Autokonsumpcja Calculator Functions
+    function obliczAutokonsumpcje() {
+        const produkcja = parseFloat(document.getElementById('produkcja').value);
+        const eksport = parseFloat(document.getElementById('eksport').value);
+        const zuzycieCalkowite = parseFloat(document.getElementById('zuzycie_au').value);
+        const wynik = document.getElementById('wyn极-auto');
 
-            // Pokazanie kalkulatora zwrotu
-            document.getElementById('extra-calc').style.display = 'block';
-            ostatniaProdukcja = produkcja;
+        if (isNaN(produkcja) || produkcja <= 0) {
+            pokazBlad("Produkcja musi być większa od 0", wynik);
+            return;
+        }
+        if (isNaN(eksport) || eksport < 0) {
+            pokazBlad("Eksport nie może być ujemny", wynik);
+            return;
+        }
+        if (eksport > produkcja) {
+            pokazBlad("Eksport nie może przekraczać produkcji!", wynik);
+            return;
         }
 
-        function obliczZwrot() {
-            let cenaPradu = parseFloat(document.getElementById('cenaPradu').value);
-            let cenaInstalacji = parseFloat(document.getElementById('cenaInstalacji').value);
-            let trybKalkulacji = document.getElementById('trybKalkulacji').value;
+        const autokonsumpcja = ((produkcja - eksport) / produkcja) * 100;
+        const zuzyte = produkcja - eksport;
 
-            if (isNaN(cenaPradu) || isNaN(cenaInstalacji) || ostatniaProdukcja === 0) {
-                showNotification("Podaj wszystkie dane do kalkulacji zwrotu!");
-                return;
-            }
-
-            let lata = 0, oszczednosci = 0, wynikZwrotu = "";
-
-            if (trybKalkulacji === "standardowa") {
-                lata = cenaInstalacji / (cenaPradu * ostatniaProdukcja);
-                oszczednosci = cenaPradu * ostatniaProdukcja;
-                wynikZwrotu = `
-                    <b>Szacowany okres zwrotu:</b> ${lata.toFixed(1)} lat<br>
-                    <b>Roczne oszczędności:</b> ${oszczednosci.toFixed(2)} zł
-                `;
-            } else {
-                // Optymistyczna - 5% wzrost ceny prądu rocznie
-                let suma = 0, cena = cenaPradu;
-                while (suma < cenaInstalacji && lata < 50) {
-                    suma += cena * ostatniaProdukcja;
-                    cena *= 1.05;
-                    lata++;
-                }
-                oszczednosci = suma;
-                wynikZwrotu = `
-                    <b>Szacowany okres zwrotu:</b> ${lata} lat<br>
-                    <b>Łączne oszczędności w tym czasie:</b> ${oszczednosci.toFixed(2)} zł
-                `;
-            }
-            document.getElementById('extra-result').innerHTML = wynikZwrotu;
+        let poziom, sugestia, kolorKlasa;
+        if (autokonsumpcja < 30) {
+            poziom = "NISKA AUTOKONSUMPCJA";
+            sugestia = "Konieczna zmiana nawyków w codziennym użytkowaniu urządzeń energochłonnych - edukacja użytkowo-techniczna. <strong>Proponowane rozwiązanie magazyn energii!</strong>";
+            kolorKlasa = "background: rgba(239, 68, 68, 0.1); border-left-color: #ef4444;";
+        } else if (autokonsumpcja < 60) {
+            poziom极 "ŚREDNIA AUTOKONSUMPCJA";
+            sugestia = "Jest dobrze, ale może być lepiej. <strong>Proponowane rozwiązanie: magazyn energii!</strong>";
+            kolorKlasa = "background: rgba(255, 193, 7, 0.1); border-left-color: #ffc107;";
+        } else {
+            poziom = "WYSOKA AUTOKONSUMPCJA";
+            sugestia = "Świetnie! Maksymalizujesz zyski z instalacji fotowoltaicznej. Monitoruj dalej.";
+            kolorKlasa = "background: rgba(74, 222, 128, 0.1); border-left-color: #4ade80;";
         }
 
-        // Autokonsumpcja Calculator Functions
-        function obliczAutokonsumpcje() {
-            const produkcja = parseFloat(document.getElementById('produkcja').value);
-            const eksport = parseFloat(document.getElementById('eksport').value);
-            const zuzycieCalkowite = parseFloat(document.getElementById('zuzycie_au').value);
-            const wynik = document.getElementById('wynik-auto');
-
-            if (isNaN(produkcja) || produkcja <= 0) {
-                pokazBlad("Produkcja musi być większa od 0", wynik);
-                return;
-            }
-            if (isNaN(eksport) || eksport < 0) {
-                pokazBlad("Eksport nie może być ujemny", wynik);
-                return;
-            }
-            if (eksport > produkcja) {
-                pokazBlad("Eksport nie może przekraczać produkcji!", wynik);
-                return;
-            }
-
-            const autokonsumpcja = ((produkcja - eksport) / produkcja) * 100;
-            const zuzyte = produkcja - eksport;
-
-            let poziom, sugestia, kolorKlasa;
-            if (autokonsumpcja < 30) {
-                poziom = "NISKA AUTOKONSUMPCJA";
-                sugestia = "Konieczna zmiana nawyków w codziennym użytkowaniu urządzeń energochłonnych - edukacja użytkowo-techniczna. <strong>Proponowane rozwiązanie magazyn energii!</strong>";
-                kolorKlasa = "background: rgba(239, 68, 68, 0.1); border-left-color: #ef4444;";
-            } else if (autokonsumpcja < 60) {
-                poziom = "ŚREDNIA AUTOKONSUMPCJA";
-                sugestia = "Jest dobrze, ale może być lepiej. <strong>Proponowane rozwiązanie: magazyn energii!</strong>";
-                kolorKlasa = "background: rgba(255, 193, 7, 0.1); border-left-color: #ffc107;";
-            } else {
-                poziom = "WYSOKA AUTOKONSUMPCJA";
-                sugestia = "Świetnie! Maksymalizujesz zyski z instalacji fotowoltaicznej. Monitoruj dalej.";
-                kolorKlasa = "background: rgba(74, 222, 128, 0.1); border-left-color: #4ade80;";
-            }
-
-            wynik.innerHTML = `
-                <div style="font-size: 2.2em; font-weight: 700; color: #4ade80; margin-bottom: 10px;">
-                    ${autokonsumpcja.toFixed(1)}%
+        wynik.innerHTML = `
+            <div style="font-size: 2.2em; font-weight: 700; color: #4ade80; margin-bottom: 10px;">
+                ${autokonsumpcja.toFixed(1)}%
+            </div>
+            <div style="font-weight: 600; font-size: 1.3em; margin-bottom: 15px; color: #86efac;">
+                ${poziom}
+            </div>
+            <div style="font-size: 1.1极m; line-height: 1.5; margin-bottom: 20px;">
+                ${sugestia}
+            </div>
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px; font-size: 1em;">
+                <div style="极ext-align: center; padding: 15px; background: rgba(255,255,255,0.1); border-radius: 10px;">
+                    <div style="color: #86efac; font-weight: 600;">Zużyto z PV</div>
+                    <div style="font-size: 1.3em; font-weight: 700; color: #4ade80;">${zuzyte.toFixed(2)} kWh</div>
                 </div>
-                <div style="font-weight: 600; font-size: 1.3em; margin-bottom: 15px; color: #86efac;">
-                    ${poziom}
-                </div>
-                <div style="font-size: 1.1em; line-height: 1.5; margin-bottom: 20px;">
-                    ${sugestia}
-                </div>
-                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px; font-size: 1em;">
-                    <div style="text-align: center; padding: 15px; background: rgba(255,255,255,0.1); border-radius: 10px;">
-                        <div style="color: #86efac; font-weight: 600;">Zużyto z PV</div>
-                        <div style="font-size: 1.3em; font-weight: 700; color: #4ade80;">${zuzyte.toFixed(2)} kWh</div>
+                <div style="text-align: center; padding: 15px; background: rgba(255,255,255,0.1); border-radius: 10px;">
+                    <div style="color: #86极fac; font-weight: 600;">Eksport</div>
+                    <div style="font-size: 1.3em; font-weight: 700; color: #4ade80;">${eksport.toFixed(2)} kWh</div>
+                </极>
+            </div>
+        `;
+
+        wynik.style.cssText = `
+            display: block;
+            margin-top: 20px;
+            padding: 25px;
+            border-radius: 15px;
+            border-left: 5px solid;
+            font-size: 1.1em;
+            line-height: 1.极;
+            text-align: center;
+            ${kolorKlasa}
+        `;
+
+        // Dodaj informację o całkowitym zużyciu jeśli podane
+        if (!isNaN(zuzycieCalkowite) && zuzycieCalkowite > 0) {
+            const importZSieci = Math.max(0, zuzycie极alkowite - zuzyte);
+            const dodatkoweInfo = `
+                <div style="margin-top: 20px; padding: 15px; background: rgba(255,255,255,0.05); border-radius: 10px;">
+                    <div style="font-size: 1.1em; font-weight: 600; margin-bottom: 10px; color: #86efac;">Dodatkowe informacje:</div>
+                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px; font-size: 0.95em;">
+                        <div>Całkowite zużycie: <strong>${zuzycieCalkowite.toFixed(2)} kWh</strong></div>
+                        <div>Import z sieci: <strong>${importZSieci.toFixed(2)} kWh</strong></div>
                     </div>
-                    <div style="text-align: center; padding: 15px; background: rgba(255,255,255,0.1); border-radius: 10px;">
-                        <div style="color: #86efac; font-weight: 600;">Eksport</div>
-                        <div style="font-size: 1.3em; font-weight: 700; color: #4ade80;">${eksport.toFixed(2)} kWh</div>
-                    </div>
                 </div>
             `;
+            wynik.innerHTML += dodatkowe极nfo;
+        }
+    }
 
-            wynik.style.cssText = `
-                display: block;
-                margin-top: 20px;
-                padding: 25px;
-                border-radius: 15px;
-                border-left: 5px solid;
-                font-size: 1.1em;
-                line-height: 1.6;
-                text-align: center;
-                ${kolorKlasa}
-            `;
+    function pokazBlad(tekst, element) {
+        element.innerHTML = `<strong style="color:#ef4444;">Błąd: ${tekst}</strong>`;
+        element.style.cssText = `
+            display: block;
+            margin-top: 20px;
+            padding: 20px;
+            background: rgba(239, 68, 68, 0.1);
+            border-radius: 15px;
+            border-left: 5px solid #ef4444;
+            font-size: 1.1em;
+            line-height: 1.6;
+            text-align: center;
+        `;
+    }
 
-            // Dodaj informację o całkowitym zużyciu jeśli podane
-            if (!isNaN(zuzycieCalkowite) && zuzycieCalkowite > 0) {
-                const importZSieci = Math.max(0, zuzycieCalkowite - zuzyte);
-                const dodatkoweInfo = `
-                    <div style="margin-top: 20px; padding: 15px; background: rgba(255,255,255,0.05); border-radius: 10px;">
-                        <div style="font-size: 1.1em; font-weight: 600; margin-bottom: 10px; color: #86efac;">Dodatkowe informacje:</div>
-                        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px; font-size: 0.95em;">
-                            <div>Całkowite zużycie: <strong>${zuzycieCalkowite.toFixed(2)} kWh</strong></div>
-                            <div>Import z sieci: <strong>${importZSieci.toFixed(2)} kWh</strong></div>
-                        </div>
-                    </div>
-                `;
-                wynik.innerHTML += dodatkoweInfo;
+    // Global variable for calculator
+    let ostatniaProdukcja = 0;
+
+    // Enter key support for calculators
+    document.addEventListener('keypress', function(e) {
+        if (e.key === 'Enter' && document.activeElement.tagName === 'INPUT') {
+            const currentPage = currentPageStack[currentPageStack.length - 1];
+            if (currentPage === 'pv-kalkulator') {
+                oblicz();
+            } else if (currentPage === 'autokonsumpcja-kalkulator') {
+                obliczAutokonsumpcje();
             }
         }
-
-        function pokazBlad(tekst, element) {
-            element.innerHTML = `<strong style="color:#ef4444;">Błąd: ${tekst}</strong>`;
-            element.style.cssText = `
-                display: block;
-                margin-top: 20px;
-                padding: 20px;
-                background: rgba(239, 68, 68, 0.1);
-                border-radius: 15px;
-                border-left: 5px solid #ef4444;
-                font-size: 1.1em;
-                line-height: 1.6;
-                text-align: center;
-            `;
-        }
-
-        // Global variable for calculator
-        let ostatniaProdukcja = 0;
-
-        // Enter key support for calculators
-        document.addEventListener('keypress', function(e) {
-            if (e.key === 'Enter' && document.activeElement.tagName === 'INPUT') {
-                const currentPage = currentPageStack[currentPageStack.length - 1];
-                if (currentPage === 'pv-kalkulator') {
-                    oblicz();
-                } else if (currentPage === 'autokonsumpcja-kalkulator') {
-                    obliczAutokonsumpcje();
-                }
-            }
-        });
+    });
 
     // Initialize navigation on page load
     document.addEventListener('DOMContentLoaded', function() {
