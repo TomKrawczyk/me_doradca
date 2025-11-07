@@ -103,50 +103,7 @@ function goToHome() {
   updateNavigationButtons();
 }
 
-// Helper function to safely add text with Polish characters
-function addTextWithPolishChars(pdf, text, x, y, options = {}) {
-  // Replace Polish characters with their closest ASCII equivalents for display
-  const polishMap = {
-    'ą': 'a', 'ć': 'c', 'ę': 'e', 'ł': 'l', 'ń': 'n', 
-    'ó': 'o', 'ś': 's', 'ź': 'z', 'ż': 'z',
-    'Ą': 'A', 'Ć': 'C', 'Ę': 'E', 'Ł': 'L', 'Ń': 'N',
-    'Ó': 'O', 'Ś': 'S', 'Ź': 'Z', 'Ż': 'Z'
-  };
-  
-  let convertedText = text;
-  for (const [polish, ascii] of Object.entries(polishMap)) {
-    convertedText = convertedText.replace(new RegExp(polish, 'g'), ascii);
-  }
-  
-  pdf.text(convertedText, x, y, options);
-}
-
-// Helper function to split text into lines
-function splitTextToLines(pdf, text, maxWidth) {
-  const words = text.split(' ');
-  const lines = [];
-  let currentLine = '';
-  
-  words.forEach(word => {
-    const testLine = currentLine ? currentLine + ' ' + word : word;
-    const testWidth = pdf.getTextWidth(testLine);
-    
-    if (testWidth > maxWidth && currentLine) {
-      lines.push(currentLine);
-      currentLine = word;
-    } else {
-      currentLine = testLine;
-    }
-  });
-  
-  if (currentLine) {
-    lines.push(currentLine);
-  }
-  
-  return lines;
-}
-
-// PDF Generation functions
+// PDF Generation functions using pdfmake
 function generatePDF(type) {
   const button = event.target;
   const originalText = button.textContent;
@@ -155,31 +112,24 @@ function generatePDF(type) {
   button.disabled = true;
   
   try {
-    let formData, filename;
+    let formData, filename, docDefinition;
     
     if (type === 'checklista') {
       formData = collectChecklistaData();
       filename = `Checklista_Doradcy_${new Date().toISOString().slice(0, 10)}.pdf`;
+      docDefinition = generateChecklistaPDF(formData);
     } else if (type === 'wywiad') {
       formData = collectWywiadData();
       filename = `Wywiad_Klienta_${new Date().toISOString().slice(0, 10)}.pdf`;
+      docDefinition = generateWywiadPDF(formData);
     }
     
-    const { jsPDF } = window.jspdf;
-    const pdf = new jsPDF('p', 'mm', 'a4');
-    
-    if (type === 'checklista') {
-      generateChecklistaPDF(pdf, formData);
-    } else if (type === 'wywiad') {
-      generateWywiadPDF(pdf, formData);
-    }
-    
-    pdf.save(filename);
+    pdfMake.createPdf(docDefinition).download(filename);
     
     button.textContent = originalText;
     button.disabled = false;
     
-    showNotification('PDF zostal wygenerowany i pobrany!');
+    showNotification('PDF został wygenerowany i pobrany!');
     
   } catch (error) {
     console.error('Error generating PDF:', error);
@@ -187,288 +137,325 @@ function generatePDF(type) {
     button.textContent = originalText;
     button.disabled = false;
     
-    alert('Wystapil blad podczas generowania PDF. Sprobuj ponownie.');
+    alert('Wystąpił błąd podczas generowania PDF. Spróbuj ponownie.');
   }
 }
 
-function generateChecklistaPDF(pdf, data) {
+function generateChecklistaPDF(data) {
   const today = new Date().toLocaleDateString('pl-PL');
-  let yPos = 20;
-  const pageWidth = 210;
-  const margin = 15;
-  const contentWidth = pageWidth - (2 * margin);
-  const lineHeight = 5;
   
-  // Header with background
-  pdf.setFillColor(74, 222, 128);
-  pdf.rect(0, 0, pageWidth, 35, 'F');
+  const content = [
+    // Header
+    {
+      text: 'CHECKLISTA DORADCY TECHNICZNEGO',
+      style: 'header',
+      alignment: 'center',
+      margin: [0, 0, 0, 5]
+    },
+    {
+      text: 'Analiza i modernizacja instalacji',
+      style: 'subheader',
+      alignment: 'center',
+      margin: [0, 0, 0, 20]
+    },
+    // Date
+    {
+      text: `Data wizyty: ${data.dataPodpisu || today}`,
+      style: 'dateBox',
+      margin: [0, 0, 0, 15]
+    },
+    // Section title
+    {
+      text: 'Wizyta u klienta - pierwsze kroki',
+      style: 'sectionTitle',
+      margin: [0, 0, 0, 10]
+    }
+  ];
   
-  pdf.setFontSize(18);
-  pdf.setTextColor(255, 255, 255);
-  addTextWithPolishChars(pdf, 'CHECKLISTA DORADCY TECHNICZNEGO', pageWidth / 2, 15, { align: 'center' });
-  
-  pdf.setFontSize(11);
-  addTextWithPolishChars(pdf, 'Analiza i modernizacja instalacji', pageWidth / 2, 23, { align: 'center' });
-  
-  yPos = 45;
-  pdf.setTextColor(0, 0, 0);
-  
-  // Date section
-  pdf.setFillColor(240, 253, 244);
-  pdf.rect(margin, yPos - 5, contentWidth, 12, 'F');
-  pdf.setFontSize(10);
-  pdf.setFont('helvetica', 'bold');
-  addTextWithPolishChars(pdf, `Data wizyty: ${data.dataPodpisu || today}`, margin + 5, yPos + 2);
-  yPos += 20;
-  
-  // Section title
-  pdf.setFontSize(13);
-  pdf.setTextColor(22, 163, 74);
-  pdf.setFont('helvetica', 'bold');
-  addTextWithPolishChars(pdf, 'Wizyta u klienta - pierwsze kroki', margin, yPos);
-  yPos += 10;
-  
-  pdf.setTextColor(0, 0, 0);
-  
+  // Items
   const items = [
     { label: '1. Dane klienta i lokalizacji:', value: data.daneKlienta || 'Nie podano' },
     { label: '2. Rodzaj instalacji:', value: data.rodzajInstalacji || 'Nie wybrano' },
     { label: '3. Data uruchomienia i wykonawca:', value: `Data: ${data.dataUruchomienia || 'Nie podano'} | Wykonawca: ${data.wykonawca || 'Nie podano'}` },
     { label: '4. Roczna produkcja energii [kWh]:', value: data.produkcjaEnergii || 'Nie podano' },
-    { label: '5. Roczne zuzycie energii / eksport do sieci:', value: `1.8.0: ${data.energiaPobrana || 'Nie podano'} kWh | 2.8.0: ${data.energiaOddana || 'Nie podano'} kWh` },
-    { label: '6. Ocena autokonsumpcji i bilansu z siecia:', value: data.ocenaAutokonsumpcji || 'Nie podano' },
-    { label: '7. Wizualna kontrola paneli/modulow:', value: data.kontrolaPaneli || 'Nie podano' },
-    { label: '8. Kontrola mocowan i konstrukcji nosnej:', value: data.kontrolaMocowan || 'Nie podano' },
-    { label: '9. Sprawdzenie przewodow DC/AC, polaczen MC4:', value: data.kontrolaPrzewodow || 'Nie podano' },
-    { label: '10. Stan zabezpieczen: SPD, RCD, wylaczniki:', value: data.stanZabezpieczen || 'Nie podano' },
-    { label: '11. Odczyt falownika: bledy, produkcja, komunikacja:', value: data.odczytFalownika || 'Nie podano' },
-    { label: '12. Pomiar kluczowych parametrow:', value: `Napiecie: ${data.napiecie || 'Nie podano'} | Prad: ${data.prad || 'Nie podano'} | Temperatura: ${data.temperatura || 'Nie podano'}` },
-    { label: '13. Ocena pracy pompy ciepla:', value: `Zasilanie: ${data.tempZasilania || 'Nie podano'} | Powrot: ${data.tempPowrotu || 'Nie podano'} | COP: ${data.cop || 'Nie podano'}` },
+    { label: '5. Roczne zużycie energii / eksport do sieci:', value: `1.8.0: ${data.energiaPobrana || 'Nie podano'} kWh | 2.8.0: ${data.energiaOddana || 'Nie podano'} kWh` },
+    { label: '6. Ocena autokonsumpcji i bilansu z siecią:', value: data.ocenaAutokonsumpcji || 'Nie podano' },
+    { label: '7. Wizualna kontrola paneli/modułów:', value: data.kontrolaPaneli || 'Nie podano' },
+    { label: '8. Kontrola mocowań i konstrukcji nośnej:', value: data.kontrolaMocowan || 'Nie podano' },
+    { label: '9. Sprawdzenie przewodów DC/AC, połączeń MC4:', value: data.kontrolaPrzewodow || 'Nie podano' },
+    { label: '10. Stan zabezpieczeń: SPD, RCD, wyłączniki:', value: data.stanZabezpieczen || 'Nie podano' },
+    { label: '11. Odczyt falownika: błędy, produkcja, komunikacja:', value: data.odczytFalownika || 'Nie podano' },
+    { label: '12. Pomiar kluczowych parametrów:', value: `Napięcie: ${data.napiecie || 'Nie podano'} | Prąd: ${data.prad || 'Nie podano'} | Temperatura: ${data.temperatura || 'Nie podano'}` },
+    { label: '13. Ocena pracy pompy ciepła:', value: `Zasilanie: ${data.tempZasilania || 'Nie podano'} | Powrót: ${data.tempPowrotu || 'Nie podano'} | COP: ${data.cop || 'Nie podano'}` },
     { label: '14. Wizualna kontrola uziemienia:', value: data.kontrolaUziemienia || 'Nie podano' },
-    { label: '15. Ocena mozliwosci rozbudowy:', value: data.mozliwosciRozbudowy || 'Nie podano' },
-    { label: '16. Wstepna kalkulacja potencjalu modernizacji:', value: data.kalkulacjaPotencjalu || 'Nie podano' },
+    { label: '15. Ocena możliwości rozbudowy:', value: data.mozliwosciRozbudowy || 'Nie podano' },
+    { label: '16. Wstępna kalkulacja potencjału modernizacji:', value: data.kalkulacjaPotencjalu || 'Nie podano' },
     { label: '17. Rekomendacje:', value: data.rekomendacje || 'Nie podano' },
     { label: '18. Dodatkowa rekomendacja:', value: data.dodatkowaRekomendacja || 'Nie podano' }
   ];
   
-  pdf.setFontSize(9);
+  items.forEach(item => {
+    content.push({
+      text: item.label,
+      style: 'itemLabel',
+      margin: [0, 5, 0, 2]
+    });
+    content.push({
+      text: item.value,
+      style: 'itemValue',
+      margin: [10, 0, 0, 5]
+    });
+    content.push({
+      canvas: [{ type: 'line', x1: 0, y1: 0, x2: 515, y2: 0, lineWidth: 0.5, lineColor: '#d1d5db' }],
+      margin: [0, 3, 0, 0]
+    });
+  });
   
-  items.forEach((item) => {
-    if (yPos > 260) {
-      pdf.addPage();
-      yPos = 20;
+  // Signatures
+  content.push({
+    text: 'Podpisy:',
+    style: 'sectionTitle',
+    margin: [0, 15, 0, 10]
+  });
+  
+  content.push({
+    columns: [
+      { text: `Data: ${data.dataPodpisu || today}`, style: 'normal' },
+      { text: `Podpis klienta: ${data.podpisKlienta || ''}`, style: 'normal' }
+    ],
+    margin: [0, 0, 0, 10]
+  });
+  
+  content.push({
+    columns: [
+      { text: '_____________________', alignment: 'left' },
+      { text: '_____________________', alignment: 'center' }
+    ],
+    margin: [0, 0, 0, 3]
+  });
+  
+  content.push({
+    columns: [
+      { text: 'Podpis doradcy', style: 'small', alignment: 'center' },
+      { text: 'Podpis klienta', style: 'small', alignment: 'center' }
+    ],
+    margin: [0, 0, 0, 15]
+  });
+  
+  // Note
+  content.push({
+    text: [
+      { text: 'Uwaga: ', bold: true },
+      { text: 'dokument ma charakter kontrolny. Po spotkaniu wprowadź obserwacje i pomiary do systemu.' }
+    ],
+    style: 'note',
+    margin: [0, 10, 0, 0]
+  });
+  
+  return {
+    content: content,
+    styles: {
+      header: {
+        fontSize: 18,
+        bold: true,
+        color: '#16a34a'
+      },
+      subheader: {
+        fontSize: 11,
+        color: '#16a34a'
+      },
+      dateBox: {
+        fontSize: 10,
+        bold: true,
+        fillColor: '#f0fdf4',
+        margin: [0, 5, 0, 5]
+      },
+      sectionTitle: {
+        fontSize: 13,
+        bold: true,
+        color: '#16a34a'
+      },
+      itemLabel: {
+        fontSize: 9,
+        bold: true,
+        color: '#166534'
+      },
+      itemValue: {
+        fontSize: 9,
+        color: '#374151'
+      },
+      normal: {
+        fontSize: 10
+      },
+      small: {
+        fontSize: 8,
+        color: '#6b7280'
+      },
+      note: {
+        fontSize: 9,
+        fillColor: '#fef3c7',
+        color: '#92400e',
+        margin: [5, 5, 5, 5]
+      }
+    },
+    defaultStyle: {
+      font: 'Roboto'
     }
-    
-    // Item label
-    pdf.setFont('helvetica', 'bold');
-    pdf.setTextColor(22, 101, 52);
-    const labelLines = splitTextToLines(pdf, item.label, contentWidth);
-    labelLines.forEach(line => {
-      addTextWithPolishChars(pdf, line, margin, yPos);
-      yPos += lineHeight;
-    });
-    
-    // Value
-    pdf.setFont('helvetica', 'normal');
-    pdf.setTextColor(55, 65, 81);
-    const valueLines = splitTextToLines(pdf, item.value, contentWidth - 5);
-    valueLines.forEach(line => {
-      addTextWithPolishChars(pdf, line, margin + 3, yPos);
-      yPos += lineHeight;
-    });
-    
-    yPos += 2;
-    
-    // Separator
-    pdf.setDrawColor(209, 213, 219);
-    pdf.line(margin, yPos, pageWidth - margin, yPos);
-    yPos += 4;
-  });
-  
-  // Signatures section
-  if (yPos > 230) {
-    pdf.addPage();
-    yPos = 20;
-  }
-  
-  yPos += 10;
-  pdf.setFontSize(12);
-  pdf.setFont('helvetica', 'bold');
-  pdf.setTextColor(22, 163, 74);
-  addTextWithPolishChars(pdf, 'Podpisy:', margin, yPos);
-  yPos += 12;
-  
-  pdf.setFontSize(10);
-  pdf.setFont('helvetica', 'normal');
-  pdf.setTextColor(0, 0, 0);
-  addTextWithPolishChars(pdf, `Data: ${data.dataPodpisu || today}`, margin, yPos);
-  addTextWithPolishChars(pdf, `Podpis klienta: ${data.podpisKlienta || ''}`, pageWidth / 2 + 10, yPos);
-  yPos += 15;
-  
-  // Signature lines
-  pdf.setDrawColor(0, 0, 0);
-  pdf.line(margin, yPos, margin + 60, yPos);
-  pdf.line(pageWidth / 2 + 10, yPos, pageWidth / 2 + 70, yPos);
-  yPos += 4;
-  
-  pdf.setFontSize(8);
-  pdf.setTextColor(107, 114, 128);
-  addTextWithPolishChars(pdf, 'Podpis doradcy', margin + 15, yPos);
-  addTextWithPolishChars(pdf, 'Podpis klienta', pageWidth / 2 + 25, yPos);
-  yPos += 15;
-  
-  // Note section
-  pdf.setFillColor(254, 243, 199);
-  pdf.rect(margin, yPos - 5, contentWidth, 20, 'F');
-  pdf.setFontSize(9);
-  pdf.setFont('helvetica', 'bold');
-  pdf.setTextColor(146, 64, 14);
-  addTextWithPolishChars(pdf, 'Uwaga: ', margin + 3, yPos + 2);
-  pdf.setFont('helvetica', 'normal');
-  const noteText = 'dokument ma charakter kontrolny. Po spotkaniu wprowadz obserwacje i pomiary do systemu.';
-  const noteLines = splitTextToLines(pdf, noteText, contentWidth - 20);
-  let noteY = yPos + 2;
-  noteLines.forEach(line => {
-    addTextWithPolishChars(pdf, line, margin + 18, noteY);
-    noteY += 5;
-  });
+  };
 }
 
-function generateWywiadPDF(pdf, data) {
+function generateWywiadPDF(data) {
   const today = new Date().toLocaleDateString('pl-PL');
-  let yPos = 20;
-  const pageWidth = 210;
-  const margin = 15;
-  const contentWidth = pageWidth - (2 * margin);
-  const lineHeight = 5;
   
-  // Header with background
-  pdf.setFillColor(74, 222, 128);
-  pdf.rect(0, 0, pageWidth, 35, 'F');
-  
-  pdf.setFontSize(18);
-  pdf.setTextColor(255, 255, 255);
-  addTextWithPolishChars(pdf, 'WYWIAD Z KLIENTEM', pageWidth / 2, 15, { align: 'center' });
-  
-  pdf.setFontSize(11);
-  addTextWithPolishChars(pdf, 'Analiza potrzeb energetycznych', pageWidth / 2, 23, { align: 'center' });
-  
-  yPos = 45;
-  pdf.setTextColor(0, 0, 0);
-  
-  // Date section
-  pdf.setFillColor(240, 253, 244);
-  pdf.rect(margin, yPos - 5, contentWidth, 12, 'F');
-  pdf.setFontSize(10);
-  pdf.setFont('helvetica', 'bold');
-  addTextWithPolishChars(pdf, `Data wywiadu: ${data.data || today}`, margin + 5, yPos + 2);
-  yPos += 20;
-  
-  // Section title
-  pdf.setFontSize(13);
-  pdf.setTextColor(22, 163, 74);
-  pdf.setFont('helvetica', 'bold');
-  addTextWithPolishChars(pdf, 'Kluczowe pytania', margin, yPos);
-  yPos += 10;
-  
-  pdf.setTextColor(0, 0, 0);
-  
-  const questions = [
-    { q: '1. Jaki jest roczny koszt za energie elektryczna?', a: data.kosztEnergii || 'Nie podano' },
-    { q: '2. Ile osob zamieszkuje dom/mieszkanie?', a: data.liczbOsob || 'Nie podano' },
-    { q: '3. O jakiej porze dnia zuzycie pradu jest najwieksze?', a: data.zuzyciePradu || 'Nie podano' },
-    { q: '4. Czym ogrzewana jest ciepla woda?', a: data.ogrzewanieCieplejWody || 'Nie podano' },
-    { q: '5. Hobby?', a: data.hobby || 'Nie podano' },
-    { q: '6. Jaki mamy sprzet elektryczny w domu?', a: data.sprzetElektryczny || 'Nie podano' },
-    { q: '7. Jakie plany zakupowe dotyczace urzadzen energochlonnych?', a: data.planyZakupowe || 'Nie podano' }
+  const content = [
+    // Header
+    {
+      text: 'WYWIAD Z KLIENTEM',
+      style: 'header',
+      alignment: 'center',
+      margin: [0, 0, 0, 5]
+    },
+    {
+      text: 'Analiza potrzeb energetycznych',
+      style: 'subheader',
+      alignment: 'center',
+      margin: [0, 0, 0, 20]
+    },
+    // Date
+    {
+      text: `Data wywiadu: ${data.data || today}`,
+      style: 'dateBox',
+      margin: [0, 0, 0, 15]
+    },
+    // Section title
+    {
+      text: 'Kluczowe pytania',
+      style: 'sectionTitle',
+      margin: [0, 0, 0, 10]
+    }
   ];
   
-  pdf.setFontSize(10);
+  const questions = [
+    { q: '1. Jaki jest roczny koszt za energię elektryczną?', a: data.kosztEnergii || 'Nie podano' },
+    { q: '2. Ile osób zamieszkuje dom/mieszkanie?', a: data.liczbOsob || 'Nie podano' },
+    { q: '3. O jakiej porze dnia zużycie prądu jest największe?', a: data.zuzyciePradu || 'Nie podano' },
+    { q: '4. Czym ogrzewana jest ciepła woda?', a: data.ogrzewanieCieplejWody || 'Nie podano' },
+    { q: '5. Hobby?', a: data.hobby || 'Nie podano' },
+    { q: '6. Jaki mamy sprzęt elektryczny w domu?', a: data.sprzetElektryczny || 'Nie podano' },
+    { q: '7. Jakie plany zakupowe dotyczące urządzeń energochłonnych?', a: data.planyZakupowe || 'Nie podano' }
+  ];
   
-  questions.forEach((item) => {
-    if (yPos > 250) {
-      pdf.addPage();
-      yPos = 20;
+  questions.forEach(item => {
+    content.push({
+      text: item.q,
+      style: 'question',
+      margin: [0, 5, 0, 3]
+    });
+    content.push({
+      text: item.a,
+      style: 'answer',
+      fillColor: '#f9fafb',
+      margin: [0, 0, 0, 8]
+    });
+    content.push({
+      canvas: [{ type: 'line', x1: 0, y1: 0, x2: 515, y2: 0, lineWidth: 0.5, lineColor: '#e5e7eb' }],
+      margin: [0, 3, 0, 0]
+    });
+  });
+  
+  // Signatures
+  content.push({
+    text: 'Potwierdzenie:',
+    style: 'sectionTitle',
+    margin: [0, 15, 0, 10]
+  });
+  
+  content.push({
+    text: `Data: ${data.data || today}`,
+    style: 'normal',
+    margin: [0, 0, 0, 5]
+  });
+  
+  content.push({
+    text: `Podpis klienta: ${data.podpisKlienta || ''}`,
+    style: 'normal',
+    margin: [0, 0, 0, 10]
+  });
+  
+  content.push({
+    text: '________________________________',
+    alignment: 'left',
+    margin: [0, 0, 0, 3]
+  });
+  
+  content.push({
+    text: 'Podpis klienta',
+    style: 'small',
+    alignment: 'left',
+    margin: [0, 0, 0, 15]
+  });
+  
+  // Note
+  content.push({
+    text: [
+      { text: 'Uwaga: ', bold: true },
+      { text: 'dokument ma charakter informacyjny. Odpowiedzi pomogą w doborze optymalnej instalacji.' }
+    ],
+    style: 'note',
+    margin: [0, 10, 0, 0]
+  });
+  
+  return {
+    content: content,
+    styles: {
+      header: {
+        fontSize: 18,
+        bold: true,
+        color: '#16a34a'
+      },
+      subheader: {
+        fontSize: 11,
+        color: '#16a34a'
+      },
+      dateBox: {
+        fontSize: 10,
+        bold: true,
+        fillColor: '#f0fdf4',
+        margin: [0, 5, 0, 5]
+      },
+      sectionTitle: {
+        fontSize: 13,
+        bold: true,
+        color: '#16a34a'
+      },
+      question: {
+        fontSize: 10,
+        bold: true,
+        color: '#166534'
+      },
+      answer: {
+        fontSize: 9,
+        color: '#374151',
+        margin: [5, 5, 5, 5]
+      },
+      normal: {
+        fontSize: 10
+      },
+      small: {
+        fontSize: 8,
+        color: '#6b7280'
+      },
+      note: {
+        fontSize: 9,
+        fillColor: '#fef3c7',
+        color: '#92400e',
+        margin: [5, 5, 5, 5]
+      }
+    },
+    defaultStyle: {
+      font: 'Roboto'
     }
-    
-    // Question
-    pdf.setFont('helvetica', 'bold');
-    pdf.setTextColor(22, 101, 52);
-    const qLines = splitTextToLines(pdf, item.q, contentWidth);
-    qLines.forEach(line => {
-      addTextWithPolishChars(pdf, line, margin, yPos);
-      yPos += lineHeight;
-    });
-    
-    yPos += 1;
-    
-    // Answer box
-    pdf.setFillColor(249, 250, 251);
-    const aLines = splitTextToLines(pdf, item.a, contentWidth - 10);
-    const boxHeight = Math.max(12, aLines.length * lineHeight + 4);
-    pdf.rect(margin, yPos - 3, contentWidth, boxHeight, 'F');
-    
-    pdf.setFont('helvetica', 'normal');
-    pdf.setTextColor(55, 65, 81);
-    let answerY = yPos + 2;
-    aLines.forEach(line => {
-      addTextWithPolishChars(pdf, line, margin + 3, answerY);
-      answerY += lineHeight;
-    });
-    
-    yPos += boxHeight + 6;
-    
-    // Separator
-    pdf.setDrawColor(229, 231, 235);
-    pdf.line(margin, yPos, pageWidth - margin, yPos);
-    yPos += 6;
-  });
-  
-  // Signatures section
-  if (yPos > 230) {
-    pdf.addPage();
-    yPos = 20;
-  }
-  
-  yPos += 10;
-  pdf.setFontSize(12);
-  pdf.setFont('helvetica', 'bold');
-  pdf.setTextColor(22, 163, 74);
-  addTextWithPolishChars(pdf, 'Potwierdzenie:', margin, yPos);
-  yPos += 12;
-  
-  pdf.setFontSize(10);
-  pdf.setFont('helvetica', 'normal');
-  pdf.setTextColor(0, 0, 0);
-  addTextWithPolishChars(pdf, `Data: ${data.data || today}`, margin, yPos);
-  addTextWithPolishChars(pdf, `Podpis klienta: ${data.podpisKlienta || ''}`, margin, yPos + 8);
-  yPos += 20;
-  
-  // Signature line (only for client)
-  pdf.setDrawColor(0, 0, 0);
-  pdf.line(margin, yPos, margin + 80, yPos);
-  yPos += 4;
-  
-  pdf.setFontSize(8);
-  pdf.setTextColor(107, 114, 128);
-  addTextWithPolishChars(pdf, 'Podpis klienta', margin + 20, yPos);
-  yPos += 15;
-  
-  // Note section
-  pdf.setFillColor(254, 243, 199);
-  pdf.rect(margin, yPos - 5, contentWidth, 20, 'F');
-  pdf.setFontSize(9);
-  pdf.setFont('helvetica', 'bold');
-  pdf.setTextColor(146, 64, 14);
-  addTextWithPolishChars(pdf, 'Uwaga: ', margin + 3, yPos + 2);
-  pdf.setFont('helvetica', 'normal');
-  const noteText = 'dokument ma charakter informacyjny. Odpowiedzi pomoga w doborze optymalnej instalacji.';
-  const noteLines = splitTextToLines(pdf, noteText, contentWidth - 20);
-  let noteY = yPos + 2;
-  noteLines.forEach(line => {
-    addTextWithPolishChars(pdf, line, margin + 18, noteY);
-    noteY += 5;
-  });
+  };
 }
 
 function collectChecklistaData() {
@@ -478,7 +465,7 @@ function collectChecklistaData() {
   
   const selectedTypes = [];
   if (document.getElementById('pv-checkbox')?.checked) selectedTypes.push('PV');
-  if (document.getElementById('pompa-checkbox')?.checked) selectedTypes.push('Pompa ciepla');
+  if (document.getElementById('pompa-checkbox')?.checked) selectedTypes.push('Pompa ciepła');
   if (document.getElementById('magazyn-checkbox')?.checked) selectedTypes.push('Magazyn energii');
   data.rodzajInstalacji = selectedTypes.join(', ') || 'Nie wybrano';
   
@@ -564,13 +551,13 @@ function oblicz() {
   const limitJednofazowy = 3.68;
 
   if (isNaN(zuzycie)) {
-    showNotification("Podaj roczne zuzycie energii!");
+    showNotification("Podaj roczne zużycie energii!");
     return;
   }
 
   let mocWstępna = (zuzycie * 1.2) / 1000;
   let panel = mocWstępna <= limitJednofazowy ? 450 : 480;
-  let typInstalacji = mocWstępna <= limitJednofazowy ? "jednofazowa" : "trojfazowa";
+  let typInstalacji = mocWstępna <= limitJednofazowy ? "jednofazowa" : "trójfazowa";
   let liczbaPaneli = Math.ceil((mocWstępna * 1000) / panel);
   let mocInstalacji = (liczbaPaneli * panel) / 1000;
   let produkcja = mocInstalacji * 1000 * orientacja;
@@ -593,7 +580,7 @@ function oblicz() {
   if (trybMagazynu === 'export') {
     wynik += "<br><b>Tryb rozliczenia:</b> Eksport energii do sieci";
   } else {
-    wynik += "<br><b>Tryb rozliczenia:</b> Bez eksportu (tylko zuzycie lokalne)";
+    wynik += "<br><b>Tryb rozliczenia:</b> Bez eksportu (tylko zużycie lokalne)";
   }
 
   document.getElementById('wynik').innerHTML = wynik;
@@ -619,7 +606,7 @@ function obliczZwrot() {
     oszczednosci = cenaPradu * ostatniaProdukcja;
     wynikZwrotu = `
       <b>Szacowany okres zwrotu:</b> ${lata.toFixed(1)} lat<br>
-      <b>Roczne oszczednosci:</b> ${oszczednosci.toFixed(2)} zl
+      <b>Roczne oszczędności:</b> ${oszczednosci.toFixed(2)} zł
     `;
   } else {
     let suma = 0, cena = cenaPradu;
@@ -631,7 +618,7 @@ function obliczZwrot() {
     oszczednosci = suma;
     wynikZwrotu = `
       <b>Szacowany okres zwrotu:</b> ${lata} lat<br>
-      <b>Laczne oszczednosci w tym czasie:</b> ${oszczednosci.toFixed(2)} zl
+      <b>Łączne oszczędności w tym czasie:</b> ${oszczednosci.toFixed(2)} zł
     `;
   }
   document.getElementById('extra-result').innerHTML = wynikZwrotu;
@@ -644,15 +631,15 @@ function obliczAutokonsumpcje() {
   const wynik = document.getElementById('wynik-auto');
 
   if (isNaN(produkcja) || produkcja <= 0) {
-    pokazBlad("Produkcja musi byc wieksza od 0", wynik);
+    pokazBlad("Produkcja musi być większa od 0", wynik);
     return;
   }
   if (isNaN(eksport) || eksport < 0) {
-    pokazBlad("Eksport nie moze byc ujemny", wynik);
+    pokazBlad("Eksport nie może być ujemny", wynik);
     return;
   }
   if (eksport > produkcja) {
-    pokazBlad("Eksport nie moze przekraczac produkcji!", wynik);
+    pokazBlad("Eksport nie może przekraczać produkcji!", wynik);
     return;
   }
 
@@ -662,15 +649,15 @@ function obliczAutokonsumpcje() {
   let poziom, sugestia, kolorKlasa;
   if (autokonsumpcja < 30) {
     poziom = "NISKA AUTOKONSUMPCJA";
-    sugestia = "Konieczna zmiana nawykow w codziennym uzytkowaniu urzadzen energochlonnych - edukacja uzytkowo-techniczna. <strong>Proponowane rozwiazanie magazyn energii!</strong>";
+    sugestia = "Konieczna zmiana nawyków w codziennym użytkowaniu urządzeń energochłonnych - edukacja użytkowo-techniczna. <strong>Proponowane rozwiązanie magazyn energii!</strong>";
     kolorKlasa = "background: rgba(239, 68, 68, 0.1); border-left-color: #ef4444;";
   } else if (autokonsumpcja < 60) {
-    poziom = "SREDNIA AUTOKONSUMPCJA";
-    sugestia = "Jest dobrze, ale moze byc lepiej. <strong>Proponowane rozwiazanie: magazyn energii!</strong>";
+    poziom = "ŚREDNIA AUTOKONSUMPCJA";
+    sugestia = "Jest dobrze, ale może być lepiej. <strong>Proponowane rozwiązanie: magazyn energii!</strong>";
     kolorKlasa = "background: rgba(255, 193, 7, 0.1); border-left-color: #ffc107;";
   } else {
     poziom = "WYSOKA AUTOKONSUMPCJA";
-    sugestia = "Swietnie! Maksymalizujesz zyski z instalacji fotowoltaicznej. Monitoruj dalej.";
+    sugestia = "Świetnie! Maksymalizujesz zyski z instalacji fotowoltaicznej. Monitoruj dalej.";
     kolorKlasa = "background: rgba(74, 222, 128, 0.1); border-left-color: #4ade80;";
   }
 
@@ -686,7 +673,7 @@ function obliczAutokonsumpcje() {
     </div>
     <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px; font-size: 1em;">
       <div style="text-align: center; padding: 15px; background: rgba(255,255,255,0.1); border-radius: 10px;">
-        <div style="color: #86efac; font-weight: 600;">Zuzyto z PV</div>
+        <div style="color: #86efac; font-weight: 600;">Zużyto z PV</div>
         <div style="font-size: 1.3em; font-weight: 700; color: #4ade80;">${zuzyte.toFixed(2)} kWh</div>
       </div>
       <div style="text-align: center; padding: 15px; background: rgba(255,255,255,0.1); border-radius: 10px;">
@@ -714,7 +701,7 @@ function obliczAutokonsumpcje() {
       <div style="margin-top: 20px; padding: 15px; background: rgba(255,255,255,0.05); border-radius: 10px;">
         <div style="font-size: 1.1em; font-weight: 600; margin-bottom: 10px; color: #86efac;">Dodatkowe informacje:</div>
         <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px; font-size: 0.95em;">
-          <div>Calkowite zuzycie: <strong>${zuzycieCalkowite.toFixed(2)} kWh</strong></div>
+          <div>Całkowite zużycie: <strong>${zuzycieCalkowite.toFixed(2)} kWh</strong></div>
           <div>Import z sieci: <strong>${importZSieci.toFixed(2)} kWh</strong></div>
         </div>
       </div>
@@ -724,7 +711,7 @@ function obliczAutokonsumpcje() {
 }
 
 function pokazBlad(tekst, element) {
-  element.innerHTML = `<strong style="color:#ef4444;">Blad: ${tekst}</strong>`;
+  element.innerHTML = `<strong style="color:#ef4444;">Błąd: ${tekst}</strong>`;
   element.style.cssText = `
     display: block;
     margin-top: 20px;
