@@ -731,6 +731,43 @@ function pokazBlad(tekst, element) {
     text-align: center;
   `;
 }
+// Kod dla rysownika (canvas)
+const canvas = document.getElementById('drawing-canvas');
+const ctx = canvas.getContext('2d');
+const colorPicker = document.getElementById('color-picker');
+const lineWidthInput = document.getElementById('line-width');
+let isDrawing = false;
+let lastX = 0;
+let lastY = 0;
+// Funkcja do rozpoczęcia rysowania
+function startDrawing(e) {
+  isDrawing = true;
+  [lastX, lastY] = [e.offsetX, e.offsetY];
+}
+// Funkcja do rysowania linii
+function draw(e) {
+  if (!isDrawing) return;
+  ctx.strokeStyle = colorPicker.value;
+  ctx.lineWidth = lineWidthInput.value;
+  ctx.lineCap = 'round';
+  ctx.beginPath();
+  ctx.moveTo(lastX, lastY);
+  ctx.lineTo(e.offsetX, e.offsetY);
+  ctx.stroke();
+  [lastX, lastY] = [e.offsetX, e.offsetY];
+}
+// Funkcja do zakończenia rysowania
+function stopDrawing() {
+  isDrawing = false;
+}
+// Funkcja do czyszczenia płótna
+function clearCanvas() {
+  ctx.clearRect(0, 0, canvas.width, canvas.height);
+}
+// Nasłuchiwanie zdarzeń
+canvas.addEventListener('mousedown', startDrawing);
+canvas.addEventListener('mousemove', draw);
+});
 
 // Event listeners
 document.addEventListener('keypress', function(e) {
