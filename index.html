@@ -1,306 +1,328 @@
 <!DOCTYPE html>
 <html lang="pl">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Autokonsumpcja - 4ECO</title>
-  <link rel="stylesheet" href="style.css">
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.2.7/pdfmake.min.js"></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.2.7/vfs_fonts.js"></script>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Autokonsumpcja - 4ECO</title>
+<link rel="stylesheet" href="style.css">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.2.7/pdfmake.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.2.7/vfs_fonts.js"></script>
 </head>
 <body>
-  <a href="#" class="back-button" onclick="goBack()">← Wstecz</a>
-  <a href="#" class="next-button" onclick="goNext()">Dalej →</a>
-  <a href="#" class="home-button-nav" onclick="goToHome()">Strona główna</a>
+<a href="#" class="back-button" onclick="goBack()">← Wstecz</a>
+<a href="#" class="next-button" onclick="goNext()">Dalej →</a>
+<a href="#" class="home-button-nav" onclick="goToHome()">Strona główna</a>
 
-  <div class="container">
-    <div id="main-menu" class="content-page active">
-      <div class="header">
-        <div class="logo">Doradca techniczny</div>
-        <div class="subtitle">Autokonsumpcja, edukacja</div>
-      </div>
-      <div class="main-menu">
-        <div class="menu-card" onclick="showSubmenu('checklista')">
-          <div class="menu-title">Checklista</div>
-          <div class="menu-description">Podstawowe zadania doradcy</div>
-        </div>
-        <div class="menu-card" onclick="showSubmenu('wywiad')">
-          <div class="menu-title">Wywiad</div>
-          <div class="menu-description">Rozmowa z klientem / analiza potrzeb</div>
-        </div>
-        <div class="menu-card" onclick="showPage('autokonsumpcja-kalkulator')">
-          <div class="menu-title">Kalkulator Autokonsumpcji</div>
-          <div class="menu-description">Oblicz opłacalność zużycia własnego</div>
-        </div>
-        <div class="menu-card" onclick="showSubmenu('edukacja')">
-          <div class="menu-title">Edukacja / Autokonsumpcja</div>
-          <div class="menu-description">Jak działa system, co warto wiedzieć</div>
-        </div>
-        <div class="menu-card" onclick="showPage('pv-kalkulator')">
-          <div class="menu-title">Kalkulator PV</div>
-          <div class="menu-description">Dobierz moc instalacji i sprawdź zysk</div>
-        </div>
-      </div>
-    </div>
+<div class="container">
+<div id="main-menu" class="content-page active">
+<div class="header">
+<div class="logo">Doradca techniczny</div>
+<div class="subtitle">Autokonsumpcja, edukacja</div>
+</div>
+<div class="main-menu">
+<div class="menu-card" onclick="showSubmenu('checklista')">
+<div class="menu-title">Checklista</div>
+<div class="menu-description">Podstawowe zadania doradcy</div>
+</div>
+<div class="menu-card" onclick="showSubmenu('wywiad')">
+<div class="menu-title">Wywiad</div>
+<div class="menu-description">Rozmowa z klientem / analiza potrzeb</div>
+</div>
+<div class="menu-card" onclick="showPage('autokonsumpcja-kalkulator')">
+<div class="menu-title">Kalkulator Autokonsumpcji</div>
+<div class="menu-description">Oblicz opłacalność zużycia własnego</div>
+</div>
+<div class="menu-card" onclick="showSubmenu('edukacja')">
+<div class="menu-title">Edukacja / Autokonsumpcja</div>
+<div class="menu-description">Jak działa system, co warto wiedzieć</div>
+</div>
+<div class="menu-card" onclick="showPage('pv-kalkulator')">
+<div class="menu-title">Kalkulator PV</div>
+<div class="menu-description">Dobierz moc instalacji i sprawdź zysk</div>
+</div>
+</div>
+</div>
 
-    <div id="submenu-checklista" class="content-page">
-      <div class="page-header">
-        <div class="page-title">Checklista</div>
-      </div>
-      <div class="submenu">
-        <div class="submenu-card" onclick="showPage('checklista-start')">
-          <div class="submenu-title">Checklista Doradcy Technicznego</div>
-          <div class="submenu-description">Priorytet u klienta</div>
-        </div>
-      </div>
-    </div>
-    
-    <div id="checklista-start" class="content-page">
-      <div class="page-header">
-        <div class="page-title">CHECKLISTA DORADCY TECHNICZNEGO</div>
-        <div class="page-subtitle">Analiza i modernizacja instalacji</div>
-      </div>
+<div id="submenu-checklista" class="content-page">
+<div class="page-header">
+<div class="page-title">Checklista</div>
+</div>
+<div class="submenu">
+<div class="submenu-card" onclick="showPage('checklista-start')">
+<div class="submenu-title">Checklista Doradcy Technicznego</div>
+<div class="submenu-description">Priorytet u klienta</div>
+</div>
+</div>
+</div>
 
-      <div class="slide-content">
-        <h3>Wizyta u klienta - pierwsze kroki</h3>
-        <ul>
-         <li>Dane klienta i lokalizacji (adres, kontakt):<br>
-            <input type="text" class="checklist-input" id="dane-klienta" placeholder="np. Jan Kowalski, ul. Słoneczna 12, 00-000 Warszawa, tel. 600 123 456" />
-         </li>
-          <li>Rodzaj instalacji:
-            <div class="checkbox-group">
-              <label class="checkbox-item"><input type="checkbox" id="pv-checkbox"> PV</label>
-              <label class="checkbox-item"><input type="checkbox" id="pompa-checkbox"> Pompa ciepła</label>
-              <label class="checkbox-item"><input type="checkbox" id="magazyn-checkbox"> Magazyn energii</label>
-            </div>
-          </li>
-          <li>Data uruchomienia i wykonawca:<br>
-            <input type="date" class="checklist-input" id="data-uruchomienia" /> | <input type="text" class="checklist-input" id="wykonawca" placeholder="Nazwa firma wykonawcy" />
-          </li>
-          <li>Roczna produkcja energii [kWh] (falownik):<br>
-            <input type="text" class="checklist-input" id="produkcja-energii" placeholder="np. 8500" />
-          </li>
-          <li>Roczne zużycie energii w budynku [kWh] / eksport do sieci [kWh] (licznik):<br>
-            <strong>1.8.0</strong> <input type="text" class="checklist-input" id="energia-pobrana" placeholder="Całkowita energia pobrana z sieci" /> kWh &nbsp;&nbsp;
-            <strong>2.8.0</strong> <input type="text" class="checklist-input" id="energia-oddana" placeholder="Całkowita energia oddana do sieci" /> kWh
-          </li>
-          <li>Ocena autokonsumpcji i bilansu z siecią:<br>
-            <input type="text" class="checklist-input" id="ocena-autokonsumpcji" placeholder="np. Autokonsumpcja ok. 35%, eksport 65% produkcji. Potencjał poprawy poprzez magazyn energii." />
-          </li>
-          <li>Wizualna kontrola paneli/modułów (pęknięcia, zabrudzenia):<br>
-            <input type="text" class="checklist-input" id="kontrola-paneli" placeholder="np. Panele czyste, brak pęknięć, lekkie zabrudzenia ptasie na 3 modułach." />
-          </li>
-          <li>Kontrola mocowań i konstrukcji nośnej:<br>
-            <input type="text" class="checklist-input" id="kontrola-mocowan" placeholder="np. Mocowania stabilne, brak korozji, konstrukcja w dobrym stanie." />
-          </li>
-          <li>Wizualny sprawdzenie przewodów DC/AC, połączeń MC4:<br>
-            <input type="text" class="checklist-input" id="kontrola-przewodow" placeholder="np. Wszystkie MC4 szczelne, brak przegrzewania, izolacja OK." />
-          </li>
-          <li>Wizualny stan zabezpieczeń: SPD, RCD, wyłączniki:<br>
-            <input type="text" class="checklist-input" id="stan-zabezpieczen" placeholder="np. SPD sprawne, RCD testowane – OK, wyłączniki bez śladów przegrzania." />
-          </li>
-          <li>Odczyt falownika: błędy, produkcja, komunikacja:<br>
-            <input type="text" class="checklist-input" id="odczyt-falownika" placeholder="np. Brak błędów, komunikacja Wi-Fi OK, aktualna produkcja 4.2 kW." />
-          </li>
-          </li>
-          <li>Wizualna kontrola uziemienia i ciągłości przewodów ochronnych:<br>
-            <input type="text" class="checklist-input" id="kontrola-uziemienia" placeholder="np. Uziemienie wizualnie OK, ciągłość PE potwierdzona." />
-          </li>
-          <li>Ocena możliwości rozbudowy: miejsce, przyłącze, ograniczenia:<br>
-            <input type="text" class="checklist-input" id="mozliwosci-rozbudowy" placeholder="np. Dach pozwala na +6 paneli, moc przyłącza 25 kW – wystarczająca." />
-          </li>
-          <li>Wstępna kalkulacja potencjału modernizacji (kWh/rok):<br>
-            <input type="text" class="checklist-input" id="kalkulacja-potencjalu" placeholder="np. +3200 kWh/rok po dodaniu magazynu 10 kWh" />
-          </li>
-          <li>Rekomendacje: serwis, czyszczenie, wymiana elementów krytycznych:<br>
-            <input type="text" class="checklist-input" id="rekomendacje" placeholder="Zalecane: czyszczenie paneli, przegląd SPD za 6 miesięcy, rozważenie magazynu energii." />
-          </li>
-          <li>Dodatkowa rekomendacja:<br>
-            <input type="text" class="checklist-input" id="dodatkowa-rekomendacja" placeholder="np. Montaż optymalizatorów na zacienionych modułach." />
-          </li>
-        </ul>
+<div id="checklista-start" class="content-page">
+<div class="page-header">
+<div class="page-title">CHECKLISTA DORADCY TECHNICZNEGO</div>
+<div class="page-subtitle">Analiza i modernizacja instalacji</div>
+</div>
 
-        <div class="footer">
-          <div class="signature">
-            <strong>Data:</strong> <input type="date" id="data-podpisu" />
-          </div>
-          <div class="signature">
-            <strong>Podpis klienta:</strong> <input type="text" id="podpis-klienta" placeholder="Imię i nazwisko" style="width: 200px;" />
-          </div>
-        </div>
+<div class="slide-content">
+<h3>Wizyta u klienta - pierwsze kroki</h3>
+<ul>
+<li>Dane klienta i lokalizacji (adres, kontakt):<br>
+<input type="text" class="checklist-input" id="dane-klienta" placeholder="np. Jan Kowalski, ul. Słoneczna 12, 00-000 Warszawa, tel. 600 123 456" />
+</li>
+<li>Rodzaj instalacji:
+<div class="checkbox-group">
+<label class="checkbox-item"><input type="checkbox" id="pv-checkbox"> PV</label>
+<label class="checkbox-item"><input type="checkbox" id="pompa-checkbox"> Pompa ciepła</label>
+<label class="checkbox-item"><input type="checkbox" id="magazyn-checkbox"> Magazyn energii</label>
+</div>
+</li>
+<li>Data uruchomienia i wykonawca:<br>
+<input type="date" class="checklist-input" id="data-uruchomienia" /> | <input type="text" class="checklist-input" id="wykonawca" placeholder="Nazwa firmy wykonawcy" />
+</li>
+<li>Roczna produkcja energii [kWh] (falownik):<br>
+<input type="text" class="checklist-input" id="produkcja-energii" placeholder="np. 8500" />
+</li>
+<li>Roczne zużycie energii w budynku [kWh] / eksport do sieci [kWh] (licznik):<br>
+<strong>1.8.0</strong> <input type="text" class="checklist-input" id="energia-pobrana" placeholder="Całkowita energia pobrana z sieci" /> kWh &nbsp;&nbsp;
+<strong>2.8.0</strong> <input type="text" class="checklist-input" id="energia-oddana" placeholder="Całkowita energia oddana do sieci" /> kWh
+</li>
+<li>Ocena autokonsumpcji i bilansu z siecią:<br>
+<input type="text" class="checklist-input" id="ocena-autokonsumpcji" placeholder="np. Autokonsumpcja ok. 35%, eksport 65% produkcji." />
+</li>
+<li>Wizualna kontrola paneli/modułów (pęknięcia, zabrudzenia):<br>
+<input type="text" class="checklist-input" id="kontrola-paneli" placeholder="np. Panele czyste, brak pęknięć." />
+</li>
+<li>Kontrola mocowań i konstrukcji nośnej:<br>
+<input type="text" class="checklist-input" id="kontrola-mocowan" placeholder="np. Mocowania stabilne, brak korozji." />
+</li>
+<li>Wizualne sprawdzenie przewodów DC/AC, połączeń MC4:<br>
+<input type="text" class="checklist-input" id="kontrola-przewodow" placeholder="np. Wszystkie MC4 szczelne." />
+</li>
+<li>Wizualny stan zabezpieczeń: SPD, RCD, wyłączniki:<br>
+<input type="text" class="checklist-input" id="stan-zabezpieczen" placeholder="np. SPD sprawne, RCD testowane – OK." />
+</li>
+<li>Odczyt falownika: błędy, produkcja, komunikacja:<br>
+<input type="text" class="checklist-input" id="odczyt-falownika" placeholder="np. Brak błędów, komunikacja Wi-Fi OK." />
+</li>
+<li>Wizualna kontrola uziemienia i ciągłości przewodów ochronnych:<br>
+<input type="text" class="checklist-input" id="kontrola-uziemienia" placeholder="np. Uziemienie wizualnie OK." />
+</li>
+<li>Ocena możliwości rozbudowy: miejsce, przyłącze, ograniczenia:<br>
+<input type="text" class="checklist-input" id="mozliwosci-rozbudowy" placeholder="np. Dach pozwala na +6 paneli." />
+</li>
+<li>Wstępna kalkulacja potencjału modernizacji (kWh/rok):<br>
+<input type="text" class="checklist-input" id="kalkulacja-potencjalu" placeholder="np. +3200 kWh/rok po dodaniu magazynu" />
+</li>
+<li>Rekomendacje: serwis, czyszczenie, wymiana elementów krytycznych:<br>
+<input type="text" class="checklist-input" id="rekomendacje" placeholder="Zalecane: czyszczenie paneli, przegląd SPD." />
+</li>
+<li>Dodatkowa rekomendacja:<br>
+<input type="text" class="checklist-input" id="dodatkowa-rekomendacja" placeholder="np. Montaż optymalizatorów." />
+</li>
+</ul>
 
-        <p class="note">
-          <strong>Uwaga:</strong> dokument ma charakter kontrolny. Po spotkaniu wprowadź obserwacje i pomiary do systemu.
-        </p>
+<div class="footer">
+<div class="signature">
+<strong>Data:</strong> <input type="date" id="data-podpisu" />
+</div>
+<div class="signature">
+<strong>Podpis klienta:</strong> <input type="text" id="podpis-klienta" placeholder="Imię i nazwisko" style="width: 200px;" />
+</div>
+</div>
 
-        <button class="btn" onclick="generatePDF('checklista')">Pobierz PDF</button>
-      </div>
-    </div>
+<p class="note">
+<strong>Uwaga:</strong> dokument ma charakter kontrolny. Po spotkaniu wprowadź obserwacje i pomiary do systemu.
+</p>
 
-    <div id="submenu-wywiad" class="content-page">
-      <div class="page-header"><div class="page-title">Wywiad</div></div>
-      <div class="submenu">
-        <div class="submenu-card" onclick="showPage('wywiad-pytania')">
-          <div class="submenu-title">Pytania</div>
-          <div class="submenu-description">Trochę szczegółów....</div>
-        </div>
-      </div>
-    </div>
-    
-    <div id="wywiad-pytania" class="content-page">
-      <div class="page-header"><div class="page-title">Wywiad: Pytania</div></div>
-      <div class="slide-content">
-        <h3>Kluczowe pytania</h3>
-        <ul>
-          <li>Jaki jest roczny koszt za energi elektryczną?</li>
-          <input type="text" class="checklist-input" id="wywiad-koszt" placeholder="Roczny koszt" />
-          <li>Ile osób zamieszkuje dom/mieszkanie?</li>
-          <input type="text" class="checklist-input" id="wywiad-osoby" placeholder="Osoby zamieszkujące" />
-          <li>O jakiej porze dnia zużycie prądu jest największe?</li>
-          <input type="text" class="checklist-input" id="wywiad-zuzycie" placeholder="Zużycie prądu" />
-          <li>Czym ogrzewana jest ciepłą wodę?</li>
-          <input type="text" class="checklist-input" id="wywiad-woda" placeholder="Ciepłą wodę" />
-          <li>Hobby?</li>
-          <input type="text" class="checklist-input" id="wywiad-hobby" placeholder="Hobby" />
-          <li>Jaki mamy sprzęt elektryczny w domu?</li>
-          <input type="text" class="checklist-input" id="wywiad-sprzet" placeholder="Sprzęt elektryczny" />
-          <li>Jakie plany zakupowe dotyczące urządzeń energochłonnych?</li>
-          <input type="text" class="checklist-input" id="wywiad-plany" placeholder="Plany zakupowe" />
-        </ul>
+<button class="btn" onclick="generatePDF('checklista')">Pobierz PDF</button>
+</div>
+</div>
 
-        <div class="footer">
-          <div class="signature">
-            <strong>Data:</strong> <input type="date" id="wywiad-data" />
-          </div>
-          <div class="signature">
-            <strong>Podpis klienta:</strong> <input type="text" id="wywiad-podpis" placeholder="Imię i nazwisko" style="width: 200px;" />
-          </div>
-        </div>
+<div id="submenu-wywiad" class="content-page">
+<div class="page-header"><div class="page-title">Wywiad</div></div>
+<div class="submenu">
+<div class="submenu-card" onclick="showPage('wywiad-pytania')">
+<div class="submenu-title">Pytania</div>
+<div class="submenu-description">Szczegółowe pytania dla klienta</div>
+</div>
+</div>
+</div>
 
-        <p class="note">
-          <strong>Uwaga:</strong> dokument ma charakter informacyjny. Odpowiedzi pomogą w doborze optymalnej instalacji.
-        </p>
+<div id="wywiad-pytania" class="content-page">
+<div class="page-header"><div class="page-title">Wywiad: Pytania</div></div>
+<div class="slide-content">
+<h3>Kluczowe pytania</h3>
+<ul>
+<li>Jaki jest roczny koszt za energię elektryczną?
+<input type="text" class="checklist-input" id="wywiad-koszt" placeholder="Roczny koszt" />
+</li>
+<li>Ile osób zamieszkuje dom/mieszkanie?
+<input type="text" class="checklist-input" id="wywiad-osoby" placeholder="Liczba osób" />
+</li>
+<li>O jakiej porze dnia zużycie prądu jest największe?
+<input type="text" class="checklist-input" id="wywiad-zuzycie" placeholder="Pora dnia" />
+</li>
+<li>Czym ogrzewana jest ciepła woda?
+<input type="text" class="checklist-input" id="wywiad-woda" placeholder="Sposób ogrzewania" />
+</li>
+<li>Hobby?
+<input type="text" class="checklist-input" id="wywiad-hobby" placeholder="Hobby klienta" />
+</li>
+<li>Jaki mamy sprzęt elektryczny w domu?
+<input type="text" class="checklist-input" id="wywiad-sprzet" placeholder="Sprzęt elektryczny" />
+</li>
+<li>Jakie plany zakupowe dotyczące urządzeń energochłonnych?
+<input type="text" class="checklist-input" id="wywiad-plany" placeholder="Plany zakupowe" />
+</li>
+</ul>
 
-        <button class="btn" onclick="generatePDF('wywiad')">Pobierz PDF</button>
-      </div>
-    </div>
+<div class="footer">
+<div class="signature">
+<strong>Data:</strong> <input type="date" id="wywiad-data" />
+</div>
+<div class="signature">
+<strong>Podpis klienta:</strong> <input type="text" id="wywiad-podpis" placeholder="Imię i nazwisko" style="width: 200px;" />
+</div>
+</div>
 
-    <div id="autokonsumpcja-kalkulator" class="content-page">
-      <div class="page-header"><div class="page-title">Kalkulator Autokonsumpcji</div></div>
-      <div class="calculator-container">
-        <h3>Wprowadź dane z falownika i licznika</h3>
-        
-        <label>Produkcja prądu [kWh]</label>
-        <input type="number" id="produkcja" step="0.01" placeholder="np. 18.5">
+<p class="note">
+<strong>Uwaga:</strong> dokument ma charakter informacyjny. Odpowiedzi pomogą w doborze optymalnej instalacji.
+</p>
 
-        <label>Eksport do sieci [kWh]</label>
-        <input type="number" id="eksport" step="0.01" placeholder="np. 10.2">
+<button class="btn" onclick="generatePDF('wywiad')">Pobierz PDF</button>
+</div>
+</div>
 
-        <label>Całkowite zużycie domu [kWh] <small style="color:#86efac;">(opcjonalne)</small></label>
-        <input type="number" id="zuzycie_au" step="0.01" placeholder="np. 15.3">
+<div id="autokonsumpcja-kalkulator" class="content-page">
+<div class="page-header"><div class="page-title">Kalkulator Autokonsumpcji</div></div>
+<div class="calculator-container">
+<h3>Wprowadź dane z falownika i licznika</h3>
 
-        <button onclick="obliczAutokonsumpcje()">OBLICZ AUTOKONSUMPCJĘ</button>
+<label>Produkcja prądu [kWh]</label>
+<input type="number" id="produkcja" step="0.01" placeholder="np. 18.5">
 
-        <div class="calc-result" id="wynik-auto" style="display: none;"></div>
-      </div>
-    </div>
+<label>Eksport do sieci [kWh]</label>
+<input type="number" id="eksport" step="0.01" placeholder="np. 10.2">
 
-    <div id="submenu-edukacja" class="content-page">
-      <div class="page-header"><div class="page-title">Edukacja / Autokonsumpcja</div></div>
-      <div class="submenu">
-        <div class="submenu-card" onclick="showPage('edukacja-dzialanie')">
-          <div class="submenu-title">Jak działa PV</div>
-          <div class="submenu-description">Zasada działania</div>
-        </div>
-      </div>
-    </div>
-    
-    <div id="edukacja-dzialanie" class="content-page">
-      <div class="page-header"><div class="page-title">Jak działa PV</div></div>
-      <div class="slide-content">
-        <h3>Zasada działania instalacji fotowoltaicznej</h3>
-        <p>Instalacja fotowoltaiczna przekształca energię słoneczną w energię elektryczną za pomocą paneli słonecznych. Proces ten odbywa się w kilku etapach:</p>
-        <ul>
-          <li>Panele fotowoltaiczne wychwytują promieniowanie słoneczne</li>
-          <li>Energia słoneczna jest przekształcana w prąd stały (DC)</li>
-          <li>Falownik konwertuje prąd stały na prąd przemienny (AC)</li>
-          <li>Energia jest wykorzystywana w domu lub oddawana do sieci</li>
-          <li>Nadwyżka energii może być magazynowana w bateriach</li>
-        </ul>
-        <h3>Autokonsumpcja</h3>
-        <p>Autokonsumpcja to wykorzystanie wyprodukowanej energii bezpośrednio w gospodarstwie domowym. Im wyższa autokonsumpcja, tym większe oszczędności na rachunkach za prąd.</p>
+<label>Całkowite zużycie domu [kWh] <small style="color:#86efac;">(opcjonalne)</small></label>
+<input type="number" id="zuzycie_au" step="0.01" placeholder="np. 15.3">
 
-        <!-- Dodany prosty edytor rysunkowy -->
-        <h3>Rysuj schemat działania instalacji PV</h3>
-        <p>Użyj narzędzia poniżej, aby narysować prosty obrazek (np. schemat paneli, falownika itp.). Kliknij i przeciągnij myszką, aby rysować.</p>
-        
-        <!-- Kontrolki edytora -->
-        <div style="margin-bottom: 10px;">
-          <label>Kolor linii: </label>
-          <input type="color" id="color-picker" value="#000000">
-          <label style="margin-left: 10px;">Grubość linii: </label>
-          <input type="range" id="line-width" min="1" max="20" value="2">
-          <button onclick="clearCanvas()">Wyczyść płótno</button>
-        </div>
-        
-        <!-- Canvas do rysowania -->
-        <canvas id="drawing-canvas" width="800" height="400" style="border: 1px solid #000; background-color: #fff;"></canvas>
+<button onclick="obliczAutokonsumpcje()">OBLICZ AUTOKONSUMPCJĘ</button>
 
-      </div>
-    </div>
+<div class="calc-result" id="wynik-auto" style="display: none;"></div>
+</div>
+</div>
 
-    <div id="pv-kalkulator" class="content-page">
-      <div class="page-header">
-        <div class="page-title">Kalkulator Instalacji PV</div>
-        <div class="page-subtitle">Oblicz swoją instalację fotowoltaiczną i zobacz oszczędności!</div>
-      </div>
-      <div class="calculator-container">
-        <label>Roczne zużycie energii [kWh]</label>
-        <input type="number" id="zuzycie" placeholder="np. 4000">
+<div id="submenu-edukacja" class="content-page">
+<div class="page-header"><div class="page-title">Edukacja / Autokonsumpcja</div></div>
+<div class="submenu">
+<div class="submenu-card" onclick="showPage('edukacja-dzialanie')">
+<div class="submenu-title">Jak działa PV</div>
+<div class="submenu-description">Zasada działania + Rysownik</div>
+</div>
+</div>
+</div>
 
-        <label>Wybór paneli [Wp]</label>
-        <select id="panel">
-          <option value="450">450 (dla instalacji jednofazowych do 3,68 kWp)</option>
-          <option value="480">480 (dla instalacji powyżej 3,68 kWp)</option>
-        </select>
+<div id="edukacja-dzialanie" class="content-page">
+<div class="page-header"><div class="page-title">Jak działa PV + Rysownik Schematów</div></div>
+<div class="slide-content">
+<h3>Zasada działania instalacji fotowoltaicznej</h3>
+<p>Instalacja fotowoltaiczna przekształca energię słoneczną w energię elektryczną za pomocą paneli słonecznych. Proces ten odbywa się w kilku etapach:</p>
+<ul>
+<li>Panele fotowoltaiczne wychwytują promieniowanie słoneczne</li>
+<li>Energia słoneczna jest przekształcana w prąd stały (DC)</li>
+<li>Falownik konwertuje prąd stały na prąd przemienny (AC)</li>
+<li>Energia jest wykorzystywana w domu lub oddawana do sieci</li>
+<li>Nadwyżka energii może być magazynowana w bateriach</li>
+</ul>
+<h3>Autokonsumpcja</h3>
+<p>Autokonsumpcja to wykorzystanie wyprodukowanej energii bezpośrednio w gospodarstwie domowym. Im wyższa autokonsumpcja, tym większe oszczędności na rachunkach za prąd.</p>
 
-        <label>Orientacja dachu</label>
-        <select id="orientacja">
-          <option value="0.95">Południe</option>
-          <option value="0.9">Wschód-Zachód</option>
-        </select>
+<h3>Rysuj schemat działania instalacji PV</h3>
+<p>Użyj narzędzi poniżej, aby narysować schemat (np. paneli, falownika, połączeń). Możesz rysować różne kształty, używać gumki i zapisać swoją pracę.</p>
 
-        <label>Tryb magazynu energii</label>
-        <select id="trybMagazynu">
-          <option value="export">On-grid (autokonsumpcja)</option>
-          <option value="no-export">Off-grid</option>
-        </select>
+<div class="drawing-tools">
+<div class="tool-row">
+<div class="tool-group">
+<label>Narzędzie:</label>
+<select id="drawing-tool">
+<option value="pen">✏️ Ołówek</option>
+<option value="line">📏 Linia prosta</option>
+<option value="rectangle">⬜ Prostokąt</option>
+<option value="circle">⭕ Koło</option>
+<option value="arrow">➡️ Strzałka</option>
+<option value="eraser">🧹 Gumka</option>
+</select>
+</div>
 
-        <button onclick="oblicz()">OBLICZ INSTALACJĘ</button>
+<div class="tool-group">
+<label>Kolor linii:</label>
+<input type="color" id="stroke-color" value="#000000">
+</div>
 
-        <div class="calc-result" id="wynik" style="display: none;"></div>
+<div class="tool-group">
+<label>Wypełnienie:</label>
+<input type="checkbox" id="fill-checkbox">
+<input type="color" id="fill-color" value="#4ade80">
+</div>
 
-        <div class="extra-calc" id="extra-calc">
-          <h3 style="color: #4ade80; text-align: center; margin-bottom: 20px;">Oblicz okres zwrotu inwestycji</h3>
-          <label>Obecna cena prądu [zł/kWh]</label>
-          <input type="number" id="cenaPradu" placeholder="np. 0.85" step="0.01" min="0">
+<div class="tool-group">
+<label>Grubość: <span id="line-width-value">2</span>px</label>
+<input type="range" id="line-width" min="1" max="20" value="2">
+</div>
+</div>
 
-          <label>Cena instalacji [zł]</label>
-          <input type="number" id="cenaInstalacji" placeholder="np. 35000" min="0">
+<div class="tool-row">
+<button class="tool-btn" onclick="clearCanvas()">🗑️ Wyczyść płótno</button>
+<button class="tool-btn" onclick="saveAsImage('png')">💾 Zapisz PNG</button>
+<button class="tool-btn" onclick="saveAsImage('jpg')">💾 Zapisz JPG</button>
+</div>
+</div>
 
-          <label>Tryb kalkulacji zwrotu</label>
-          <select id="trybKalkulacji">
-            <option value="standardowa">Standardowa (stała cena prądu)</option>
-            <option value="optymistyczna">Realistyczna (5% wzrostu ceny prądu rocznie)</option>
-          </select>
+<canvas id="drawing-canvas" width="1000" height="600"></canvas>
 
-          <button onclick="obliczZwrot()">Oblicz zwrot inwestycji</button>
-          <div class="extra-result" id="extra-result"></div>
-        </div>
-      </div>
-    </div>
-  </div>
+</div>
+</div>
 
-  <script src="script.js"></script>
+<div id="pv-kalkulator" class="content-page">
+<div class="page-header">
+<div class="page-title">Kalkulator Instalacji PV</div>
+<div class="page-subtitle">Oblicz swoją instalację fotowoltaiczną i zobacz oszczędności!</div>
+</div>
+<div class="calculator-container">
+<label>Roczne zużycie energii [kWh]</label>
+<input type="number" id="zuzycie" placeholder="np. 4000">
+
+<label>Wybór paneli [Wp]</label>
+<select id="panel">
+<option value="450">450 (dla instalacji jednofazowych do 3,68 kWp)</option>
+<option value="480">480 (dla instalacji powyżej 3,68 kWp)</option>
+</select>
+
+<label>Orientacja dachu</label>
+<select id="orientacja">
+<option value="0.95">Południe</option>
+<option value="0.85">Południowy-Wschód / Południowy-Zachód</option>
+<option value="0.75">Wschód / Zachód</option>
+</select>
+
+<label>Kąt nachylenia dachu</label>
+<select id="nachylenie">
+<option value="1.0">30-40° (optymalne)</option>
+<option value="0.95">20-30°</option>
+<option value="0.90">40-50°</option>
+<option value="0.85">10-20° lub 50-60°</option>
+</select>
+
+<label>Cena prądu [zł/kWh]</label>
+<input type="number" id="cena-pradu" step="0.01" placeholder="np. 0.85" value="0.85">
+
+<button onclick="obliczPV()">OBLICZ INSTALACJĘ</button>
+
+<div class="calc-result" id="wynik-pv" style="display: none;"></div>
+</div>
+</div>
+
+</div>
+
+<script src="script.js"></script>
 </body>
 </html>
