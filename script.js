@@ -370,6 +370,43 @@ let lineWidth = 2;
 let useFill = false;
 let drawingHistory = [];
 
+function resizeCanvas() {
+if (!canvas) return;
+
+const container = canvas.parentElement;
+const containerWidth = container.offsetWidth;
+let imageData = null;
+const oldWidth = canvas.width;
+const oldHeight = canvas.height;
+
+if (ctx && oldWidth > 0 && oldHeight > 0) {
+const tempCanvas = document.createElement('canvas');
+tempCanvas.width = oldWidth;
+tempCanvas.height = oldHeight;
+const tempCtx = tempCanvas.getContext('2d');
+tempCtx.drawImage(canvas, 0, 0);
+imageData = tempCanvas;
+}
+
+if (window.innerWidth <= 768) {
+const newWidth = Math.min(containerWidth - 40, 600);
+const newHeight = Math.floor(newWidth * 0.6);
+canvas.width = newWidth;
+canvas.height = newHeight;
+} else {
+canvas.width = 1000;
+canvas.height = 600;
+}
+
+if (ctx) {
+ctx.lineCap = 'round';
+ctx.lineJoin = 'round';
+if (imageData) {
+ctx.drawImage(imageData, 0, 0, oldWidth, oldHeight, 0, 0, canvas.width, canvas.height);
+}
+}
+}
+
 function initCanvas() {
 canvas = document.getElementById('drawing-canvas');
 if (!canvas) return;
@@ -378,14 +415,18 @@ ctx = canvas.getContext('2d');
 ctx.lineCap = 'round';
 ctx.lineJoin = 'round';
 
+resizeCanvas();
+
+window.addEventListener('resize', resizeCanvas);
+
 canvas.addEventListener('mousedown', startDrawing);
 canvas.addEventListener('mousemove', draw);
 canvas.addEventListener('mouseup', stopDrawing);
 canvas.addEventListener('mouseout', stopDrawing);
 
-canvas.addEventListener('touchstart', handleTouch);
-canvas.addEventListener('touchmove', handleTouch);
-canvas.addEventListener('touchend', stopDrawing);
+canvas.addEventListener('touchstart', handleTouchStart);
+canvas.addEventListener('touchmove', handleTouchMove);
+canvas.addEventListener('touchend', handleTouchEnd);
 
 document.getElementById('drawing-tool')?.addEventListener('change', (e) => {
 currentTool = e.target.value;
@@ -418,14 +459,72 @@ y: e.clientY - rect.top
 };
 }
 
-function handleTouch(e) {
+function handleTouchStart(e) {
 e.preventDefault();
+if (e.touches.length === 0) return;
 const touch = e.touches[0];
-const mouseEvent = new MouseEvent(e.type === 'touchstart' ? 'mousedown' : 'mousemove', {
-clientX: touch.clientX,
-clientY: touch.clientY
-});
-canvas.dispatchEvent(mouseEvent);
+const rect = canvas.getBoundingClientRect();
+const x = touch.clientX - rect.left;
+const y = touch.clientY - rect.top;
+
+isDrawing = true;
+startX = x;
+startY = y;
+
+if (currentTool === 'pen' || currentTool === 'eraser') {
+ctx.beginPath();
+ctx.moveTo(startX, startY);
+}
+
+if (currentTool !== 'pen' && currentTool !== 'eraser') {
+drawingHistory.push(ctx.getImageData(0, 0, canvas.width, canvas.height));
+}
+}
+
+function handleTouchMove(e) {
+e.preventDefault();
+if (!isDrawing || e.touches.length === 0) return;
+
+const touch = e.touches[0];
+const rect = canvas.getBoundingClientRect();
+const currentX = touch.clientX - rect.left;
+const currentY = touch.clientY - rect.top;
+
+if (currentTool === 'pen') {
+ctx.strokeStyle = strokeColor;
+ctx.lineWidth = lineWidth;
+ctx.lineTo(currentX, currentY);
+ctx.stroke();
+} else if (currentTool === 'eraser') {
+ctx.clearRect(currentX - lineWidth / 2, currentY - lineWidth / 2, lineWidth * 2, lineWidth * 2);
+} else {
+if (drawingHistory.length > 0) {
+ctx.putImageData(drawingHistory[drawingHistory.length - 1], 0, 0);
+}
+
+ctx.strokeStyle = strokeColor;
+ctx.fillStyle = fillColor;
+ctx.lineWidth = lineWidth;
+
+if (currentTool === 'line') {
+drawLine(startX, startY, currentX, currentY);
+} else if (currentTool === 'rectangle') {
+drawRectangle(startX, startY, currentX, currentY);
+} else if (currentTool === 'circle') {
+drawCircle(startX, startY, currentX, currentY);
+} else if (currentTool === 'arrow') {
+drawArrow(startX, startY, currentX, currentY);
+}
+}
+}
+
+function handleTouchEnd(e) {
+e.preventDefault();
+if (isDrawing && currentTool !== 'pen' && currentTool !== 'eraser') {
+drawingHistory.pop();
+}
+isDrawing = false;
+ctx.beginPath();
 }
 
 function startDrawing(e) {
