@@ -153,7 +153,6 @@ function obliczPV() {
 const zuzycie = parseFloat(document.getElementById('zuzycie').value);
 const mocPanela = parseFloat(document.getElementById('panel').value);
 const orientacja = parseFloat(document.getElementById('orientacja').value);
-const nachylenie = parseFloat(document.getElementById('nachylenie').value);
 const cenaPradu = parseFloat(document.getElementById('cena-pradu').value);
 
 if (isNaN(zuzycie) || isNaN(cenaPradu)) {
@@ -162,15 +161,17 @@ return;
 }
 
 const bazowaProdukacja = 1100;
-const skorygowanaProdukacja = bazowaProdukacja * orientacja * nachylenie;
+const skorygowanaProdukacja = bazowaProdukacja * orientacja;
 
-const liczbaPaneli = Math.ceil(zuzycie / skorygowanaProdukacja);
+const liczbaPaneli = Math.ceil((zuzycie * 1.3) / skorygowanaProdukacja);
 const mocInstalacji = (liczbaPaneli * mocPanela / 1000).toFixed(2);
 const rocznaProdukcja = (liczbaPaneli * skorygowanaProdukacja).toFixed(0);
 
 const oszczednosciRoczne = (rocznaProdukcja * cenaPradu * 0.7).toFixed(0);
 const kosztInstalacji = (mocInstalacji * 4500).toFixed(0);
 const zwrotInwestycji = (kosztInstalacji / oszczednosciRoczne).toFixed(1);
+
+const rekomendacjaMagazynu = `Rekomendacja: Magazyn energii o pojemności dopasowanej do instalacji PV (${mocInstalacji} kWp), np. ${Math.ceil(parseFloat(mocInstalacji) * 2)} kWh, aby maksymalizować autokonsumpcję i niezależność energetyczną.`;
 
 const wynikHTML = `
 <h4>⚡ Rekomendowana Instalacja</h4>
@@ -182,6 +183,9 @@ const wynikHTML = `
 <p><strong>Zwrot inwestycji:</strong> ~${zwrotInwestycji} lat</p>
 <p style="margin-top: 20px; padding: 15px; background: rgba(74, 222, 128, 0.2); border-radius: 10px;">
 <strong>💰 Podsumowanie:</strong> Instalacja ${mocInstalacji} kWp pokryje około ${((rocznaProdukcja / zuzycie) * 100).toFixed(0)}% Twojego zużycia energii.
+</p>
+<p style="margin-top: 10px; padding: 15px; background: rgba(255, 193, 7, 0.2); border-radius: 10px;">
+<strong>🔋 ${rekomendacjaMagazynu}</strong>
 </p>
 `;
 
