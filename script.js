@@ -237,7 +237,7 @@ data.produkcjaEnergii = document.getElementById('produkcja-energii')?.value || '
 data.energiaPobrana = document.getElementById('energia-pobrana')?.value || '';
 data.energiaOddana = document.getElementById('energia-oddana')?.value || '';
 data.ocenaAutokonsumpcji = document.getElementById('ocena-autokonsumpcji')?.value || '';
-data.kontrolaPaneli = document.getElementById('kontrola-paneli')?.value || '';
+data.kontrolaPaneli = document.getElementById('Wizualna kontrola paneli/modułów')?.value || '';
 data.kontrolaMocowan = document.getElementById('kontrola-mocowan')?.value || '';
 data.kontrolaPrzewodow = document.getElementById('kontrola-przewodow')?.value || '';
 data.stanZabezpieczen = document.getElementById('stan-zabezpieczen')?.value || '';
@@ -283,7 +283,7 @@ const items = [
 { label: '5. Roczne zużycie / eksport w budynku [kWh]:', value: `1.8.0: ${data.energiaPobrana || 'Nie podano'} kWh | 2.8.0: ${data.energiaOddana || 'Nie podano'} kWh` },
 { label: '6. Ocena autokonsumpcji i bilansu z siecią:', value: data.ocenaAutokonsumpcji || 'Nie podano' },
 { label: '7. Wizualna kontrola paneli/modułów:', value: data.kontrolaPaneli || 'Nie podano' },
-{ label: '8. Wizualna kontrola mocowań i konstrukcji nośnej ń:', value: data.kontrolaMocowan || 'Nie podano' },
+{ label: '8. Wizualna kontrola mocowań i konstrukcji nośnej:', value: data.kontrolaMocowan || 'Nie podano' },
 { label: '9. Wizualne sprawdzenie przewodów DC/AC, połączeń MC4:', value: data.kontrolaPrzewodow || 'Nie podano' },
 { label: '10. Wizualny stan zabezpieczeń: SPD, RCD, wyłącznik:', value: data.stanZabezpieczen || 'Nie podano' },
 { label: '11. Odczyt falownika: błędy, produkcja, komunikacja:', value: data.odczytFalownika || 'Nie podano' },
