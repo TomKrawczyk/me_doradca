@@ -328,13 +328,13 @@ const content = [
 ];
 
 const questions = [
-{ q: '1. Roczny koszt energii:', a: data.kosztEnergii || 'Nie podano' },
-{ q: '2. Liczba osób:', a: data.liczbOsob || 'Nie podano' },
-{ q: '3. Największe zużycie prądu:', a: data.zuzyciePradu || 'Nie podano' },
-{ q: '4. Ogrzewanie ciepłej wody:', a: data.ogrzewanieCieplejWody || 'Nie podano' },
-{ q: '5. Hobby:', a: data.hobby || 'Nie podano' },
-{ q: '6. Sprzęt elektryczny:', a: data.sprzetElektryczny || 'Nie podano' },
-{ q: '7. Plany zakupowe:', a: data.planyZakupowe || 'Nie podano' }
+{ q: '1. Jaki jest roczny koszt za energię elektryczną?', a: data.kosztEnergii || 'Nie podano' },
+{ q: '2. Ile osób zamieszkuje dom/mieszkanie?', a: data.liczbOsob || 'Nie podano' },
+{ q: '3. O jakiej porze dnia zużycie prądu jest największe?', a: data.zuzyciePradu || 'Nie podano' },
+{ q: '4. Czym ogrzewana jest ciepła woda?', a: data.ogrzewanieCieplejWody || 'Nie podano' },
+{ q: '5. Hobby?', a: data.hobby || 'Nie podano' },
+{ q: '6. Jaki mamy sprzęt elektryczny w domu?', a: data.sprzetElektryczny || 'Nie podano' },
+{ q: '7. Jakie plany zakupowe dotyczące urządzeń energochłonnych?', a: data.planyZakupowe || 'Nie podano' }
 ];
 
 questions.forEach(item => {
