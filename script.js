@@ -186,7 +186,7 @@ function obliczPV() {
     const rocznaProdukcja = (mocInstalacji * produkcjaNaKwp).toFixed(0);
     
     const oszczednosciRoczne = (rocznaProdukcja * cenaPradu * 0.7).toFixed(0);
-    const zwrotInwestycji = (kosztInstalacji / oszczednosciRoczne).toFixed(1);
+    //const zwrotInwestycji = (kosztInstalacji / oszczednosciRoczne).toFixed(1);
     
     const rekomendacjaMagazynu = `Rekomendacja: Magazyn energii o pojemności dopasowanej do instalacji PV (${mocInstalacji} kWp), np. ${Math.ceil(parseFloat(mocInstalacji) * 2)} kWh, aby maksymalizować autokonsumpcję i niezależność energetyczną.`;
     
