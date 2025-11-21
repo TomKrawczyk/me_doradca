@@ -115,27 +115,51 @@ function obliczAutokonsumpcje() {
     const procentAutokonsumpcji = ((autokonsumpcja / produkcja) * 100).toFixed(1);
     const procentEksportu = ((eksport / produkcja) * 100).toFixed(1);
     
+    // Determine card type based on percentage
+    let cardClass = '';
+    let statusTitle = '';
+    let statusMessage = '';
+    let recommendation = '';
+    
+    if (procentAutokonsumpcji < 30) {
+        cardClass = 'result-card-red';
+        statusTitle = '🔴 Niska autokonsumpcja';
+        statusMessage = 'Wymagana edukacja oraz zmiana korzystania z urządzeń energochłonnych.';
+        recommendation = 'Proponowane rozwiązanie: magazyn energii';
+    } else if (procentAutokonsumpcji >= 30 && procentAutokonsumpcji < 60) {
+        cardClass = 'result-card-yellow';
+        statusTitle = '🟡 Średnia autokonsumpcja';
+        statusMessage = 'Nie jest źle, ale może być lepiej!';
+        recommendation = 'Edukacja i rozważ montaż magazynu energii';
+    } else {
+        cardClass = 'result-card-green';
+        statusTitle = '🟢 Świetnie!';
+        statusMessage = 'Autokonsumpcja na wysokim poziomie.';
+        recommendation = 'Gratulacje!';
+    }
+    
     let wynikHTML = `
-        <div class="result-header">
-            <div class="result-title">📊 Wyniki Autokonsumpcji</div>
+        <div class="result-main-card ${cardClass}">
+            <div class="result-status-title">${statusTitle}</div>
+            <div class="result-percentage-huge">${procentAutokonsumpcji}%</div>
+            <div class="result-percentage-label">AUTOKONSUMPCJI</div>
+            <div class="result-status-message">${statusMessage}</div>
+            <div class="result-recommendation">${recommendation}</div>
         </div>
         
-        <div class="stats-grid">
-            <div class="stat-card">
-                <div class="stat-number">${produkcja.toFixed(1)}</div>
-                <div class="stat-label">Produkcja <span class="stat-unit">kWh</span></div>
+        <div class="result-details-section">
+            <h4>📊 Szczegóły energetyczne</h4>
+            <div class="detail-row">
+                <span class="detail-label">Produkcja prądu:</span>
+                <span class="detail-value">${produkcja.toFixed(1)} kWh</span>
             </div>
-            <div class="stat-card">
-                <div class="stat-number">${autokonsumpcja.toFixed(1)}</div>
-                <div class="stat-label">Autokonsumpcja <span class="stat-unit">kWh</span></div>
+            <div class="detail-row">
+                <span class="detail-label">Autokonsumpcja:</span>
+                <span class="detail-value">${autokonsumpcja.toFixed(1)} kWh</span>
             </div>
-            <div class="stat-card">
-                <div class="stat-number">${eksport.toFixed(1)}</div>
-                <div class="stat-label">Eksport <span class="stat-unit">kWh</span></div>
-            </div>
-            <div class="stat-card highlight-card">
-                <div class="stat-number percentage-highlight">${procentAutokonsumpcji}%</div>
-                <div class="stat-label">Procent Autokonsumpcji</div>
+            <div class="detail-row">
+                <span class="detail-label">Eksport do sieci:</span>
+                <span class="detail-value">${eksport.toFixed(1)} kWh (${procentEksportu}%)</span>
             </div>
         </div>
     `;
@@ -146,24 +170,23 @@ function obliczAutokonsumpcje() {
         const procentZuzyciaWlasne = ((autokonsumpcja / zuzycie) * 100).toFixed(1);
         
         wynikHTML += `
-            <div class="extra-result">
-                <h4>📈 Szczegółowa analiza zużycia</h4>
-                <p><strong>Całkowite zużycie:</strong> ${zuzycie.toFixed(2)} kWh</p>
-                <p><strong>Import z sieci:</strong> ${importZSieci.toFixed(2)} kWh (${procentZuzyciaSieci}%)</p>
-                <p><strong>Pokrycie własną energią:</strong> ${procentZuzyciaWlasne}%</p>
+            <div class="result-details-section">
+                <h4>📈 Analiza zużycia</h4>
+                <div class="detail-row">
+                    <span class="detail-label">Całkowite zużycie domu:</span>
+                    <span class="detail-value">${zuzycie.toFixed(1)} kWh</span>
+                </div>
+                <div class="detail-row">
+                    <span class="detail-label">Import z sieci:</span>
+                    <span class="detail-value">${importZSieci.toFixed(1)} kWh (${procentZuzyciaSieci}%)</span>
+                </div>
+                <div class="detail-row">
+                    <span class="detail-label">Pokrycie własną energią:</span>
+                    <span class="detail-value highlight-value">${procentZuzyciaWlasne}%</span>
+                </div>
             </div>
         `;
     }
-    
-    wynikHTML += `
-        <div class="recommendation-box">
-            <strong>💡 Rekomendacja:</strong> ${procentAutokonsumpcji < 40 ? 
-                'Niska autokonsumpcja - rozważ magazyn energii lub optymalizację zużycia.' : 
-                procentAutokonsumpcji < 60 ? 
-                'Umiarkowana autokonsumpcja - możliwa optymalizacja.' : 
-                'Wysoka autokonsumpcja - bardzo dobry wynik!'}
-        </div>
-    `;
     
     const wynikDiv = document.getElementById('wynik-auto');
     wynikDiv.innerHTML = wynikHTML;
