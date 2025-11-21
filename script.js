@@ -116,10 +116,28 @@ function obliczAutokonsumpcje() {
     const procentEksportu = ((eksport / produkcja) * 100).toFixed(1);
     
     let wynikHTML = `
-        <h4>📊 Wyniki Autokonsumpcji</h4>
-        <p><strong>Produkcja:</strong> ${produkcja.toFixed(2)} kWh</p>
-        <p><strong>Eksport do sieci:</strong> ${eksport.toFixed(2)} kWh (${procentEksportu}%)</p>
-        <p><strong>Autokonsumpcja:</strong> ${autokonsumpcja.toFixed(2)} kWh (${procentAutokonsumpcji}%)</p>
+        <div class="result-header">
+            <div class="result-title">📊 Wyniki Autokonsumpcji</div>
+        </div>
+        
+        <div class="stats-grid">
+            <div class="stat-card">
+                <div class="stat-number">${produkcja.toFixed(1)}</div>
+                <div class="stat-label">Produkcja <span class="stat-unit">kWh</span></div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-number">${autokonsumpcja.toFixed(1)}</div>
+                <div class="stat-label">Autokonsumpcja <span class="stat-unit">kWh</span></div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-number">${eksport.toFixed(1)}</div>
+                <div class="stat-label">Eksport <span class="stat-unit">kWh</span></div>
+            </div>
+            <div class="stat-card highlight-card">
+                <div class="stat-number percentage-highlight">${procentAutokonsumpcji}%</div>
+                <div class="stat-label">Procent Autokonsumpcji</div>
+            </div>
+        </div>
     `;
     
     if (!isNaN(zuzycie)) {
@@ -128,20 +146,23 @@ function obliczAutokonsumpcje() {
         const procentZuzyciaWlasne = ((autokonsumpcja / zuzycie) * 100).toFixed(1);
         
         wynikHTML += `
-            <p><strong>Całkowite zużycie:</strong> ${zuzycie.toFixed(2)} kWh</p>
-            <p><strong>Import z sieci:</strong> ${importZSieci.toFixed(2)} kWh (${procentZuzyciaSieci}%)</p>
-            <p><strong>Pokrycie własną energią:</strong> ${procentZuzyciaWlasne}%</p>
+            <div class="extra-result">
+                <h4>📈 Szczegółowa analiza zużycia</h4>
+                <p><strong>Całkowite zużycie:</strong> ${zuzycie.toFixed(2)} kWh</p>
+                <p><strong>Import z sieci:</strong> ${importZSieci.toFixed(2)} kWh (${procentZuzyciaSieci}%)</p>
+                <p><strong>Pokrycie własną energią:</strong> ${procentZuzyciaWlasne}%</p>
+            </div>
         `;
     }
     
     wynikHTML += `
-        <p style="margin-top: 20px; padding: 15px; background: rgba(74, 222, 128, 0.2); border-radius: 10px;">
+        <div class="recommendation-box">
             <strong>💡 Rekomendacja:</strong> ${procentAutokonsumpcji < 40 ? 
                 'Niska autokonsumpcja - rozważ magazyn energii lub optymalizację zużycia.' : 
                 procentAutokonsumpcji < 60 ? 
                 'Umiarkowana autokonsumpcja - możliwa optymalizacja.' : 
                 'Wysoka autokonsumpcja - bardzo dobry wynik!'}
-        </p>
+        </div>
     `;
     
     const wynikDiv = document.getElementById('wynik-auto');
@@ -153,6 +174,7 @@ function obliczPV() {
     const zuzycie = parseFloat(document.getElementById('zuzycie').value);
     const orientacja = parseFloat(document.getElementById('orientacja').value);
     const cenaPradu = parseFloat(document.getElementById('cena-pradu').value);
+    const cenaHandlowca = parseFloat(document.getElementById('cena-handlowca').value);
     
     if (isNaN(zuzycie) || isNaN(cenaPradu)) {
         alert('Proszę wypełnić wszystkie wymagane pola');
@@ -185,24 +207,63 @@ function obliczPV() {
     mocInstalacji = (liczbaPaneli * mocPanela / 1000).toFixed(2);
     const rocznaProdukcja = (mocInstalacji * produkcjaNaKwp).toFixed(0);
     
-    const oszczednosciRoczne = (rocznaProdukcja * cenaPradu * 0.7).toFixed(0);
-    //const zwrotInwestycji = (kosztInstalacji / oszczednosciRoczne).toFixed(1);
+    // Użyj ceny handlowca jeśli podana, w przeciwnym razie domyślna cena instalacji
+    const kosztInstalacji = !isNaN(cenaHandlowca) ? cenaHandlowca : (parseFloat(mocInstalacji) * 4500); // 4500 zł/kWp jako domyślna cena
+    
+    // Obliczenie zwrotu z realistycznym wzrostem ceny prądu 5% rocznie
+    const oszczednosciRoczne = rocznaProdukcja * cenaPradu * 0.7; // 70% autokonsumpcji
+    
+    // Obliczenie zwrotu z uwzględnieniem 5% wzrostu ceny prądu rocznie
+    let sumaOszczednosci = 0;
+    let rokZwrotu = 0;
+    
+    for (let rok = 1; rok <= 25; rok++) {
+        const cenaPraduWRoku = cenaPradu * Math.pow(1.05, rok - 1); // 5% wzrost rocznie
+        const oszczednosciWRoku = rocznaProdukcja * cenaPraduWRoku * 0.7;
+        sumaOszczednosci += oszczednosciWRoku;
+        
+        if (sumaOszczednosci >= kosztInstalacji && rokZwrotu === 0) {
+            rokZwrotu = rok;
+        }
+    }
     
     const rekomendacjaMagazynu = `Rekomendacja: Magazyn energii o pojemności dopasowanej do instalacji PV (${mocInstalacji} kWp), np. ${Math.ceil(parseFloat(mocInstalacji) * 2)} kWh, aby maksymalizować autokonsumpcję i niezależność energetyczną.`;
     
     const wynikHTML = `
-        <h4>⚡ Rekomendowana Instalacja</h4>
-        <p><strong>Liczba paneli:</strong> ${liczbaPaneli} szt. (${mocPanela}Wp każdy)</p>
-        <p><strong>Moc instalacji:</strong> ${mocInstalacji} kWp</p>
-        <p><strong>Roczna produkcja:</strong> ~${rocznaProdukcja} kWh</p>
-        <p><strong>Oszczędności roczne:</strong> ~${oszczednosciRoczne} zł</p>
-        <p><strong>Zwrot inwestycji:</strong> ~${zwrotInwestycji} lat</p>
-        <p style="margin-top: 20px; padding: 15px; background: rgba(74, 222, 128, 0.2); border-radius: 10px;">
-            <strong>💰 Podsumowanie:</strong> Instalacja ${mocInstalacji} kWp pokryje około ${((rocznaProdukcja / zuzycie) * 100).toFixed(0)}% Twojego zużycia energii.
-        </p>
-        <p style="margin-top: 10px; padding: 15px; background: rgba(255, 193, 7, 0.2); border-radius: 10px;">
+        <div class="result-header">
+            <div class="result-title">⚡ Rekomendowana Instalacja</div>
+        </div>
+        
+        <div class="stats-grid">
+            <div class="stat-card">
+                <div class="stat-number">${liczbaPaneli}</div>
+                <div class="stat-label">Paneli <span class="stat-unit">${mocPanela}Wp</span></div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-number">${mocInstalacji}</div>
+                <div class="stat-label">Moc <span class="stat-unit">kWp</span></div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-number">${rocznaProdukcja}</div>
+                <div class="stat-label">Produkcja <span class="stat-unit">kWh/rok</span></div>
+            </div>
+            <div class="stat-card highlight-card">
+                <div class="stat-number percentage-highlight">${rokZwrotu}</div>
+                <div class="stat-label">Zwrot inwestycji <span class="stat-unit">lat</span></div>
+            </div>
+        </div>
+        
+        <div class="extra-result">
+            <h4>💰 Analiza finansowa</h4>
+            <p><strong>Koszt instalacji:</strong> ${kosztInstalacji.toLocaleString('pl-PL')} zł ${!isNaN(cenaHandlowca) ? '(cena handlowca)' : '(szacunkowa)'}</p>
+            <p><strong>Oszczędności w 1. roku:</strong> ~${Math.round(oszczednosciRoczne).toLocaleString('pl-PL')} zł</p>
+            <p><strong>Pokrycie zużycia:</strong> ${((rocznaProdukcja / zuzycie) * 100).toFixed(0)}%</p>
+            <p><strong>Wzrost ceny prądu:</strong> 5% rocznie (realistyczne założenie)</p>
+        </div>
+        
+        <div class="recommendation-box">
             <strong>🔋 ${rekomendacjaMagazynu}</strong>
-        </p>
+        </div>
     `;
     
     const wynikDiv = document.getElementById('wynik-pv');
