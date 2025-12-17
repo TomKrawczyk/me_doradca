@@ -101,6 +101,10 @@ function goToHome() {
     updateNavigationButtons();
 }
 
+// Store last calculation results for PDF generation
+let lastAutokonsumpcjaResults = null;
+let lastPVResults = null;
+
 function obliczAutokonsumpcje() {
     const produkcja = parseFloat(document.getElementById('produkcja').value);
     const eksport = parseFloat(document.getElementById('eksport').value);
@@ -114,6 +118,16 @@ function obliczAutokonsumpcje() {
     const autokonsumpcja = produkcja - eksport;
     const procentAutokonsumpcji = ((autokonsumpcja / produkcja) * 100).toFixed(1);
     const procentEksportu = ((eksport / produkcja) * 100).toFixed(1);
+    
+    // Store results for PDF
+    lastAutokonsumpcjaResults = {
+        produkcja: produkcja,
+        eksport: eksport,
+        zuzycie: zuzycie,
+        autokonsumpcja: autokonsumpcja,
+        procentAutokonsumpcji: procentAutokonsumpcji,
+        procentEksportu: procentEksportu
+    };
     
     // Determine card type based on percentage
     let cardClass = '';
@@ -137,6 +151,10 @@ function obliczAutokonsumpcje() {
         statusMessage = 'Autokonsumpcja na wysokim poziomie.';
         recommendation = 'Gratulacje!';
     }
+    
+    lastAutokonsumpcjaResults.statusTitle = statusTitle;
+    lastAutokonsumpcjaResults.statusMessage = statusMessage;
+    lastAutokonsumpcjaResults.recommendation = recommendation;
     
     let wynikHTML = `
         <div class="result-main-card ${cardClass}">
@@ -169,6 +187,10 @@ function obliczAutokonsumpcje() {
         const procentZuzyciaSieci = ((importZSieci / zuzycie) * 100).toFixed(1);
         const procentZuzyciaWlasne = ((autokonsumpcja / zuzycie) * 100).toFixed(1);
         
+        lastAutokonsumpcjaResults.importZSieci = importZSieci;
+        lastAutokonsumpcjaResults.procentZuzyciaSieci = procentZuzyciaSieci;
+        lastAutokonsumpcjaResults.procentZuzyciaWlasne = procentZuzyciaWlasne;
+        
         wynikHTML += `
             <div class="result-details-section">
                 <h4>📈 Analiza zużycia</h4>
@@ -187,6 +209,10 @@ function obliczAutokonsumpcje() {
             </div>
         `;
     }
+    
+    wynikHTML += `
+        <button class="btn" onclick="generatePDF('autokonsumpcja')">Pobierz PDF</button>
+    `;
     
     const wynikDiv = document.getElementById('wynik-auto');
     wynikDiv.innerHTML = wynikHTML;
@@ -252,6 +278,28 @@ function obliczPV() {
     
     const rekomendacjaMagazynu = `Rekomendacja: Magazyn energii o pojemności dopasowanej do instalacji PV (${mocInstalacji} kWp), np. ${Math.ceil(parseFloat(mocInstalacji) * 2)} kWh, aby maksymalizować autokonsumpcję i niezależność energetyczną.`;
     
+    // Get selected orientation text
+    const orientacjaSelect = document.getElementById('orientacja');
+    const orientacjaText = orientacjaSelect.options[orientacjaSelect.selectedIndex].text;
+    
+    // Store results for PDF
+    lastPVResults = {
+        zuzycie: zuzycie,
+        orientacja: orientacja,
+        orientacjaText: orientacjaText,
+        cenaPradu: cenaPradu,
+        cenaHandlowca: cenaHandlowca,
+        liczbaPaneli: liczbaPaneli,
+        mocPanela: mocPanela,
+        mocInstalacji: mocInstalacji,
+        rocznaProdukcja: rocznaProdukcja,
+        kosztInstalacji: kosztInstalacji,
+        oszczednosciRoczne: oszczednosciRoczne,
+        rokZwrotu: rokZwrotu,
+        pokrycieZuzycia: ((rocznaProdukcja / zuzycie) * 100).toFixed(0),
+        rekomendacjaMagazynu: rekomendacjaMagazynu
+    };
+    
     const wynikHTML = `
         <div class="result-header">
             <div class="result-title">⚡ Rekomendowana Instalacja</div>
@@ -287,6 +335,8 @@ function obliczPV() {
         <div class="recommendation-box">
             <strong>🔋 ${rekomendacjaMagazynu}</strong>
         </div>
+        
+        <button class="btn" onclick="generatePDF('pv')">Pobierz PDF</button>
     `;
     
     const wynikDiv = document.getElementById('wynik-pv');
@@ -302,16 +352,34 @@ function generatePDF(type) {
     button.disabled = true;
     
     try {
-        let formData, filename, docDefinition;
+        let filename, docDefinition;
         
         if (type === 'checklista') {
-            formData = collectChecklistaData();
+            const formData = collectChecklistaData();
             filename = `Checklista_Doradcy_${new Date().toISOString().slice(0, 10)}.pdf`;
             docDefinition = generateChecklistaPDF(formData);
         } else if (type === 'wywiad') {
-            formData = collectWywiadData();
+            const formData = collectWywiadData();
             filename = `Wywiad_Klienta_${new Date().toISOString().slice(0, 10)}.pdf`;
             docDefinition = generateWywiadPDF(formData);
+        } else if (type === 'autokonsumpcja') {
+            if (!lastAutokonsumpcjaResults) {
+                alert('Brak wyników do wygenerowania PDF. Proszę najpierw obliczyć autokonsumpcję.');
+                button.textContent = originalText;
+                button.disabled = false;
+                return;
+            }
+            filename = `Kalkulator_Autokonsumpcji_${new Date().toISOString().slice(0, 10)}.pdf`;
+            docDefinition = generateAutokonsumpcjaPDF(lastAutokonsumpcjaResults);
+        } else if (type === 'pv') {
+            if (!lastPVResults) {
+                alert('Brak wyników do wygenerowania PDF. Proszę najpierw obliczyć instalację PV.');
+                button.textContent = originalText;
+                button.disabled = false;
+                return;
+            }
+            filename = `Kalkulator_PV_${new Date().toISOString().slice(0, 10)}.pdf`;
+            docDefinition = generatePVPDF(lastPVResults);
         }
         
         pdfMake.createPdf(docDefinition).download(filename);
@@ -459,6 +527,171 @@ function generateWywiadPDF(data) {
             sectionTitle: { fontSize: 14, bold: true, color: '#16a34a' },
             question: { fontSize: 11, bold: true, color: '#166534' },
             answer: { fontSize: 10, color: '#374151' }
+        },
+        defaultStyle: { font: 'Roboto' }
+    };
+}
+
+function generateAutokonsumpcjaPDF(data) {
+    const today = new Date().toLocaleDateString('pl-PL');
+    const content = [
+        { text: 'KALKULATOR AUTOKONSUMPCJI', style: 'header', alignment: 'center', margin: [0, 0, 0, 5] },
+        { text: 'Wyniki obliczeń', style: 'subheader', alignment: 'center', margin: [0, 0, 0, 20] },
+        { text: `Data: ${today}`, style: 'dateBox', margin: [0, 0, 0, 15] },
+        
+        // Status section
+        { text: data.statusTitle, style: 'statusTitle', alignment: 'center', margin: [0, 10, 0, 10] },
+        { text: `${data.procentAutokonsumpcji}% AUTOKONSUMPCJI`, style: 'percentageHuge', alignment: 'center', margin: [0, 0, 0, 10] },
+        { text: data.statusMessage, style: 'statusMessage', alignment: 'center', margin: [0, 0, 0, 10] },
+        { text: data.recommendation, style: 'recommendation', alignment: 'center', margin: [0, 0, 0, 20] },
+        
+        // Details section
+        { text: 'Szczegóły energetyczne', style: 'sectionTitle', margin: [0, 15, 0, 10] }
+    ];
+    
+    const details = [
+        { label: 'Produkcja prądu:', value: `${data.produkcja.toFixed(1)} kWh` },
+        { label: 'Autokonsumpcja:', value: `${data.autokonsumpcja.toFixed(1)} kWh` },
+        { label: 'Eksport do sieci:', value: `${data.eksport.toFixed(1)} kWh (${data.procentEksportu}%)` }
+    ];
+    
+    details.forEach(item => {
+        content.push({
+            columns: [
+                { text: item.label, style: 'detailLabel', width: '50%' },
+                { text: item.value, style: 'detailValue', width: '50%', alignment: 'right' }
+            ],
+            margin: [0, 5, 0, 5]
+        });
+    });
+    
+    if (!isNaN(data.zuzycie)) {
+        content.push({ text: 'Analiza zużycia', style: 'sectionTitle', margin: [0, 15, 0, 10] });
+        
+        const zusycieDetails = [
+            { label: 'Całkowite zużycie domu:', value: `${data.zuzycie.toFixed(1)} kWh` },
+            { label: 'Import z sieci:', value: `${data.importZSieci.toFixed(1)} kWh (${data.procentZuzyciaSieci}%)` },
+            { label: 'Pokrycie własną energią:', value: `${data.procentZuzyciaWlasne}%` }
+        ];
+        
+        zusycieDetails.forEach(item => {
+            content.push({
+                columns: [
+                    { text: item.label, style: 'detailLabel', width: '50%' },
+                    { text: item.value, style: 'detailValue', width: '50%', alignment: 'right' }
+                ],
+                margin: [0, 5, 0, 5]
+            });
+        });
+    }
+    
+    return {
+        content: content,
+        pageSize: 'A4',
+        pageMargins: [40, 60, 40, 60],
+        styles: {
+            header: { fontSize: 20, bold: true, color: '#16a34a' },
+            subheader: { fontSize: 12, color: '#16a34a' },
+            dateBox: { fontSize: 11, bold: true },
+            statusTitle: { fontSize: 18, bold: true, color: '#16a34a' },
+            percentageHuge: { fontSize: 36, bold: true, color: '#22c55e' },
+            statusMessage: { fontSize: 12, color: '#374151' },
+            recommendation: { fontSize: 11, bold: true, color: '#166534' },
+            sectionTitle: { fontSize: 14, bold: true, color: '#16a34a' },
+            detailLabel: { fontSize: 10, color: '#374151' },
+            detailValue: { fontSize: 10, bold: true, color: '#16a34a' }
+        },
+        defaultStyle: { font: 'Roboto' }
+    };
+}
+
+function generatePVPDF(data) {
+    const today = new Date().toLocaleDateString('pl-PL');
+    const content = [
+        { text: 'KALKULATOR INSTALACJI PV', style: 'header', alignment: 'center', margin: [0, 0, 0, 5] },
+        { text: 'Rekomendowana instalacja fotowoltaiczna', style: 'subheader', alignment: 'center', margin: [0, 0, 0, 20] },
+        { text: `Data: ${today}`, style: 'dateBox', margin: [0, 0, 0, 15] },
+        
+        // Input parameters
+        { text: 'Parametry wejściowe', style: 'sectionTitle', margin: [0, 10, 0, 10] }
+    ];
+    
+    const inputParams = [
+        { label: 'Roczne zużycie energii:', value: `${data.zuzycie.toFixed(0)} kWh` },
+        { label: 'Orientacja dachu:', value: data.orientacjaText },
+        { label: 'Cena prądu:', value: `${data.cenaPradu.toFixed(2)} zł/kWh` }
+    ];
+    
+    if (!isNaN(data.cenaHandlowca)) {
+        inputParams.push({ label: 'Cena instalacji (handlowiec):', value: `${data.cenaHandlowca.toLocaleString('pl-PL')} zł` });
+    }
+    
+    inputParams.forEach(item => {
+        content.push({
+            columns: [
+                { text: item.label, style: 'detailLabel', width: '50%' },
+                { text: item.value, style: 'detailValue', width: '50%', alignment: 'right' }
+            ],
+            margin: [0, 5, 0, 5]
+        });
+    });
+    
+    // Recommended installation
+    content.push({ text: 'Rekomendowana instalacja', style: 'sectionTitle', margin: [0, 15, 0, 10] });
+    
+    const installation = [
+        { label: 'Liczba paneli:', value: `${data.liczbaPaneli} x ${data.mocPanela}Wp` },
+        { label: 'Moc instalacji:', value: `${data.mocInstalacji} kWp` },
+        { label: 'Roczna produkcja:', value: `${data.rocznaProdukcja} kWh/rok` }
+    ];
+    
+    installation.forEach(item => {
+        content.push({
+            columns: [
+                { text: item.label, style: 'detailLabel', width: '50%' },
+                { text: item.value, style: 'detailValue', width: '50%', alignment: 'right' }
+            ],
+            margin: [0, 5, 0, 5]
+        });
+    });
+    
+    // Financial analysis
+    content.push({ text: 'Analiza finansowa', style: 'sectionTitle', margin: [0, 15, 0, 10] });
+    
+    const financial = [
+        { label: 'Koszt instalacji:', value: `${data.kosztInstalacji.toLocaleString('pl-PL')} zł` },
+        { label: 'Oszczędności w 1. roku:', value: `~${Math.round(data.oszczednosciRoczne).toLocaleString('pl-PL')} zł` },
+        { label: 'Pokrycie zużycia:', value: `${data.pokrycieZuzycia}%` },
+        { label: 'Zwrot inwestycji:', value: `${data.rokZwrotu} lat` },
+        { label: 'Wzrost ceny prądu:', value: '5% rocznie' }
+    ];
+    
+    financial.forEach(item => {
+        content.push({
+            columns: [
+                { text: item.label, style: 'detailLabel', width: '50%' },
+                { text: item.value, style: 'detailValue', width: '50%', alignment: 'right' }
+            ],
+            margin: [0, 5, 0, 5]
+        });
+    });
+    
+    // Recommendation
+    content.push({ text: 'Rekomendacja', style: 'sectionTitle', margin: [0, 15, 0, 10] });
+    content.push({ text: data.rekomendacjaMagazynu, style: 'recommendation', margin: [0, 0, 0, 10] });
+    
+    return {
+        content: content,
+        pageSize: 'A4',
+        pageMargins: [40, 60, 40, 60],
+        styles: {
+            header: { fontSize: 20, bold: true, color: '#16a34a' },
+            subheader: { fontSize: 12, color: '#16a34a' },
+            dateBox: { fontSize: 11, bold: true },
+            sectionTitle: { fontSize: 14, bold: true, color: '#16a34a' },
+            detailLabel: { fontSize: 10, color: '#374151' },
+            detailValue: { fontSize: 10, bold: true, color: '#16a34a' },
+            recommendation: { fontSize: 10, color: '#374151', italics: true }
         },
         defaultStyle: { font: 'Roboto' }
     };
