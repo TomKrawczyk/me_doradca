@@ -256,23 +256,27 @@ function obliczPV() {
     mocInstalacji = (liczbaPaneli * mocPanela / 1000).toFixed(2);
     const rocznaProdukcja = (mocInstalacji * produkcjaNaKwp).toFixed(0);
     
-    // Użyj ceny handlowca jeśli podana, w przeciwnym razie domyślna cena instalacji
-    const kosztInstalacji = !isNaN(cenaHandlowca) ? cenaHandlowca : (parseFloat(mocInstalacji) * 4500); // 4500 zł/kWp jako domyślna cena
-    
-    // Obliczenie zwrotu z realistycznym wzrostem ceny prądu 5% rocznie
+    // Obliczenie oszczędności rocznych
     const oszczednosciRoczne = rocznaProdukcja * cenaPradu * 0.7; // 70% autokonsumpcji
     
-    // Obliczenie zwrotu z uwzględnieniem 5% wzrostu ceny prądu rocznie
-    let sumaOszczednosci = 0;
-    let rokZwrotu = 0;
+    // Obliczenie zwrotu inwestycji tylko jeśli podano cenę handlowca
+    let kosztInstalacji = null;
+    let rokZwrotu = null;
     
-    for (let rok = 1; rok <= 25; rok++) {
-        const cenaPraduWRoku = cenaPradu * Math.pow(1.05, rok - 1); // 5% wzrost rocznie
-        const oszczednosciWRoku = rocznaProdukcja * cenaPraduWRoku * 0.7;
-        sumaOszczednosci += oszczednosciWRoku;
+    if (!isNaN(cenaHandlowca)) {
+        kosztInstalacji = cenaHandlowca;
         
-        if (sumaOszczednosci >= kosztInstalacji && rokZwrotu === 0) {
-            rokZwrotu = rok;
+        // Obliczenie zwrotu z uwzględnieniem 5% wzrostu ceny prądu rocznie
+        let sumaOszczednosci = 0;
+        
+        for (let rok = 1; rok <= 25; rok++) {
+            const cenaPraduWRoku = cenaPradu * Math.pow(1.05, rok - 1); // 5% wzrost rocznie
+            const oszczednosciWRoku = rocznaProdukcja * cenaPraduWRoku * 0.7;
+            sumaOszczednosci += oszczednosciWRoku;
+            
+            if (sumaOszczednosci >= kosztInstalacji && rokZwrotu === null) {
+                rokZwrotu = rok;
+            }
         }
     }
     
@@ -319,14 +323,14 @@ function obliczPV() {
                 <div class="stat-label">Produkcja <span class="stat-unit">kWh/rok</span></div>
             </div>
             <div class="stat-card highlight-card">
-                <div class="stat-number percentage-highlight">${rokZwrotu}</div>
+                <div class="stat-number percentage-highlight">${rokZwrotu !== null ? rokZwrotu : '-'}</div>
                 <div class="stat-label">Zwrot inwestycji <span class="stat-unit">lat</span></div>
             </div>
         </div>
         
         <div class="extra-result">
             <h4>💰 Analiza finansowa</h4>
-            <p><strong>Koszt instalacji:</strong> ${kosztInstalacji.toLocaleString('pl-PL')} zł ${!isNaN(cenaHandlowca) ? '(cena handlowca)' : '(szacunkowa)'}</p>
+            ${kosztInstalacji !== null ? `<p><strong>Koszt instalacji:</strong> ${kosztInstalacji.toLocaleString('pl-PL')} zł (cena handlowca)</p>` : ''}
             <p><strong>Oszczędności w 1. roku:</strong> ~${Math.round(oszczednosciRoczne).toLocaleString('pl-PL')} zł</p>
             <p><strong>Pokrycie zużycia:</strong> ${((rocznaProdukcja / zuzycie) * 100).toFixed(0)}%</p>
             <p><strong>Wzrost ceny prądu:</strong> 5% rocznie (realistyczne założenie)</p>
@@ -658,13 +662,16 @@ function generatePVPDF(data) {
     // Financial analysis
     content.push({ text: 'Analiza finansowa', style: 'sectionTitle', margin: [0, 15, 0, 10] });
     
-    const financial = [
-        { label: 'Koszt instalacji:', value: `${data.kosztInstalacji.toLocaleString('pl-PL')} zł` },
-        { label: 'Oszczędności w 1. roku:', value: `~${Math.round(data.oszczednosciRoczne).toLocaleString('pl-PL')} zł` },
-        { label: 'Pokrycie zużycia:', value: `${data.pokrycieZuzycia}%` },
-        { label: 'Zwrot inwestycji:', value: `${data.rokZwrotu} lat` },
-        { label: 'Wzrost ceny prądu:', value: '5% rocznie' }
-    ];
+    const financial = [];
+    
+    if (data.kosztInstalacji !== null) {
+        financial.push({ label: 'Koszt instalacji:', value: `${data.kosztInstalacji.toLocaleString('pl-PL')} zł` });
+    }
+    
+    financial.push({ label: 'Oszczędności w 1. roku:', value: `~${Math.round(data.oszczednosciRoczne).toLocaleString('pl-PL')} zł` });
+    financial.push({ label: 'Pokrycie zużycia:', value: `${data.pokrycieZuzycia}%` });
+    financial.push({ label: 'Zwrot inwestycji:', value: data.rokZwrotu !== null ? `${data.rokZwrotu} lat` : '-' });
+    financial.push({ label: 'Wzrost ceny prądu:', value: '5% rocznie' });
     
     financial.forEach(item => {
         content.push({
